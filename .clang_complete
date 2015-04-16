@@ -1,3 +1,4 @@
+-fPIC
 -std=c++11
 
 # pkg-config --cflags Qt5Widgets Qt5WebKitWidgets

@@ -1,0 +1,11 @@
+-std=c++11
+
+# pkg-config --cflags Qt5Widgets Qt5WebKitWidgets
+
+-I/usr/include/qt
+-I/usr/include/qt/QtCore
+-I/usr/include/qt/QtGui
+-I/usr/include/qt/QtNetwork
+-I/usr/include/qt/QtWebKit
+-I/usr/include/qt/QtWebKitWidgets
+-I/usr/include/qt/QtWidgets

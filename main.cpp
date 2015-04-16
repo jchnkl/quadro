@@ -25,6 +25,8 @@ int main(int argc, char ** argv)
   browserLayout.addWidget(&browserView, 1, 0);
 
   QGroupBox browserGroup;
+  browserGroup.setWindowFlags(Qt::FramelessWindowHint);
+  browserGroup.setAttribute(Qt::WA_TranslucentBackground);
   browserGroup.setLayout(&browserLayout);
 
   browserGroup.show();

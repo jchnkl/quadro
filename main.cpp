@@ -24,11 +24,20 @@ class Browser : public QGroupBox
       this->setWindowFlags(Qt::FramelessWindowHint);
       this->setAttribute(Qt::WA_TranslucentBackground);
       this->setLayout(&m_Layout);
+
+      connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::loadUrlFromBar);
     }
 
     void loadUrl(const QUrl & url)
     {
       m_View.load(url);
+    }
+
+  protected:
+    void loadUrlFromBar(void)
+    {
+      loadUrl(QUrl(m_UrlBar.text(), QUrl::TolerantMode));
+      m_UrlBar.selectAll();
     }
 
   private:

@@ -1,0 +1,6 @@
+*.sw[op]
+*.o
+salsa
+Makefile
+salsa.supp
+salsa-supp.log

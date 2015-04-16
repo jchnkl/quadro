@@ -2,34 +2,48 @@
 #include <QLineEdit>
 #include <QGroupBox>
 #include <QGridLayout>
+#include <QtWidgets>
 #include <QWebView>
+
+class Browser : public QGroupBox
+{
+  public:
+    Browser(void)
+    {
+      // create & set transparent palette for browser window
+      QPalette palette = m_View.palette();
+      palette.setBrush(QPalette::Base, Qt::transparent);
+      m_View.page()->setPalette(palette);
+
+      // enable transparency for underlying window
+      m_View.setAttribute(Qt::WA_TranslucentBackground, true);
+
+      m_Layout.addWidget(&m_UrlBar, 0, 0);
+      m_Layout.addWidget(&m_View, 1, 0);
+
+      this->setWindowFlags(Qt::FramelessWindowHint);
+      this->setAttribute(Qt::WA_TranslucentBackground);
+      this->setLayout(&m_Layout);
+    }
+
+    void loadUrl(const QUrl & url)
+    {
+      m_View.load(url);
+    }
+
+  private:
+    QWebView m_View;
+    QLineEdit m_UrlBar;
+    QGridLayout m_Layout;
+}; // Browser
 
 int main(int argc, char ** argv)
 {
   QApplication app(argc, argv);
-  QWebView browserView;
 
-  // create & set transparent palette for browser window
-  QPalette palette = browserView.palette();
-  palette.setBrush(QPalette::Base, Qt::transparent);
-  browserView.page()->setPalette(palette);
-
-  // enable transparency for underlying window
-  browserView.setAttribute(Qt::WA_TranslucentBackground, true);
-  browserView.load(QUrl(argv[1]));
-
-  QLineEdit browserUriBar;
-
-  QGridLayout browserLayout;
-  browserLayout.addWidget(&browserUriBar, 0, 0);
-  browserLayout.addWidget(&browserView, 1, 0);
-
-  QGroupBox browserGroup;
-  browserGroup.setWindowFlags(Qt::FramelessWindowHint);
-  browserGroup.setAttribute(Qt::WA_TranslucentBackground);
-  browserGroup.setLayout(&browserLayout);
-
-  browserGroup.show();
+  Browser browser;
+  browser.loadUrl(QUrl(argv[1]));
+  browser.show();
 
   return app.exec();
 }

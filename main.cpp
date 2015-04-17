@@ -1,3 +1,5 @@
+#include <iostream>
+#include <QPixmap>
 #include <QApplication>
 #include <QLineEdit>
 #include <QGroupBox>
@@ -25,6 +27,7 @@ class Browser : public QGroupBox
       this->setAttribute(Qt::WA_TranslucentBackground);
       this->setLayout(&m_Layout);
 
+      connect(&m_View, &QWebView::loadFinished, this, &Browser::renderToImage);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::loadUrlFromBar);
     }
 
@@ -38,6 +41,17 @@ class Browser : public QGroupBox
     {
       loadUrl(QUrl(m_UrlBar.text(), QUrl::TolerantMode));
       m_UrlBar.selectAll();
+    }
+
+    void
+    renderToImage(bool ok)
+    {
+      if (ok) {
+        QPixmap pixmap(m_View.size());
+        m_View.render(&pixmap, QPoint(), m_View.rect());
+        pixmap.save("foo.jpg");
+      }
+      std::cerr << "done" << std::endl;
     }
 
   private:

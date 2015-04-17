@@ -58,6 +58,9 @@ class Browser : public QGroupBox
 
       xcbSetNetWmWindowTypeHint(*this, "_NET_WM_WINDOW_TYPE_DESKTOP");
 
+      this->setObjectName("Browser");
+      this->setStyleSheet("QGroupBox#Browser { border:0px }");
+
       // this->winId();
 
       // this->setW

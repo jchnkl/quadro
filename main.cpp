@@ -37,6 +37,28 @@ class Browser : public QGroupBox
   public:
     Browser(void)
     {
+      // set object name for style sheet
+      this->setObjectName("Browser");
+
+      // remove the border
+      this->setStyleSheet("QGroupBox#Browser { border: 0px; }");
+
+      // hint for window manager to leave away frames/window borders
+      this->setWindowFlags(Qt::FramelessWindowHint);
+
+      // make window background transparent
+      this->setAttribute(Qt::WA_TranslucentBackground, true);
+
+      // this->setAttribute(Qt::WA_X11NetWmWindowTypeDesktop);
+      xcbSetNetWmWindowTypeHint(*this, "_NET_WM_WINDOW_TYPE_DESKTOP");
+
+      // add widgets to grid layout
+      m_Layout.addWidget(&m_UrlBar, 0, 0);
+      m_Layout.addWidget(&m_View, 1, 0);
+
+      // use grid layout
+      this->setLayout(&m_Layout);
+
       // create & set transparent palette for browser window
       QPalette palette = m_View.palette();
       palette.setBrush(QPalette::Base, Qt::transparent);
@@ -44,27 +66,6 @@ class Browser : public QGroupBox
 
       // enable transparency for underlying window
       m_View.setAttribute(Qt::WA_TranslucentBackground, true);
-
-      m_Layout.addWidget(&m_UrlBar, 0, 0);
-      m_Layout.addWidget(&m_View, 1, 0);
-
-      this->setWindowFlags(Qt::FramelessWindowHint);
-      this->setAttribute(Qt::WA_TranslucentBackground, true);
-      // this->setAttribute(Qt::WA_X11NetWmWindowTypeDesktop, true);
-      // m_View.setAttribute(Qt::WA_X11NetWmWindowTypeDesktop, true);
-      // m_Layout.setAttribute(Qt::WA_X11NetWmWindowTypeDesktop, true);
-      // m_UrlBar.setAttribute(Qt::WA_X11NetWmWindowTypeDesktop, true);
-      this->setLayout(&m_Layout);
-
-      xcbSetNetWmWindowTypeHint(*this, "_NET_WM_WINDOW_TYPE_DESKTOP");
-
-      this->setObjectName("Browser");
-      this->setStyleSheet("QGroupBox#Browser { border:0px }");
-
-      // this->winId();
-
-      // this->setW
-      // this->setAttribute(Qt::WA_X11NetWmWindowTypeDesktop);
 
       connect(&m_View, &QWebView::loadFinished, this, &Browser::renderToImage);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::loadUrlFromBar);

@@ -5,6 +5,32 @@
 #include <QGroupBox>
 #include <QGridLayout>
 #include <QWebView>
+#include <QX11Info>
+#include <xcb/xcb.h>
+
+void
+xcbSetNetWmWindowTypeHint(const QWidget & widget, const std::string & hint)
+{
+  xcb_connection_t * c = QX11Info::connection();
+
+  std::string type = "_NET_WM_WINDOW_TYPE";
+
+  xcb_intern_atom_cookie_t type_atom =
+    xcb_intern_atom(c, 0, type.length(), type.c_str());
+  xcb_intern_atom_cookie_t hint_atom =
+    xcb_intern_atom(c, 0, hint.length(), hint.c_str());
+
+  xcb_intern_atom_reply_t * type_reply =
+    xcb_intern_atom_reply(c, type_atom, NULL);
+  xcb_intern_atom_reply_t * hint_reply =
+    xcb_intern_atom_reply(c, hint_atom, NULL);
+
+  const uint32_t data[] = { hint_reply->atom };
+
+  xcb_change_property(c, XCB_PROP_MODE_REPLACE, widget.winId(),
+      type_reply->atom, XCB_ATOM_ATOM,
+      (u_int8_t)32, sizeof(data)/sizeof(data[0]), &data);
+}
 
 class Browser : public QGroupBox
 {
@@ -23,8 +49,19 @@ class Browser : public QGroupBox
       m_Layout.addWidget(&m_View, 1, 0);
 
       this->setWindowFlags(Qt::FramelessWindowHint);
-      this->setAttribute(Qt::WA_TranslucentBackground);
+      this->setAttribute(Qt::WA_TranslucentBackground, true);
+      // this->setAttribute(Qt::WA_X11NetWmWindowTypeDesktop, true);
+      // m_View.setAttribute(Qt::WA_X11NetWmWindowTypeDesktop, true);
+      // m_Layout.setAttribute(Qt::WA_X11NetWmWindowTypeDesktop, true);
+      // m_UrlBar.setAttribute(Qt::WA_X11NetWmWindowTypeDesktop, true);
       this->setLayout(&m_Layout);
+
+      xcbSetNetWmWindowTypeHint(*this, "_NET_WM_WINDOW_TYPE_DESKTOP");
+
+      // this->winId();
+
+      // this->setW
+      // this->setAttribute(Qt::WA_X11NetWmWindowTypeDesktop);
 
       connect(&m_View, &QWebView::loadFinished, this, &Browser::renderToImage);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::loadUrlFromBar);

@@ -10,3 +10,4 @@
 -I/usr/include/qt/QtWebKit
 -I/usr/include/qt/QtWebKitWidgets
 -I/usr/include/qt/QtWidgets
+-I/usr/include/qt/QtX11Extras

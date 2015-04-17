@@ -4,7 +4,6 @@
 #include <QLineEdit>
 #include <QGroupBox>
 #include <QGridLayout>
-#include <QtWidgets>
 #include <QWebView>
 
 class Browser : public QGroupBox

@@ -31,8 +31,6 @@ class Browser : public QGroupBox
 
       windowType.clear().add(NetWmWindowType::Desktop);
 
-      // this->setAttribute(Qt::WA_X11NetWmWindowTypeDesktop);
-
       // add widgets to grid layout
       m_Layout.addWidget(&m_UrlBar, 0, 0);
       m_Layout.addWidget(&m_View, 1, 0);

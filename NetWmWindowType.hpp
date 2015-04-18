@@ -6,7 +6,8 @@
 
 #include "Ewmh.hpp"
 
-class NetWmWindowType {
+class NetWmWindowType
+{
   public:
     enum Hint { Desktop, Dock, Toolbar, Menu, Utility, Splash, Dialog,
                 DropdownMenu, PopupMenu, Tooltip, Notification, Combo, Dnd,

@@ -4,7 +4,8 @@
 #include <memory>
 #include <xcb/xcb_ewmh.h>
 
-class Ewmh {
+class Ewmh
+{
   public:
     Ewmh(xcb_connection_t * const c)
     {

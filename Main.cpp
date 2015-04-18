@@ -1,6 +1,7 @@
 #include <iostream>
 #include <QPixmap>
 #include <QApplication>
+#include <QCommandLineParser>
 #include <QLineEdit>
 #include <QGroupBox>
 #include <QGridLayout>
@@ -97,9 +98,27 @@ int main(int argc, char ** argv)
   QApplication::setApplicationName("Salsa");
   QApplication::setApplicationVersion("1.0");
 
-  Browser browser;
-  browser.loadUrl(QUrl(argv[1]));
-  browser.show();
+  QCommandLineParser parser;
+  parser.setApplicationDescription("Draw HTML widgets on your screen");
+  parser.addHelpOption();
+  parser.addVersionOption();
 
-  return app.exec();
+  QCommandLineOption urlOption(
+      QStringList() << "u" << "url",
+      QCoreApplication::translate("main", "URL to load at start"),
+      QCoreApplication::translate("main", "url"));
+
+  parser.addOption(urlOption);
+
+  parser.process(app);
+
+  if (parser.isSet(urlOption)) {
+    Browser browser;
+    browser.loadUrl(QUrl(parser.value(urlOption)));
+    browser.show();
+    return app.exec();
+
+  } else {
+    parser.showHelp(EXIT_FAILURE);
+  }
 }

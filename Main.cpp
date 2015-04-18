@@ -94,6 +94,8 @@ class Browser : public QGroupBox
 int main(int argc, char ** argv)
 {
   QApplication app(argc, argv);
+  QApplication::setApplicationName("Salsa");
+  QApplication::setApplicationVersion("1.0");
 
   Browser browser;
   browser.loadUrl(QUrl(argv[1]));

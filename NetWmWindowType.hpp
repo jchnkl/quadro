@@ -13,20 +13,40 @@ class NetWmWindowType
                 DropdownMenu, PopupMenu, Tooltip, Notification, Combo, Dnd,
                 Normal };
 
+    enum HintClass { All, Other, Same };
+
     NetWmWindowType(const Ewmh & ewmh, xcb_window_t window)
       : m_ewmh(ewmh), m_window(window)
     {}
 
     const NetWmWindowType &
-    clear(bool all_atoms = false) const
+    clear(HintClass hclass) const
     {
-      if (all_atoms) {
-        xcb_ewmh_set_wm_window_type(m_ewmh(), m_window, 0, NULL);
+      if (hclass == All) {
+          xcb_ewmh_set_wm_window_type(m_ewmh(), m_window, 0, NULL);
       } else {
-        auto atoms = get();
-        auto f = std::bind(&NetWmWindowType::isHint, this, std::placeholders::_1);
-        atoms.erase(std::remove_if(atoms.begin(), atoms.end(), f), atoms.end());
-        set(atoms);
+          auto atoms = get();
+          atoms.erase(std::remove_if(atoms.begin(), atoms.end(),
+                [&](xcb_atom_t atom) {
+                  // auto b = isHint(atom);
+                  // return hclass == Same ? b : ! b;
+
+                  // Bool : Bool : ! Bool
+                  // True ? True : False
+                  // False ? True : False
+                  // True ? False : True
+                  // False ? False : True
+
+                  // True  True  -> True
+                  // False True  -> False
+                  // True  False -> False
+                  // False False -> True
+
+                  // just for fun, this is reversed xor
+                  return ! (isHint(atom) ^ (hclass == Same));
+
+                }), atoms.end());
+          set(atoms);
       }
       return *this;
     }

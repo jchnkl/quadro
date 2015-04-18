@@ -29,7 +29,7 @@ class Browser : public QGroupBox
       Ewmh ewmh(QX11Info::connection());
       NetWmWindowType windowType(ewmh, this->winId());
 
-      windowType.clear().add(NetWmWindowType::Desktop);
+      windowType.clear(NetWmWindowType::Same).add(NetWmWindowType::Desktop);
 
       // add widgets to grid layout
       m_Layout.addWidget(&m_UrlBar, 0, 0);

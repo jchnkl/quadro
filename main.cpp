@@ -1,4 +1,6 @@
 #include <iostream>
+#include <memory>
+#include <algorithm>
 #include <QPixmap>
 #include <QApplication>
 #include <QLineEdit>
@@ -9,35 +11,53 @@
 #include <xcb/xcb.h>
 #include <xcb/xcb_ewmh.h>
 
-class Ewmh
-{
+class Ewmh {
   public:
     Ewmh(xcb_connection_t * const c)
     {
-      xcb_intern_atom_cookie_t * cookies = xcb_ewmh_init_atoms(c, &m_ewmh);
+      m_ewmh = std::shared_ptr<xcb_ewmh_connection_t>(new xcb_ewmh_connection_t,
+          [](xcb_ewmh_connection_t * ec) {
+            xcb_ewmh_connection_wipe(ec);
+            std::free(ec);
+          });
+
+      xcb_intern_atom_cookie_t * cookies = xcb_ewmh_init_atoms(c, m_ewmh.get());
+
       if (cookies) {
         xcb_generic_error_t * error = NULL;
-        xcb_ewmh_init_atoms_replies(&m_ewmh, cookies, &error);
+        xcb_ewmh_init_atoms_replies(m_ewmh.get(), cookies, &error);
         if (error) {
           std::free(error);
+          std::free(cookies);
+          throw std::runtime_error(__PRETTY_FUNCTION__);
         }
+
+      } else {
+        throw std::runtime_error(__PRETTY_FUNCTION__);
       }
     }
 
-    ~Ewmh(void)
+    const xcb_ewmh_connection_t &
+    operator*(void) const
     {
-      xcb_ewmh_connection_wipe(&m_ewmh);
+      return *m_ewmh;
     }
 
-    const xcb_ewmh_connection_t *
-    operator->(void)
+    xcb_ewmh_connection_t *
+    operator()(void) const
     {
-      return &m_ewmh;
+      return m_ewmh.get();
+    }
+
+    xcb_ewmh_connection_t *
+    operator->(void) const
+    {
+      return m_ewmh.get();
     }
 
   private:
-    xcb_ewmh_connection_t m_ewmh;
-};
+    std::shared_ptr<xcb_ewmh_connection_t> m_ewmh;
+}; // class Ewmh
 
 void
 xcbSetNetWmWindowTypeHint(const QWidget & widget, const std::string & hint)

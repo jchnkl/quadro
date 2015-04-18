@@ -1,13 +1,12 @@
 #include <iostream>
-#include <QPixmap>
 #include <QApplication>
 #include <QCommandLineParser>
-#include <QLineEdit>
-#include <QGroupBox>
 #include <QGridLayout>
+#include <QGroupBox>
+#include <QLineEdit>
+#include <QPixmap>
 #include <QWebView>
 #include <QX11Info>
-
 #include "NetWmWindowType.hpp"
 
 class Browser : public QGroupBox

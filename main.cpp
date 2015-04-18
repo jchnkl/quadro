@@ -7,6 +7,37 @@
 #include <QWebView>
 #include <QX11Info>
 #include <xcb/xcb.h>
+#include <xcb/xcb_ewmh.h>
+
+class Ewmh
+{
+  public:
+    Ewmh(xcb_connection_t * const c)
+    {
+      xcb_intern_atom_cookie_t * cookies = xcb_ewmh_init_atoms(c, &m_ewmh);
+      if (cookies) {
+        xcb_generic_error_t * error = NULL;
+        xcb_ewmh_init_atoms_replies(&m_ewmh, cookies, &error);
+        if (error) {
+          std::free(error);
+        }
+      }
+    }
+
+    ~Ewmh(void)
+    {
+      xcb_ewmh_connection_wipe(&m_ewmh);
+    }
+
+    const xcb_ewmh_connection_t *
+    operator->(void)
+    {
+      return &m_ewmh;
+    }
+
+  private:
+    xcb_ewmh_connection_t m_ewmh;
+};
 
 void
 xcbSetNetWmWindowTypeHint(const QWidget & widget, const std::string & hint)

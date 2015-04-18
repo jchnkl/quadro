@@ -51,8 +51,13 @@ class Browser : public QGroupBox
       // make window background transparent
       this->setAttribute(Qt::WA_TranslucentBackground, true);
 
+      Ewmh ewmh(QX11Info::connection());
+      NetWmWindowType windowType(ewmh, this->winId());
+
+      windowType.clear();
+      windowType.add(NetWmWindowType::Desktop);
+
       // this->setAttribute(Qt::WA_X11NetWmWindowTypeDesktop);
-      xcbSetNetWmWindowTypeHint(*this, "_NET_WM_WINDOW_TYPE_DESKTOP");
 
       // add widgets to grid layout
       m_Layout.addWidget(&m_UrlBar, 0, 0);

@@ -54,8 +54,7 @@ class Browser : public QGroupBox
       Ewmh ewmh(QX11Info::connection());
       NetWmWindowType windowType(ewmh, this->winId());
 
-      windowType.clear();
-      windowType.add(NetWmWindowType::Desktop);
+      windowType.clear().add(NetWmWindowType::Desktop);
 
       // this->setAttribute(Qt::WA_X11NetWmWindowTypeDesktop);
 

@@ -16,7 +16,7 @@ class NetWmWindowType {
       : m_ewmh(ewmh), m_window(window)
     {}
 
-    void
+    const NetWmWindowType &
     clear(bool all_atoms = false) const
     {
       if (all_atoms) {
@@ -27,6 +27,7 @@ class NetWmWindowType {
         atoms.erase(std::remove_if(atoms.begin(), atoms.end(), f), atoms.end());
         set(atoms);
       }
+      return *this;
     }
 
     std::vector<xcb_atom_t>
@@ -48,15 +49,16 @@ class NetWmWindowType {
       }
     }
 
-    void
+    const NetWmWindowType &
     add(Hint hint) const
     {
       auto hints = { hint };
       add(hints.begin(), hints.end());
+      return *this;
     }
 
     template<typename Iterator>
-    void
+    const NetWmWindowType &
     add(Iterator begin, Iterator end) const
     {
       std::vector<xcb_atom_t> hint_atoms(std::distance(begin, end));
@@ -66,22 +68,26 @@ class NetWmWindowType {
       atoms.insert(atoms.end(), hint_atoms.begin(), hint_atoms.end());
 
       set(atoms);
+
+      return *this;
     }
 
-    void
+    const NetWmWindowType &
     set(Hint hint) const
     {
       auto hints = { hint };
       set(hints.begin(), hints.end());
+      return *this;
     }
 
     template<typename Iterator>
-    void
+    const NetWmWindowType &
     set(Iterator begin, Iterator end) const
     {
       std::vector<xcb_atom_t> atoms(std::distance(begin, end));
       toAtoms(begin, end, atoms.begin());
       set(atoms);
+      return *this;
     }
 
     bool
@@ -128,19 +134,21 @@ class NetWmWindowType {
     }
 
     template<typename Hint_Iter, typename Atom_Iter>
-    void
+    const NetWmWindowType &
     toAtoms(Hint_Iter hint_begin, Hint_Iter hint_end, Atom_Iter atom_begin) const
     {
       auto f = std::bind(&NetWmWindowType::toAtom, this, std::placeholders::_1);
       std::transform(hint_begin, hint_end, atom_begin, f);
+      return *this;
     }
 
   protected:
-    void
+    const NetWmWindowType &
     set(const std::vector<xcb_atom_t> & atoms) const
     {
       xcb_ewmh_set_wm_window_type(m_ewmh(), m_window, atoms.size(),
                                   const_cast<xcb_atom_t *>(atoms.data()));
+      return *this;
     }
 
   private:

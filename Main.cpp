@@ -13,38 +13,95 @@ class Config
 {
   public:
     Config(const QCoreApplication & app)
+      : m_fullscreen(false)
+      , m_window_type_hint(NetWmWindowType::Normal)
     {
       QCommandLineParser parser;
 
       parser.addHelpOption();
       parser.addVersionOption();
 
-      QCommandLineOption urlOption(
-          QStringList() << "u" << "url",
-          QCoreApplication::translate("main", "URL to load at startup"),
-          QCoreApplication::translate("main", "url"));
+      QCommandLineOption urlOption = this->getUrlOption();
+      QCommandLineOption fullscreenOption = this->getFullscreenOption();
+      QCommandLineOption windowTypeOption = this->getWindowTypeOption();
 
       parser.addOption(urlOption);
-
-      QCommandLineOption fullscreenOption(
-          QStringList() << "f" << "fullscreen",
-          QCoreApplication::translate("main", "Set window to fullscreen mode"));
-
       parser.addOption(fullscreenOption);
+      parser.addOption(windowTypeOption);
 
       parser.process(app);
 
       m_url = parser.value(urlOption);
       m_fullscreen = parser.isSet(fullscreenOption);
+
+      auto type = parser.value(windowTypeOption);
+      if (type == "normal") {
+        m_window_type_hint = NetWmWindowType::Normal;
+      } else if (type == "desktop") {
+        m_window_type_hint = NetWmWindowType::Desktop;
+      } else if (type == "dock") {
+        m_window_type_hint = NetWmWindowType::Dock;
+      }
     }
 
-    bool hasUrl(void) const { return m_url.length() > 0; }
-    const QString & url(void) const { return m_url; }
-    bool fullscreen(void) const { return m_fullscreen; }
+    bool
+    hasUrl(void) const
+    {
+      return m_url.length() > 0;
+    }
+
+    const QString &
+    url(void) const
+    {
+      return m_url;
+    }
+
+    bool
+    fullscreen(void) const
+    {
+      return m_fullscreen;
+    }
+
+    NetWmWindowType::Hint
+    windowTypeHint(void) const
+    {
+      return m_window_type_hint;
+    }
+
+  protected:
+    QCommandLineOption
+    getUrlOption(void)
+    {
+      QCommandLineOption urlOption(
+          QStringList() << "u" << "url",
+          QCoreApplication::translate("main", "URL to load at startup"),
+          QCoreApplication::translate("main", "url"));
+      return urlOption;
+    }
+
+    QCommandLineOption
+    getFullscreenOption(void)
+    {
+      QCommandLineOption fullscreenOption(
+          QStringList() << "f" << "fullscreen",
+          QCoreApplication::translate("main", "Set window to fullscreen mode"));
+      return fullscreenOption;
+    }
+
+    QCommandLineOption
+    getWindowTypeOption(void)
+    {
+      QCommandLineOption windowTypeOption(
+          QStringList() << "t" << "type",
+          QCoreApplication::translate("main", "Set window type: normal, desktop, dock (default: normal)"),
+          QCoreApplication::translate("main", "hint"));
+      return windowTypeOption;
+    }
 
   private:
     QString m_url;
     bool m_fullscreen;
+    NetWmWindowType::Hint m_window_type_hint;
 }; // Config
 
 class Browser
@@ -68,7 +125,7 @@ class Browser
       Ewmh ewmh(QX11Info::connection());
       NetWmWindowType windowType(ewmh, this->winId());
 
-      windowType.clear(NetWmWindowType::Same).add(NetWmWindowType::Desktop);
+      windowType.clear(NetWmWindowType::Same).add(config.windowTypeHint());
 
       // add widgets to grid layout
       m_Layout.addWidget(&m_UrlBar, 0, 0);

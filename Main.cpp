@@ -165,12 +165,6 @@ class Browser
     }
 
   protected:
-    void loadUrlFromBar(void)
-    {
-      loadUrl(QUrl::fromUserInput(m_UrlBar.text()));
-      m_UrlBar.selectAll();
-    }
-
     void
     updateUrlBar(const QUrl & url)
     {
@@ -186,6 +180,12 @@ class Browser
         pixmap.save("foo.jpg");
       }
       std::cerr << "done" << std::endl;
+    }
+
+    void loadUrlFromBar(void)
+    {
+      loadUrl(QUrl::fromUserInput(m_UrlBar.text()));
+      m_UrlBar.selectAll();
     }
 
     void

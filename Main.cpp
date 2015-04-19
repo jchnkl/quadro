@@ -1,5 +1,6 @@
 #include <iostream>
 #include <QApplication>
+#include <QDesktopWidget>
 #include <QCommandLineParser>
 #include <QGridLayout>
 #include <QGroupBox>
@@ -145,15 +146,17 @@ class Browser
       connect(&m_View, &QWebView::loadFinished, this, &Browser::renderToImage);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::loadUrlFromBar);
 
+
       if (config.fullscreen()) {
-        this->showFullScreen();
-      } else {
-        this->show();
+        QRect desktop_rect = QApplication::desktop()->screenGeometry();
+        this->setGeometry(desktop_rect);
       }
 
       if (config.hasUrl()) {
         this->loadUrl(QUrl(config.url()));
       }
+
+      this->show();
     }
 
     void loadUrl(const QUrl & url)

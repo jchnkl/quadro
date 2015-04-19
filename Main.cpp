@@ -9,10 +9,49 @@
 #include <QX11Info>
 #include "NetWmWindowType.hpp"
 
-class Browser : public QGroupBox
+class Config
 {
   public:
-    Browser(void)
+    Config(const QCoreApplication & app)
+    {
+      QCommandLineParser parser;
+
+      parser.addHelpOption();
+      parser.addVersionOption();
+
+      QCommandLineOption urlOption(
+          QStringList() << "u" << "url",
+          QCoreApplication::translate("main", "URL to load at startup"),
+          QCoreApplication::translate("main", "url"));
+
+      parser.addOption(urlOption);
+
+      QCommandLineOption fullscreenOption(
+          QStringList() << "f" << "fullscreen",
+          QCoreApplication::translate("main", "Set window to fullscreen mode"));
+
+      parser.addOption(fullscreenOption);
+
+      parser.process(app);
+
+      m_url = parser.value(urlOption);
+      m_fullscreen = parser.isSet(fullscreenOption);
+    }
+
+    bool hasUrl(void) const { return m_url.length() > 0; }
+    const QString & url(void) const { return m_url; }
+    bool fullscreen(void) const { return m_fullscreen; }
+
+  private:
+    QString m_url;
+    bool m_fullscreen;
+}; // Config
+
+class Browser
+  : public QGroupBox
+{
+  public:
+    Browser(const Config & config)
     {
       // set object name for style sheet
       this->setObjectName("Browser");
@@ -48,6 +87,16 @@ class Browser : public QGroupBox
 
       connect(&m_View, &QWebView::loadFinished, this, &Browser::renderToImage);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::loadUrlFromBar);
+
+      if (config.fullscreen()) {
+        this->showFullScreen();
+      } else {
+        this->show();
+      }
+
+      if (config.hasUrl()) {
+        this->loadUrl(QUrl(config.url()));
+      }
     }
 
     void loadUrl(const QUrl & url)
@@ -86,6 +135,7 @@ class Browser : public QGroupBox
     }
 
   private:
+    // Config m_Config;
     QGridLayout m_Layout;
     QLineEdit m_UrlBar;
     QWebView m_View;
@@ -97,27 +147,7 @@ int main(int argc, char ** argv)
   QApplication::setApplicationName("Salsa");
   QApplication::setApplicationVersion("1.0");
 
-  QCommandLineParser parser;
-  parser.setApplicationDescription("Draw HTML widgets on your screen");
-  parser.addHelpOption();
-  parser.addVersionOption();
-
-  QCommandLineOption urlOption(
-      QStringList() << "u" << "url",
-      QCoreApplication::translate("main", "URL to load at start"),
-      QCoreApplication::translate("main", "url"));
-
-  parser.addOption(urlOption);
-
-  parser.process(app);
-
-  if (parser.isSet(urlOption)) {
-    Browser browser;
-    browser.loadUrl(QUrl(parser.value(urlOption)));
-    browser.show();
-    return app.exec();
-
-  } else {
-    parser.showHelp(EXIT_FAILURE);
-  }
+  Config config(app);
+  Browser browser(config);
+  return app.exec();
 }

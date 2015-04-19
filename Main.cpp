@@ -128,6 +128,9 @@ class Browser
 
       windowType.clear(NetWmWindowType::Same).add(config.windowTypeHint());
 
+      // remove layout margins / padding
+      m_Layout.setMargin(0);
+
       // add widgets to grid layout
       m_Layout.addWidget(&m_UrlBar, 0, 0);
       m_Layout.addWidget(&m_View, 1, 0);

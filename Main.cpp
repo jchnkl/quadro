@@ -143,6 +143,7 @@ class Browser
       // enable transparency for underlying window
       m_View.setAttribute(Qt::WA_TranslucentBackground, true);
 
+      connect(&m_View, &QWebView::urlChanged, this, &Browser::updateUrlBar);
       connect(&m_View, &QWebView::loadFinished, this, &Browser::renderToImage);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::loadUrlFromBar);
 
@@ -168,6 +169,12 @@ class Browser
     {
       loadUrl(QUrl::fromUserInput(m_UrlBar.text()));
       m_UrlBar.selectAll();
+    }
+
+    void
+    updateUrlBar(const QUrl & url)
+    {
+      m_UrlBar.setText(url.toString());
     }
 
     void

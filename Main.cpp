@@ -146,14 +146,13 @@ class Browser
       connect(&m_View, &QWebView::loadFinished, this, &Browser::renderToImage);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::loadUrlFromBar);
 
+      if (config.hasUrl()) {
+        this->loadUrl(QUrl::fromUserInput(config.url()));
+      }
 
       if (config.fullscreen()) {
         QRect desktop_rect = QApplication::desktop()->screenGeometry();
         this->setGeometry(desktop_rect);
-      }
-
-      if (config.hasUrl()) {
-        this->loadUrl(QUrl(config.url()));
       }
 
       this->show();
@@ -167,7 +166,7 @@ class Browser
   protected:
     void loadUrlFromBar(void)
     {
-      loadUrl(QUrl(m_UrlBar.text(), QUrl::TolerantMode));
+      loadUrl(QUrl::fromUserInput(m_UrlBar.text()));
       m_UrlBar.selectAll();
     }
 

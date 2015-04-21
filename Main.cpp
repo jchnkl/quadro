@@ -16,6 +16,8 @@ class Config
     Config(const QCoreApplication & app)
       : m_x(0)
       , m_y(0)
+      , m_width(800)
+      , m_height(600)
       , m_fullscreen(false)
       , m_window_type_hint(NetWmWindowType::Normal)
     {
@@ -26,12 +28,16 @@ class Config
 
       QCommandLineOption xOption = this->getXOption();
       QCommandLineOption yOption = this->getYOption();
+      QCommandLineOption widthOption = this->getWidthOption();
+      QCommandLineOption heightOption = this->getHeightOption();
       QCommandLineOption urlOption = this->getUrlOption();
       QCommandLineOption fullscreenOption = this->getFullscreenOption();
       QCommandLineOption windowTypeOption = this->getWindowTypeOption();
 
       parser.addOption(xOption);
       parser.addOption(yOption);
+      parser.addOption(widthOption);
+      parser.addOption(heightOption);
       parser.addOption(urlOption);
       parser.addOption(fullscreenOption);
       parser.addOption(windowTypeOption);
@@ -44,6 +50,14 @@ class Config
 
       if (parser.isSet(yOption)) {
         m_y = std::stoi(parser.value(yOption).toStdString());
+      }
+
+      if (parser.isSet(widthOption)) {
+        m_width = std::stoul(parser.value(widthOption).toStdString());
+      }
+
+      if (parser.isSet(heightOption)) {
+        m_height = std::stoul(parser.value(heightOption).toStdString());
       }
 
       m_url = parser.value(urlOption);
@@ -69,6 +83,18 @@ class Config
     y(void) const
     {
       return m_y;
+    }
+
+    unsigned int
+    width(void) const
+    {
+      return m_width;
+    }
+
+    unsigned int
+    height(void) const
+    {
+      return m_height;
     }
 
     bool
@@ -117,6 +143,26 @@ class Config
     }
 
     QCommandLineOption
+    getWidthOption(void)
+    {
+      QCommandLineOption widthOption(
+          QStringList() << "width",
+          QCoreApplication::translate("main", "window width"),
+          QCoreApplication::translate("main", "width"));
+      return widthOption;
+    }
+
+    QCommandLineOption
+    getHeightOption(void)
+    {
+      QCommandLineOption heightOption(
+          QStringList() << "height",
+          QCoreApplication::translate("main", "window height"),
+          QCoreApplication::translate("main", "height"));
+      return heightOption;
+    }
+
+    QCommandLineOption
     getUrlOption(void)
     {
       QCommandLineOption urlOption(
@@ -148,6 +194,8 @@ class Config
   private:
     int m_x;
     int m_y;
+    unsigned int m_width;
+    unsigned int m_height;
     QString m_url;
     bool m_fullscreen;
     NetWmWindowType::Hint m_window_type_hint;
@@ -198,7 +246,7 @@ class Browser
       connect(&m_View, &QWebView::loadFinished, this, &Browser::onLoadFinished);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::onReturnPressed);
 
-      this->move(config.x(), config.y());
+      this->setGeometry(config.x(), config.y(), config.width(), config.height());
 
       if (config.hasUrl()) {
         this->loadUrl(QUrl::fromUserInput(config.url()));

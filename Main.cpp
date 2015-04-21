@@ -213,7 +213,7 @@ class Browser
 int main(int argc, char ** argv)
 {
   QApplication app(argc, argv);
-  QApplication::setApplicationName("Salsa");
+  QApplication::setApplicationName("Quadro");
   QApplication::setApplicationVersion("1.0");
 
   Config config(app);

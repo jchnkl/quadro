@@ -5,7 +5,7 @@ PKGCONFIG += xcb xcb-ewmh
 
 greaterThan(QT_MAFOR_VERSION, 4): QT += widets
 
-TARGET = salsa
+TARGET = quadro
 TEMPLATE = app
 
 SOURCES += Main.cpp Ewmh.hpp NetWmWindowType.hpp

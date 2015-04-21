@@ -194,9 +194,9 @@ class Browser
       // enable transparency for underlying window
       m_View.setAttribute(Qt::WA_TranslucentBackground, true);
 
-      connect(&m_View, &QWebView::urlChanged, this, &Browser::updateUrlBar);
-      connect(&m_View, &QWebView::loadFinished, this, &Browser::renderToImage);
-      connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::loadUrlFromBar);
+      connect(&m_View, &QWebView::urlChanged, this, &Browser::onUrlChanged);
+      connect(&m_View, &QWebView::loadFinished, this, &Browser::onLoadFinished);
+      connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::onReturnPressed);
 
       this->move(config.x(), config.y());
 
@@ -219,13 +219,13 @@ class Browser
 
   protected:
     void
-    updateUrlBar(const QUrl & url)
+    onUrlChanged(const QUrl & url)
     {
       m_UrlBar.setText(url.toString());
     }
 
     void
-    renderToImage(bool ok)
+    onLoadFinished(bool ok)
     {
       if (ok) {
         QPixmap pixmap(m_View.size());
@@ -235,7 +235,7 @@ class Browser
       std::cerr << "done" << std::endl;
     }
 
-    void loadUrlFromBar(void)
+    void onReturnPressed(void)
     {
       loadUrl(QUrl::fromUserInput(m_UrlBar.text()));
       m_UrlBar.selectAll();

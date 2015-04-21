@@ -14,7 +14,9 @@ class Config
 {
   public:
     Config(const QCoreApplication & app)
-      : m_fullscreen(false)
+      : m_x(0)
+      , m_y(0)
+      , m_fullscreen(false)
       , m_window_type_hint(NetWmWindowType::Normal)
     {
       QCommandLineParser parser;
@@ -22,15 +24,27 @@ class Config
       parser.addHelpOption();
       parser.addVersionOption();
 
+      QCommandLineOption xOption = this->getXOption();
+      QCommandLineOption yOption = this->getYOption();
       QCommandLineOption urlOption = this->getUrlOption();
       QCommandLineOption fullscreenOption = this->getFullscreenOption();
       QCommandLineOption windowTypeOption = this->getWindowTypeOption();
 
+      parser.addOption(xOption);
+      parser.addOption(yOption);
       parser.addOption(urlOption);
       parser.addOption(fullscreenOption);
       parser.addOption(windowTypeOption);
 
       parser.process(app);
+
+      if (parser.isSet(xOption)) {
+        m_x = std::stoi(parser.value(xOption).toStdString());
+      }
+
+      if (parser.isSet(yOption)) {
+        m_y = std::stoi(parser.value(yOption).toStdString());
+      }
 
       m_url = parser.value(urlOption);
       m_fullscreen = parser.isSet(fullscreenOption);
@@ -43,6 +57,18 @@ class Config
       } else if (type == "dock") {
         m_window_type_hint = NetWmWindowType::Dock;
       }
+    }
+
+    int
+    x(void) const
+    {
+      return m_x;
+    }
+
+    int
+    y(void) const
+    {
+      return m_y;
     }
 
     bool
@@ -70,6 +96,26 @@ class Config
     }
 
   protected:
+    QCommandLineOption
+    getXOption(void)
+    {
+      QCommandLineOption xOption(
+          QStringList() << "x",
+          QCoreApplication::translate("main", "x position on screen"),
+          QCoreApplication::translate("main", "X"));
+      return xOption;
+    }
+
+    QCommandLineOption
+    getYOption(void)
+    {
+      QCommandLineOption yOption(
+          QStringList() << "y",
+          QCoreApplication::translate("main", "y position on screen"),
+          QCoreApplication::translate("main", "Y"));
+      return yOption;
+    }
+
     QCommandLineOption
     getUrlOption(void)
     {
@@ -100,6 +146,8 @@ class Config
     }
 
   private:
+    int m_x;
+    int m_y;
     QString m_url;
     bool m_fullscreen;
     NetWmWindowType::Hint m_window_type_hint;
@@ -149,6 +197,8 @@ class Browser
       connect(&m_View, &QWebView::urlChanged, this, &Browser::updateUrlBar);
       connect(&m_View, &QWebView::loadFinished, this, &Browser::renderToImage);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::loadUrlFromBar);
+
+      this->move(config.x(), config.y());
 
       if (config.hasUrl()) {
         this->loadUrl(QUrl::fromUserInput(config.url()));

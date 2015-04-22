@@ -1,8 +1,6 @@
 #ifndef _QUADRO_BROWSER_HPP
 #define _QUADRO_BROWSER_HPP
 
-#include <iostream>
-
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QGridLayout>
@@ -57,7 +55,6 @@ class Browser
       m_View.setAttribute(Qt::WA_TranslucentBackground, true);
 
       connect(&m_View, &QWebView::urlChanged, this, &Browser::onUrlChanged);
-      connect(&m_View, &QWebView::loadFinished, this, &Browser::onLoadFinished);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::onReturnPressed);
 
       this->setGeometry(config.x(), config.y(), config.width(), config.height());
@@ -84,17 +81,6 @@ class Browser
     onUrlChanged(const QUrl & url)
     {
       m_UrlBar.setText(url.toString());
-    }
-
-    void
-    onLoadFinished(bool ok)
-    {
-      if (ok) {
-        QPixmap pixmap(m_View.size());
-        m_View.render(&pixmap, QPoint(), m_View.rect());
-        pixmap.save("foo.jpg");
-      }
-      std::cerr << "done" << std::endl;
     }
 
     void onReturnPressed(void)

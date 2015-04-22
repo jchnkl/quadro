@@ -2,10 +2,12 @@
 #define _QUADRO_BROWSER_HPP
 
 #include <QApplication>
+#include <QContextMenuEvent>
 #include <QDesktopWidget>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QLineEdit>
+#include <QMenu>
 #include <QWebView>
 #include <QX11Info>
 
@@ -14,6 +16,17 @@
 
 
 namespace Browser {
+
+class WebView
+  : public QWebView
+{
+  protected:
+    void
+    contextMenuEvent(QContextMenuEvent * e)
+    {
+      this->page()->createStandardContextMenu()->exec(e->globalPos());
+    }
+};
 
 class Window
   : public QGroupBox
@@ -106,10 +119,9 @@ class Window
     }
 
   private:
-    // Config m_Config;
-    QGridLayout m_Layout;
+    WebView m_View;
     QLineEdit m_UrlBar;
-    QWebView m_View;
+    QGridLayout m_Layout;
 }; // class Window
 
 }; // namespace Browser

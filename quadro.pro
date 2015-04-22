@@ -8,4 +8,4 @@ greaterThan(QT_MAFOR_VERSION, 4): QT += widets
 TARGET = quadro
 TEMPLATE = app
 
-SOURCES += Main.cpp Ewmh.hpp NetWmWindowType.hpp
+SOURCES += Main.cpp Config.hpp Ewmh.hpp NetWmWindowType.hpp

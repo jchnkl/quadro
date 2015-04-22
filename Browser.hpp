@@ -71,7 +71,8 @@ class Browser
       this->show();
     }
 
-    void loadUrl(const QUrl & url)
+    void
+    loadUrl(const QUrl & url)
     {
       m_View.load(url);
     }
@@ -83,7 +84,8 @@ class Browser
       m_UrlBar.setText(url.toString());
     }
 
-    void onReturnPressed(void)
+    void
+    onReturnPressed(void)
     {
       loadUrl(QUrl::fromUserInput(m_UrlBar.text()));
       m_UrlBar.selectAll();

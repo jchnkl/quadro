@@ -8,29 +8,13 @@
 #include <QGroupBox>
 #include <QLineEdit>
 #include <QMenu>
-#include <QWebView>
 #include <QX11Info>
 
 #include "Config.hpp"
+#include "WebView.hpp"
 #include "NetWmWindowType.hpp"
 
 namespace Browser {
-
-class WebView
-  : public QWebView
-{
-  Q_OBJECT
-
-  protected:
-    void
-    contextMenuEvent(QContextMenuEvent * e)
-    {
-      emit contextMenuSignal(e, this);
-    }
-
-  signals:
-    void contextMenuSignal(QContextMenuEvent * event, WebView * webview);
-};
 
 class Window
   : public QGroupBox
@@ -147,7 +131,5 @@ class Window
 }; // class Window
 
 }; // namespace Browser
-
-#include "Browser.moc"
 
 #endif // _QUADRO_BROWSER_HPP

@@ -1,6 +1,8 @@
 *.sw[op]
 *.o
-salsa
+moc_*
+quadro
 Makefile
 salsa.supp
 salsa-supp.log
+examples/

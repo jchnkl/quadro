@@ -14,18 +14,22 @@
 #include "Config.hpp"
 #include "NetWmWindowType.hpp"
 
-
 namespace Browser {
 
 class WebView
   : public QWebView
 {
+  Q_OBJECT
+
   protected:
     void
     contextMenuEvent(QContextMenuEvent * e)
     {
-      this->page()->createStandardContextMenu()->exec(e->globalPos());
+      emit contextMenuSignal(e, this);
     }
+
+  signals:
+    void contextMenuSignal(QContextMenuEvent * event, WebView * webview);
 };
 
 class Window
@@ -69,7 +73,8 @@ class Window
       // enable transparency for underlying window
       m_View.setAttribute(Qt::WA_TranslucentBackground, true);
 
-      connect(&m_View, &QWebView::urlChanged, this, &Window::onUrlChanged);
+      connect(&m_View, &WebView::urlChanged, this, &Window::onUrlChanged);
+      connect(&m_View, &WebView::contextMenuSignal, this, &Window::onContextMenuSignal);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Window::onReturnPressed);
 
       this->setGeometry(config.x(), config.y(), config.width(), config.height());
@@ -94,6 +99,35 @@ class Window
 
   protected:
     void
+    onShowUi(void)
+    {
+      if (! m_UrlBar.isVisible()) {
+        m_UrlBar.show();
+      } else {
+        m_UrlBar.hide();
+      }
+    }
+
+    void
+    onContextMenuSignal(QContextMenuEvent * e, QWebView * webview)
+    {
+      QMenu * menu = webview->page()->createStandardContextMenu();
+
+      QAction showUiAction(menu->addSeparator());;
+      showUiAction.setText("Show UI");
+      showUiAction.setCheckable(true);
+      showUiAction.setChecked(m_UrlBar.isVisible());
+
+      QMetaObject::Connection connection =
+        QObject::connect(&showUiAction, &QAction::changed, this, &Window::onShowUi);
+
+      menu->addAction(&showUiAction);
+      menu->exec(e->globalPos());
+
+      QObject::disconnect(connection);
+    }
+
+    void
     onUrlChanged(const QUrl & url)
     {
       m_UrlBar.setText(url.toString());
@@ -106,18 +140,6 @@ class Window
       m_UrlBar.selectAll();
     }
 
-    void
-    enterEvent(QEvent *)
-    {
-      m_UrlBar.show();
-    }
-
-    void
-    leaveEvent(QEvent *)
-    {
-      m_UrlBar.hide();
-    }
-
   private:
     WebView m_View;
     QLineEdit m_UrlBar;
@@ -125,5 +147,7 @@ class Window
 }; // class Window
 
 }; // namespace Browser
+
+#include "Browser.moc"
 
 #endif // _QUADRO_BROWSER_HPP

@@ -4,7 +4,7 @@
 #include <QApplication>
 #include <QContextMenuEvent>
 #include <QDesktopWidget>
-#include <QGridLayout>
+#include <QVBoxLayout>
 #include <QGroupBox>
 #include <QLineEdit>
 #include <QMenu>
@@ -43,8 +43,8 @@ class Window
       m_Layout.setMargin(0);
 
       // add widgets to grid layout
-      m_Layout.addWidget(&m_UrlBar, 0, 0);
-      m_Layout.addWidget(&m_View, 1, 0);
+      m_Layout.addWidget(&m_UrlBar);
+      m_Layout.addWidget(&m_View);
 
       // use grid layout
       this->setLayout(&m_Layout);
@@ -127,7 +127,7 @@ class Window
   private:
     WebView m_View;
     QLineEdit m_UrlBar;
-    QGridLayout m_Layout;
+    QVBoxLayout m_Layout;
 }; // class Window
 
 }; // namespace Browser

@@ -21,13 +21,13 @@ class Config
       parser.addHelpOption();
       parser.addVersionOption();
 
-      QCommandLineOption xOption = this->getXOption();
-      QCommandLineOption yOption = this->getYOption();
-      QCommandLineOption widthOption = this->getWidthOption();
-      QCommandLineOption heightOption = this->getHeightOption();
-      QCommandLineOption urlOption = this->getUrlOption();
-      QCommandLineOption fullscreenOption = this->getFullscreenOption();
-      QCommandLineOption windowTypeOption = this->getWindowTypeOption();
+      QCommandLineOption xOption = makeOption(QStringList() << "x", "x position on screen", "x");
+      QCommandLineOption yOption = makeOption(QStringList() << "y", "y position on screen", "y");
+      QCommandLineOption widthOption = makeOption(QStringList() << "width", "window width", "width");
+      QCommandLineOption heightOption = makeOption(QStringList() << "height", "window height", "height");
+      QCommandLineOption urlOption = makeOption(QStringList() << "u" << "url", "URL to load at startup", "url");
+      QCommandLineOption fullscreenOption = makeOption(QStringList() << "f" << "fullscreen", "Set window to fullscreen mode", "fullscreen");
+      QCommandLineOption windowTypeOption = makeOption(QStringList() << "t" << "type", "Set window type: normal, desktop, dock (default: normal)", "type");
 
       parser.addOption(xOption);
       parser.addOption(yOption);
@@ -118,72 +118,12 @@ class Config
 
   protected:
     QCommandLineOption
-    getXOption(void)
+    makeOption(QStringList & list, const char * description, const char * valueName)
     {
-      QCommandLineOption xOption(
-          QStringList() << "x",
-          QCoreApplication::translate("main", "x position on screen"),
-          QCoreApplication::translate("main", "X"));
-      return xOption;
-    }
-
-    QCommandLineOption
-    getYOption(void)
-    {
-      QCommandLineOption yOption(
-          QStringList() << "y",
-          QCoreApplication::translate("main", "y position on screen"),
-          QCoreApplication::translate("main", "Y"));
-      return yOption;
-    }
-
-    QCommandLineOption
-    getWidthOption(void)
-    {
-      QCommandLineOption widthOption(
-          QStringList() << "width",
-          QCoreApplication::translate("main", "window width"),
-          QCoreApplication::translate("main", "width"));
-      return widthOption;
-    }
-
-    QCommandLineOption
-    getHeightOption(void)
-    {
-      QCommandLineOption heightOption(
-          QStringList() << "height",
-          QCoreApplication::translate("main", "window height"),
-          QCoreApplication::translate("main", "height"));
-      return heightOption;
-    }
-
-    QCommandLineOption
-    getUrlOption(void)
-    {
-      QCommandLineOption urlOption(
-          QStringList() << "u" << "url",
-          QCoreApplication::translate("main", "URL to load at startup"),
-          QCoreApplication::translate("main", "url"));
-      return urlOption;
-    }
-
-    QCommandLineOption
-    getFullscreenOption(void)
-    {
-      QCommandLineOption fullscreenOption(
-          QStringList() << "f" << "fullscreen",
-          QCoreApplication::translate("main", "Set window to fullscreen mode"));
-      return fullscreenOption;
-    }
-
-    QCommandLineOption
-    getWindowTypeOption(void)
-    {
-      QCommandLineOption windowTypeOption(
-          QStringList() << "t" << "type",
-          QCoreApplication::translate("main", "Set window type: normal, desktop, dock (default: normal)"),
-          QCoreApplication::translate("main", "hint"));
-      return windowTypeOption;
+      return QCommandLineOption(
+          list,
+          QCoreApplication::translate("main", description),
+          QCoreApplication::translate("main", valueName));
     }
 
   private:

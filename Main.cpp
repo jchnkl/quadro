@@ -8,6 +8,6 @@ int main(int argc, char ** argv)
   QApplication::setApplicationVersion("1.0");
 
   Config config(app);
-  Browser browser(config);
+  Browser::Window browser_window(config);
   return app.exec();
 }

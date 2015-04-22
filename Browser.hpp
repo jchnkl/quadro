@@ -13,17 +13,19 @@
 #include "NetWmWindowType.hpp"
 
 
-class Browser
+namespace Browser {
+
+class Window
   : public QGroupBox
 {
   public:
-    Browser(const Config & config)
+    Window(const Config & config)
     {
       // set object name for style sheet
-      this->setObjectName("Browser");
+      this->setObjectName("BrowserWindow");
 
       // remove the border
-      this->setStyleSheet("QGroupBox#Browser { border: 0px; }");
+      this->setStyleSheet("QGroupBox#BrowserWindow { border: 0px; }");
 
       // hint for window manager to leave away frames/window borders
       this->setWindowFlags(Qt::FramelessWindowHint);
@@ -54,8 +56,8 @@ class Browser
       // enable transparency for underlying window
       m_View.setAttribute(Qt::WA_TranslucentBackground, true);
 
-      connect(&m_View, &QWebView::urlChanged, this, &Browser::onUrlChanged);
-      connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Browser::onReturnPressed);
+      connect(&m_View, &QWebView::urlChanged, this, &Window::onUrlChanged);
+      connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Window::onReturnPressed);
 
       this->setGeometry(config.x(), config.y(), config.width(), config.height());
 
@@ -108,6 +110,8 @@ class Browser
     QGridLayout m_Layout;
     QLineEdit m_UrlBar;
     QWebView m_View;
-}; // Browser
+}; // class Window
+
+}; // namespace Browser
 
 #endif // _QUADRO_BROWSER_HPP

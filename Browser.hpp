@@ -10,6 +10,7 @@
 #include <QMenu>
 #include <QX11Info>
 
+#include "Ui.hpp"
 #include "Config.hpp"
 #include "WebView.hpp"
 #include "NetWmWindowType.hpp"
@@ -43,7 +44,7 @@ class Window
       m_Layout.setMargin(0);
 
       // add widgets to grid layout
-      m_Layout.addWidget(&m_UrlBar);
+      m_Layout.addWidget(&m_Ui);
       m_Layout.addWidget(&m_View);
 
       // use grid layout
@@ -59,7 +60,7 @@ class Window
 
       connect(&m_View, &WebView::urlChanged, this, &Window::onUrlChanged);
       connect(&m_View, &WebView::contextMenuSignal, this, &Window::onContextMenuSignal);
-      connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Window::onReturnPressed);
+      connect(&m_Ui.urlBar(), &QLineEdit::returnPressed, this, &Window::onReturnPressed);
 
       this->setGeometry(config.x(), config.y(), config.width(), config.height());
 
@@ -85,10 +86,10 @@ class Window
     void
     onShowUi(void)
     {
-      if (! m_UrlBar.isVisible()) {
-        m_UrlBar.show();
+      if (! m_Ui.isVisible()) {
+        m_Ui.show();
       } else {
-        m_UrlBar.hide();
+        m_Ui.hide();
       }
     }
 
@@ -100,7 +101,7 @@ class Window
       QAction showUiAction(menu->addSeparator());;
       showUiAction.setText("Show UI");
       showUiAction.setCheckable(true);
-      showUiAction.setChecked(m_UrlBar.isVisible());
+      showUiAction.setChecked(m_Ui.isVisible());
 
       QMetaObject::Connection connection =
         QObject::connect(&showUiAction, &QAction::changed, this, &Window::onShowUi);
@@ -114,19 +115,19 @@ class Window
     void
     onUrlChanged(const QUrl & url)
     {
-      m_UrlBar.setText(url.toString());
+      m_Ui.urlBar().setText(url.toString());
     }
 
     void
     onReturnPressed(void)
     {
-      loadUrl(QUrl::fromUserInput(m_UrlBar.text()));
-      m_UrlBar.selectAll();
+      loadUrl(QUrl::fromUserInput(m_Ui.urlBar().text()));
+      m_Ui.urlBar().selectAll();
     }
 
   private:
+    Ui m_Ui;
     WebView m_View;
-    QLineEdit m_UrlBar;
     QVBoxLayout m_Layout;
 }; // class Window
 

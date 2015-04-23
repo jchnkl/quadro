@@ -15,7 +15,9 @@ class Ui
     Ui(void)
     {
       m_MoveButton.setIcon(QIcon("move.svg"));
+      m_MoveButton.setCheckable(true);
       m_ResizeButton.setIcon(QIcon("resize.svg"));
+      m_ResizeButton.setCheckable(true);
 
       m_Layout.setMargin(0);
       m_Layout.addWidget(&m_UrlBar);

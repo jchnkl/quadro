@@ -61,8 +61,6 @@ class Window
       connect(&m_View, &WebView::urlChanged, this, &Window::onUrlChanged);
       connect(&m_View, &WebView::contextMenuSignal, this, &Window::onContextMenuSignal);
       connect(&m_Ui.urlBar(), &QLineEdit::returnPressed, this, &Window::onReturnPressed);
-      connect(&m_Ui.moveButton(), &QPushButton::pressed, this, &Window::onMoveButtonPressed);
-      connect(&m_Ui.resizeButton(), &QPushButton::pressed, this, &Window::onResizeButtonPressed);
 
       this->setGeometry(config.x(), config.y(), config.width(), config.height());
 
@@ -125,32 +123,6 @@ class Window
     {
       loadUrl(QUrl::fromUserInput(m_Ui.urlBar().text()));
       m_Ui.urlBar().selectAll();
-    }
-
-    void
-    onMoveButtonPressed(void)
-    {
-      if (m_Ui.moveButton().isChecked()) {
-        m_Ui.moveButton().setChecked(true);
-      } else {
-        if (m_Ui.resizeButton().isChecked()) {
-          m_Ui.resizeButton().setChecked(false);
-        }
-        m_Ui.moveButton().setChecked(false);
-      }
-    }
-
-    void
-    onResizeButtonPressed(void)
-    {
-      if (m_Ui.resizeButton().isChecked()) {
-        m_Ui.resizeButton().setChecked(true);
-      } else {
-        if (m_Ui.moveButton().isChecked()) {
-          m_Ui.moveButton().setChecked(false);
-        }
-        m_Ui.resizeButton().setChecked(false);
-      }
     }
 
   private:

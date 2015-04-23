@@ -25,6 +25,23 @@ class Ui
       m_Layout.addWidget(&m_ResizeButton);
 
       this->setLayout(&m_Layout);
+
+      connect(&m_MoveButton, &QPushButton::pressed, this, &Ui::onMoveButtonPressed);
+      connect(&m_ResizeButton, &QPushButton::pressed, this, &Ui::onResizeButtonPressed);
+    }
+
+    void
+    checkMoveButton(bool check)
+    {
+      m_MoveButton.setChecked(check);
+      m_ResizeButton.setChecked(check && m_ResizeButton.isChecked());
+    }
+
+    void
+    checkResizeButton(bool check)
+    {
+      m_ResizeButton.setChecked(check);
+      m_MoveButton.setChecked(check && m_MoveButton.isChecked());
     }
 
     QLineEdit &
@@ -43,6 +60,19 @@ class Ui
     resizeButton(void)
     {
       return m_ResizeButton;
+    }
+
+  protected:
+    void
+    onMoveButtonPressed(void)
+    {
+      checkMoveButton(m_MoveButton.isChecked());
+    }
+
+    void
+    onResizeButtonPressed(void)
+    {
+      checkResizeButton(m_ResizeButton.isChecked());
     }
 
   private:

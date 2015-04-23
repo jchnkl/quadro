@@ -1,8 +1,6 @@
 #ifndef _QUADRO_BROWSER_HPP
 #define _QUADRO_BROWSER_HPP
 
-#include <iostream>
-
 #include <QApplication>
 #include <QContextMenuEvent>
 #include <QDesktopWidget>
@@ -17,25 +15,6 @@
 #include "WebView.hpp"
 #include "NetWmWindowType.hpp"
 
-void
-printChildren(QObject * obj)
-{
-  for (auto child : obj->children()) {
-    std::cerr << "child (0x" << std::hex << child << std::dec << "): \"" << qPrintable(child->objectName()) << "\"" << std::endl;
-    printChildren(child);
-  }
-}
-
-// void
-// withAllChildren(QObject * obj, std::function<void(QObject *)> f)
-// {
-//   for (auto child : obj->children()) {
-//     f(child);
-//     withAllChildren(child, f);
-//   }
-// }
-
-
 namespace Browser {
 
 class Window
@@ -43,8 +22,6 @@ class Window
 {
   public:
     Window(const Config & config)
-    // Window(QApplication * app, const Config & config)
-      // : m_app(app)
     {
       // set object name for style sheet
       this->setObjectName("BrowserWindow");
@@ -81,8 +58,6 @@ class Window
       // enable transparency for underlying window
       m_View.setAttribute(Qt::WA_TranslucentBackground, true);
 
-      connect(&m_Ui, &Ui::moveButtonChecked, this, &Window::onMoveButtonChecked);
-      connect(&m_Ui, &Ui::resizeButtonChecked, this, &Window::onResizeButtonChecked);
       connect(&m_View, &WebView::urlChanged, this, &Window::onUrlChanged);
       connect(&m_View, &WebView::contextMenuSignal, this, &Window::onContextMenuSignal);
       connect(&m_Ui.urlBar(), &QLineEdit::returnPressed, this, &Window::onReturnPressed);
@@ -108,34 +83,6 @@ class Window
     }
 
   protected:
-
-    // void
-    // mouseMoveEvent(QMouseEvent * e)
-    // {
-    //   std::cerr << __PRETTY_FUNCTION__ << std::endl;
-    //   if (m_MouseAction) {
-    //     m_MouseAction->mouseMoveEvent(e);
-    //   }
-    // }
-
-    // void
-    // mousePressEvent(QMouseEvent * e)
-    // {
-    //   std::cerr << __PRETTY_FUNCTION__ << std::endl;
-    //   if (m_MouseAction) {
-    //     m_MouseAction->mousePressEvent(e);
-    //   }
-    // }
-
-    // void
-    // mouseReleaseEvent(QMouseEvent * e)
-    // {
-    //   std::cerr << __PRETTY_FUNCTION__ << std::endl;
-    //   if (m_MouseAction) {
-    //     m_MouseAction->mouseReleaseEvent(e);
-    //   }
-    // }
-
     void
     onShowUi(void)
     {
@@ -178,105 +125,10 @@ class Window
       m_Ui.urlBar().selectAll();
     }
 
-    void
-    onMoveButtonChecked(bool isChecked)
-    {
-      std::cerr << __PRETTY_FUNCTION__ << ": " << std::boolalpha << isChecked << std::dec << std::endl;
-      // QCursor cursor = this->cursor();
-
-      if (! isChecked) {
-        m_EventFilter = std::make_shared<MoveEventFilter>(&m_Ui, this);
-        // withAllChildren(this, [&](QObject * child) {
-        //     child->installEventFilter(m_EventFilter.get());
-        // });
-      } else {
-        // withAllChildren(this, [&](QObject * child) {
-        //     child->removeEventFilter(m_EventFilter.get());
-        // });
-        m_EventFilter.reset();
-      }
-
-      /*
-      if (! isChecked) {
-        // cursor.setShape(Qt::SizeAllCursor);
-
-        // this->grabMouse(Qt::SizeAllCursor);
-
-        QCursor cursor = this->cursor();
-        cursor.setShape(Qt::SizeAllCursor);
-        QApplication::setOverrideCursor(cursor);
-
-        m_EventFilter = std::make_shared<MoveEventFilter>(this);
-
-        withAllChildren(this, [&](QObject * child) {
-            std::cerr << "child (0x" << std::hex << child
-                      << std::dec << "): \"" << qPrintable(child->objectName())
-                      << "\"" << std::endl;
-            if (! m_Ui.isMoveButton(child)) {
-              child->installEventFilter(m_EventFilter.get());
-            }
-        });
-
-      } else {
-        withAllChildren(this, [&](QObject * child) {
-            child->removeEventFilter(m_EventFilter.get());
-        });
-
-        m_EventFilter.reset();
-
-        QApplication::restoreOverrideCursor();
-      }
-      */
-
-      // this->setCursor(cursor);
-
-//       if (! isChecked) {
-//         m_MoveEventFilter = std::make_shared<MoveEventFilter>(this);
-//         this->installEventFilter(m_MoveEventFilter.get());
-//         m_View.installEventFilter(m_MoveEventFilter.get());
-//
-//         std::cerr << "this children" << std::endl;
-//         printChildren(this);
-//
-//         std::cerr << "Ui children" << std::endl;
-//         printChildren(&m_Ui);
-//
-//         std::cerr << "View children" << std::endl;
-//         printChildren(&m_View);
-//
-//       } else {
-//         this->removeEventFilter(m_MoveEventFilter.get());
-//         m_View.removeEventFilter(m_MoveEventFilter.get());
-//         m_MoveEventFilter.reset();
-//       }
-
-      // this->setMouseTracking(true);
-      // m_View.setMouseTracking(true);
-      // if (! isChecked) {
-      //   // m_MouseAction = std::make_shared<MouseMovable>(this);
-      // } else {
-      //   m_MouseAction.reset();
-      // }
-    }
-
-    void
-    onResizeButtonChecked(bool isChecked)
-    {
-      std::cerr << __PRETTY_FUNCTION__ << ": " << std::boolalpha << isChecked << std::endl;
-      // if (! isChecked) {
-      //   m_MouseAction = std::make_shared<MouseResizable>(this);
-      // } else {
-      //   m_MouseAction.reset();
-      // }
-    }
-
   private:
     Ui m_Ui;
     WebView m_View;
     QVBoxLayout m_Layout;
-    // std::shared_ptr<MouseAction> m_MouseAction;
-    // std::shared_ptr<MoveEventFilter> m_MoveEventFilter;
-    std::shared_ptr<QObject> m_EventFilter;
 }; // class Window
 
 }; // namespace Browser

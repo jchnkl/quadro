@@ -46,10 +46,7 @@ class Window
       m_Layout.setMargin(0);
 
       // add widgets to grid layout
-      // m_Layout.addWidget(&m_Ui);
       m_Layout.addWidget(&m_View);
-
-      // auto ui = new m_Ui(this);
 
       // use grid layout
       this->setLayout(&m_Layout);
@@ -79,18 +76,6 @@ class Window
         this->setGeometry(desktop_rect);
       }
 
-      // QPalette ui_palette = m_Ui.palette();
-      // QColor color = ui_palette.color(QPalette::Window);
-      // color.setAlpha(130);
-      // ui_palette.setColor(QPalette::Text, color);
-      // m_Ui.setPalette(ui_palette);
-
-      // m_Ui.setPalette(Qt::transparent);
-      // palette.setColor(QPalette::T
-      // m_Ui.setAutoFillBackground(true);
-      // m_Ui.setWindowOpacity(0.5);
-      // m_Ui.setStyleSheet("filter:alpha(opacity=50);");
-
       m_Ui.show();
       this->show();
     }
@@ -106,9 +91,6 @@ class Window
     resizeEvent(QResizeEvent * event)
     {
       m_Ui.resize(event->size());
-      // m_Ui.frameGeometry
-      m_Ui.move(0, 0);
-      // m_Ui.setGeometry(0, 0, event->size().width(), event->size().width());
       m_Ui.raise();
       event->accept();
     }
@@ -133,15 +115,10 @@ class Window
       showUiAction.setCheckable(true);
       showUiAction.setChecked(m_Ui.isVisible());
 
-      // QAction moveUiAction(&showUiAction);
-      // moveUiAction.setText("Move");
-      // moveUiAction.setChecked(m_Ui.isVisible());
-
       QMetaObject::Connection connection =
         QObject::connect(&showUiAction, &QAction::changed, this, &Window::onShowUi);
 
       menu->addAction(&showUiAction);
-      // menu->addAction(&moveUiAction);
       menu->exec(e->globalPos());
 
       QObject::disconnect(connection);

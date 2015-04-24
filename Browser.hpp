@@ -11,6 +11,7 @@
 #include <QX11Info>
 
 #include "Ui.hpp"
+#include "Util.hpp"
 #include "Config.hpp"
 #include "WebView.hpp"
 #include "NetWmWindowType.hpp"
@@ -58,6 +59,8 @@ class Window
       // enable transparency for underlying window
       m_View.setAttribute(Qt::WA_TranslucentBackground, true);
 
+      connect(&m_Ui, &Ui::moveButtonPressed, this, &Window::onMoveButtonPressed);
+      connect(&m_Ui, &Ui::resizeButtonPressed, this, &Window::onResizeButtonPressed);
       connect(&m_View, &WebView::urlChanged, this, &Window::onUrlChanged);
       connect(&m_View, &WebView::contextMenuSignal, this, &Window::onContextMenuSignal);
       connect(&m_Ui.urlBar(), &QLineEdit::returnPressed, this, &Window::onReturnPressed);
@@ -113,6 +116,12 @@ class Window
     }
 
     void
+    move(void)
+    {
+      QApplication::setOverrideCursor(Qt::SizeAllCursor);
+    }
+
+    void
     onUrlChanged(const QUrl & url)
     {
       m_Ui.urlBar().setText(url.toString());
@@ -125,10 +134,29 @@ class Window
       m_Ui.urlBar().selectAll();
     }
 
+    void
+    onMoveButtonPressed(void)
+    {
+      if (! m_EventFilter) {
+        m_EventFilter = std::make_shared<MoveableFilter>(this);
+        withAllChildren(this, [&](QObject * child) {
+            child->installEventFilter(m_EventFilter.get());
+        });
+      } else {
+        m_EventFilter.reset();
+      }
+    }
+
+    void
+    onResizeButtonPressed(void)
+    {
+    }
+
   private:
     Ui m_Ui;
     WebView m_View;
     QVBoxLayout m_Layout;
+    std::shared_ptr<QObject> m_EventFilter;
 }; // class Window
 
 }; // namespace Browser

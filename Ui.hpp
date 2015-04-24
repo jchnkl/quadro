@@ -1,6 +1,8 @@
 #ifndef _QUADRO_UI_HPP
 #define _QUADRO_UI_HPP
 
+#include <QApplication>
+#include <QMouseEvent>
 #include <QHBoxLayout>
 #include <QGroupBox>
 #include <QLineEdit>
@@ -8,16 +10,65 @@
 
 namespace Browser {
 
+class MoveableFilter
+  : public QObject
+{
+  public:
+    MoveableFilter(QWidget * const widget)
+      : m_widget(widget)
+    {
+      QApplication::setOverrideCursor(Qt::SizeAllCursor);
+    }
+
+    ~MoveableFilter(void)
+    {
+      QApplication::restoreOverrideCursor();
+    }
+
+    bool
+    eventFilter(QObject * watched, QEvent * event)
+    {
+      bool ret = false;
+
+      if (m_move && event->type() == QEvent::MouseMove) {
+        QMouseEvent * e = static_cast<QMouseEvent *>(event);
+        m_widget->move(m_widget->pos() + e->pos() - m_pos);
+        ret = true;
+
+      } else if (event->type() == QEvent::MouseButtonPress) {
+        QMouseEvent * e = static_cast<QMouseEvent *>(event);
+        m_move = true;
+        m_pos = e->pos();
+        ret = true;
+
+      } else if (event->type() == QEvent::MouseButtonRelease) {
+        m_move = false;
+        ret = true;
+      }
+
+      return ret;
+    }
+
+  private:
+    bool m_move;
+    QPoint m_pos;
+    QWidget * const m_widget;
+}; // class Moveable
+
 class Ui
   : public QGroupBox
 {
+  Q_OBJECT
+
+  signals:
+    void moveButtonPressed(void);
+    void resizeButtonPressed(void);
+
   public:
     Ui(void)
     {
       m_MoveButton.setIcon(QIcon("move.svg"));
-      m_MoveButton.setCheckable(true);
       m_ResizeButton.setIcon(QIcon("resize.svg"));
-      m_ResizeButton.setCheckable(true);
 
       m_Layout.setMargin(0);
       m_Layout.addWidget(&m_UrlBar);
@@ -30,19 +81,7 @@ class Ui
       connect(&m_ResizeButton, &QPushButton::pressed, this, &Ui::onResizeButtonPressed);
     }
 
-    void
-    checkMoveButton(bool check)
-    {
-      m_MoveButton.setChecked(check);
-      m_ResizeButton.setChecked(check && m_ResizeButton.isChecked());
-    }
 
-    void
-    checkResizeButton(bool check)
-    {
-      m_ResizeButton.setChecked(check);
-      m_MoveButton.setChecked(check && m_MoveButton.isChecked());
-    }
 
     QLineEdit &
     urlBar(void)
@@ -66,13 +105,13 @@ class Ui
     void
     onMoveButtonPressed(void)
     {
-      checkMoveButton(m_MoveButton.isChecked());
+      emit moveButtonPressed();
     }
 
     void
     onResizeButtonPressed(void)
     {
-      checkResizeButton(m_ResizeButton.isChecked());
+      emit resizeButtonPressed();
     }
 
   private:

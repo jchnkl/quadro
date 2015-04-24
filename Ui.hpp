@@ -65,23 +65,77 @@ class Ui
     void resizeButtonPressed(void);
 
   public:
-    Ui(void)
+    // Ui(void)
+    Ui(QWidget * parent)
+      : QGroupBox(parent)
+      // , m_SpacerItem(0, 0, QSizePolicy::Maximum, QSizePolicy::Maximum)
     {
+      this->setObjectName("Ui");
+      this->setWindowFlags(Qt::FramelessWindowHint);
+      this->setStyleSheet("QGroupBox#Ui { border: 0px; background-color: rgba(0,0,0,25%); }");
+      // this->setStyleSheet("QGroupBox#Ui { background-color: rgba(0,0,0,25%); }");
+
       m_MoveButton.setIcon(QIcon("move.svg"));
+      // m_MoveButton.setCheckable(true);
       m_ResizeButton.setIcon(QIcon("resize.svg"));
+      // m_ResizeButton.setCheckable(true);
 
-      m_Layout.setMargin(0);
-      m_Layout.addWidget(&m_UrlBar);
-      m_Layout.addWidget(&m_MoveButton);
-      m_Layout.addWidget(&m_ResizeButton);
+      // m_UrlBar.setStyleSheet("border: 0px;");
+      // m_MoveButton.setStyleSheet("border: 0px;");
+      // m_ResizeButton.setStyleSheet("border: 0px;");
 
-      this->setLayout(&m_Layout);
+      m_UrlBar.setWindowFlags(Qt::FramelessWindowHint);
+      m_MoveButton.setWindowFlags(Qt::FramelessWindowHint);
+      m_ResizeButton.setWindowFlags(Qt::FramelessWindowHint);
+
+      /*
+      m_HBoxLayout.setMargin(0);
+      // m_HBoxLayout.setSpacing(0);
+      m_HBoxLayout.addWidget(&m_UrlBar);
+      m_HBoxLayout.addWidget(&m_MoveButton);
+      m_HBoxLayout.addWidget(&m_ResizeButton);
+
+      // m_HBoxGroup.setLayout(&m_HBoxLayout);
+
+      m_VBoxLayout.setMargin(0);
+      // m_VBoxLayout.setSpacing(0);
+      // m_VBoxLayout.addWidget(&m_HBoxGroup);
+      m_VBoxLayout.addLayout(&m_HBoxLayout);
+      m_VBoxLayout.addStretch();
+
+      this->setLayout(&m_VBoxLayout);
+      */
+
+      m_GridLayout.setMargin(0);
+      // m_GridLayout.setSpacing(0);
+      m_GridLayout.setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+      m_GridLayout.addWidget(&m_UrlBar, 0, 0);
+      m_GridLayout.addWidget(&m_MoveButton, 0, 1);
+      m_GridLayout.addWidget(&m_ResizeButton, 0, 2);
+
+      // m_GridLayout.setRowMinimumHeight(0, m_UrlBar.height());
+      // m_GridLayout.setRowStretch(0, 0);
+      // m_GridLayout.setRowStretch(1, 1);
+
+      this->setLayout(&m_GridLayout);
 
       connect(&m_MoveButton, &QPushButton::pressed, this, &Ui::onMoveButtonPressed);
       connect(&m_ResizeButton, &QPushButton::pressed, this, &Ui::onResizeButtonPressed);
     }
 
+    void
+    checkMoveButton(bool check)
+    {
+      // m_MoveButton.setChecked(check);
+      // m_ResizeButton.setChecked(check && m_ResizeButton.isChecked());
+    }
 
+    void
+    checkResizeButton(bool check)
+    {
+      // m_ResizeButton.setChecked(check);
+      // m_MoveButton.setChecked(check && m_MoveButton.isChecked());
+    }
 
     QLineEdit &
     urlBar(void)
@@ -105,17 +159,23 @@ class Ui
     void
     onMoveButtonPressed(void)
     {
+      // checkMoveButton(m_MoveButton.isChecked());
       emit moveButtonPressed();
     }
 
     void
     onResizeButtonPressed(void)
     {
+      // checkResizeButton(m_ResizeButton.isChecked());
       emit resizeButtonPressed();
     }
 
   private:
-    QHBoxLayout m_Layout;
+    QGridLayout m_GridLayout;
+    QHBoxLayout m_HBoxLayout;
+    QVBoxLayout m_VBoxLayout;
+    QGroupBox m_HBoxGroup;
+    // QSpacerItem m_SpacerItem;
     QLineEdit m_UrlBar;
     QPushButton m_MoveButton;
     QPushButton m_ResizeButton;

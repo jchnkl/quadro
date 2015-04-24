@@ -76,8 +76,8 @@ class Window
         this->setGeometry(desktop_rect);
       }
 
-      m_Ui.show();
       this->show();
+      m_Ui.hide();
     }
 
     void
@@ -96,10 +96,11 @@ class Window
     }
 
     void
-    onShowUi(void)
+    onShowUi(bool)
     {
       if (! m_Ui.isVisible()) {
         m_Ui.show();
+        m_Ui.raise();
       } else {
         m_Ui.hide();
       }
@@ -112,11 +113,10 @@ class Window
 
       QAction showUiAction(menu->addSeparator());;
       showUiAction.setText("Show UI");
-      showUiAction.setCheckable(true);
-      showUiAction.setChecked(m_Ui.isVisible());
+      showUiAction.setIcon(QIcon("app_show.svg"));
 
       QMetaObject::Connection connection =
-        QObject::connect(&showUiAction, &QAction::changed, this, &Window::onShowUi);
+        QObject::connect(&showUiAction, &QAction::triggered, this, &Window::onShowUi);
 
       menu->addAction(&showUiAction);
       menu->exec(e->globalPos());

@@ -72,6 +72,7 @@ class Ui
       this->setWindowFlags(Qt::FramelessWindowHint);
       this->setStyleSheet("QGroupBox#Ui { border: 0px; background-color: rgba(0,0,0,25%); }");
 
+      m_HideButton.setIcon(QIcon("app_hide.svg"));
       m_MoveButton.setIcon(QIcon("move.svg"));
       m_ResizeButton.setIcon(QIcon("resize.svg"));
 
@@ -84,9 +85,11 @@ class Ui
       m_GridLayout.addWidget(&m_UrlBar, 0, 0);
       m_GridLayout.addWidget(&m_MoveButton, 0, 1);
       m_GridLayout.addWidget(&m_ResizeButton, 0, 2);
+      m_GridLayout.addWidget(&m_HideButton, 0, 3);
 
       this->setLayout(&m_GridLayout);
 
+      connect(&m_HideButton, &QPushButton::pressed, this, &QWidget::hide);
       connect(&m_MoveButton, &QPushButton::pressed, this, &Ui::onMoveButtonPressed);
       connect(&m_ResizeButton, &QPushButton::pressed, this, &Ui::onResizeButtonPressed);
     }
@@ -125,6 +128,7 @@ class Ui
   private:
     QGridLayout m_GridLayout;
     QLineEdit m_UrlBar;
+    QPushButton m_HideButton;
     QPushButton m_MoveButton;
     QPushButton m_ResizeButton;
 }; // class Ui

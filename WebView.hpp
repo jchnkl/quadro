@@ -11,6 +11,9 @@ class WebView
 {
   Q_OBJECT
 
+  signals:
+    void contextMenuSignal(QContextMenuEvent * event, WebView * webview);
+
   public:
     WebView(void)
     {
@@ -29,9 +32,6 @@ class WebView
     {
       emit contextMenuSignal(e, this);
     }
-
-  signals:
-    void contextMenuSignal(QContextMenuEvent * event, WebView * webview);
 };
 
 }; // namespace Quadro

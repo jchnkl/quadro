@@ -91,6 +91,7 @@ class Ui
   public:
     Ui(QWidget * parent)
       : QGroupBox(parent)
+      , m_DoMouseMove(false)
     {
       this->setObjectName("QuadroUi");
       this->setWindowFlags(Qt::FramelessWindowHint);
@@ -159,7 +160,37 @@ class Ui
       emit loadUrl(m_UrlBar.text());
     }
 
+    void
+    mousePressEvent(QMouseEvent * e)
+    {
+      if (e->button() == Qt::LeftButton) {
+        m_DoMouseMove = true;
+        m_MouseOffset = e->pos();
+        QApplication::setOverrideCursor(Qt::SizeAllCursor);
+      }
+    }
+
+    void
+    mouseReleaseEvent(QMouseEvent * e)
+    {
+      if (e->button() == Qt::LeftButton) {
+        m_DoMouseMove = false;
+        QApplication::restoreOverrideCursor();
+      }
+    }
+
+    void
+    mouseMoveEvent(QMouseEvent * e)
+    {
+      if (m_DoMouseMove) {
+        QWidget * parent = this->parentWidget();
+        parent->move(parent->pos() + e->pos() - m_MouseOffset);
+      }
+    }
+
   private:
+    bool m_DoMouseMove;
+    QPoint m_MouseOffset;
     QGridLayout m_GridLayout;
     QLineEdit m_UrlBar;
     QPushButton m_HideButton;

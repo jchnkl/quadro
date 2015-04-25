@@ -112,13 +112,20 @@ class Window
       QMenu * menu = webview->page()->createStandardContextMenu();
 
       QAction showUiAction(menu->addSeparator());;
+
+      if (menu->isEmpty()) {
+        menu->addAction(&showUiAction);
+      } else {
+        QAction * first = menu->actions().first();
+        menu->insertAction(menu->insertSeparator(first), &showUiAction);
+      }
+
       showUiAction.setText("Show UI");
       showUiAction.setIcon(QIcon("app_show.svg"));
 
       QMetaObject::Connection connection =
         QObject::connect(&showUiAction, &QAction::triggered, this, &Window::onShowUi);
 
-      menu->addAction(&showUiAction);
       menu->exec(e->globalPos());
 
       QObject::disconnect(connection);

@@ -10,51 +10,6 @@
 
 namespace Quadro {
 
-class MoveableFilter
-  : public QObject
-{
-  public:
-    MoveableFilter(QWidget * const widget)
-      : m_widget(widget)
-    {
-      QApplication::setOverrideCursor(Qt::SizeAllCursor);
-    }
-
-    ~MoveableFilter(void)
-    {
-      QApplication::restoreOverrideCursor();
-    }
-
-    bool
-    eventFilter(QObject * watched, QEvent * event)
-    {
-      bool ret = false;
-
-      if (m_move && event->type() == QEvent::MouseMove) {
-        QMouseEvent * e = static_cast<QMouseEvent *>(event);
-        m_widget->move(m_widget->pos() + e->pos() - m_pos);
-        ret = true;
-
-      } else if (event->type() == QEvent::MouseButtonPress) {
-        QMouseEvent * e = static_cast<QMouseEvent *>(event);
-        m_move = true;
-        m_pos = e->pos();
-        ret = true;
-
-      } else if (event->type() == QEvent::MouseButtonRelease) {
-        m_move = false;
-        ret = true;
-      }
-
-      return ret;
-    }
-
-  private:
-    bool m_move;
-    QPoint m_pos;
-    QWidget * const m_widget;
-}; // class Moveable
-
 class Ui
   : public QGroupBox
 {

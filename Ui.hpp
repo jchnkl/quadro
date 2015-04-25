@@ -62,6 +62,7 @@ class Ui
 
   signals:
     void loadUrl(const QString & url);
+    void changed(bool show);
     void moveButtonPressed(void);
     void resizeButtonPressed(void);
 
@@ -73,10 +74,18 @@ class Ui
     }
 
     void
-    onShow(bool)
+    onShow(void)
     {
       this->show();
       this->raise();
+      emit changed(true);
+    }
+
+    void
+    onHide(void)
+    {
+      this->hide();
+      emit changed(false);
     }
 
   public:
@@ -104,7 +113,7 @@ class Ui
 
       this->setLayout(&m_GridLayout);
 
-      connect(&m_HideButton, &QPushButton::pressed, this, &QWidget::hide);
+      connect(&m_HideButton, &QPushButton::pressed, this, &Ui::onHide);
       connect(&m_MoveButton, &QPushButton::pressed, this, &Ui::onMoveButtonPressed);
       connect(&m_ResizeButton, &QPushButton::pressed, this, &Ui::onResizeButtonPressed);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Ui::onReturnPressed);

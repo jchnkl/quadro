@@ -83,30 +83,42 @@ class WebView
     void
     contextMenuEvent(QContextMenuEvent * e)
     {
-      QMenu * menu = this->page()->createStandardContextMenu();
+      if (m_Ui.isVisible()) {
+        QMenu menu;
 
-      QAction showUiAction(menu->addSeparator());;
+        QAction * hideUiAction = menu.addAction("Hide UI");
+        hideUiAction->setIcon(QIcon("app_hide.svg"));
 
-      if (menu->isEmpty()) {
-        menu->addAction(&showUiAction);
+        QMetaObject::Connection connection =
+          QObject::connect(hideUiAction, &QAction::triggered, &m_Ui, &Ui::onHide);
+
+        menu.exec(e->globalPos());
+
+        QObject::disconnect(connection);
+
       } else {
-        QAction * first = menu->actions().first();
-        menu->insertAction(menu->insertSeparator(first), &showUiAction);
+        QMenu * menu = this->page()->createStandardContextMenu();
+
+        QAction showUiAction(menu->addSeparator());;
+
+        if (menu->isEmpty()) {
+          menu->addAction(&showUiAction);
+        } else {
+          QAction * first = menu->actions().first();
+          menu->insertAction(menu->insertSeparator(first), &showUiAction);
+        }
+
+        showUiAction.setText("Show UI");
+        showUiAction.setIcon(QIcon("app_show.svg"));
+
+        QMetaObject::Connection connection =
+          QObject::connect(&showUiAction, &QAction::triggered, &m_Ui, &Ui::onShow);
+
+        menu->exec(e->globalPos());
+
+        QObject::disconnect(connection);
       }
-
-      showUiAction.setText("Show UI");
-      showUiAction.setIcon(QIcon("app_show.svg"));
-
-      QMetaObject::Connection connection =
-        QObject::connect(&showUiAction, &QAction::triggered, &m_Ui, &Ui::onShow);
-
-      menu->exec(e->globalPos());
-
-      QObject::disconnect(connection);
-
-      QWebView::contextMenuEvent(e);
     }
-
 
   private:
     Ui m_Ui;

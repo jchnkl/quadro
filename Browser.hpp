@@ -59,8 +59,6 @@ class Window
       // enable transparency for underlying window
       m_View.setAttribute(Qt::WA_TranslucentBackground, true);
 
-      connect(&m_Ui, &Ui::moveButtonPressed, this, &Window::onMoveButtonPressed);
-      connect(&m_Ui, &Ui::resizeButtonPressed, this, &Window::onResizeButtonPressed);
       connect(&m_View, &WebView::urlChanged, this, &Window::onUrlChanged);
       connect(&m_View, &WebView::contextMenuSignal, this, &Window::onContextMenuSignal);
       connect(&m_Ui.urlBar(), &QLineEdit::returnPressed, this, &Window::onReturnPressed);
@@ -130,11 +128,6 @@ class Window
       QObject::disconnect(connection);
     }
 
-    void
-    move(void)
-    {
-      QApplication::setOverrideCursor(Qt::SizeAllCursor);
-    }
 
     void
     onUrlChanged(const QUrl & url)
@@ -147,24 +140,6 @@ class Window
     {
       loadUrl(QUrl::fromUserInput(m_Ui.urlBar().text()));
       m_Ui.urlBar().selectAll();
-    }
-
-    void
-    onMoveButtonPressed(void)
-    {
-      if (! m_EventFilter) {
-        m_EventFilter = std::make_shared<MoveableFilter>(this);
-        withAllChildren(this, [&](QObject * child) {
-            child->installEventFilter(m_EventFilter.get());
-        });
-      } else {
-        m_EventFilter.reset();
-      }
-    }
-
-    void
-    onResizeButtonPressed(void)
-    {
     }
 
   private:

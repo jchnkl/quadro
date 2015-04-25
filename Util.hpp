@@ -4,6 +4,8 @@
 #include <functional>
 #include <QObject>
 
+namespace Quadro {
+
 void
 withAllChildren(QObject * obj, std::function<void(QObject *)> f)
 {
@@ -12,5 +14,7 @@ withAllChildren(QObject * obj, std::function<void(QObject *)> f)
     withAllChildren(child, f);
   }
 }
+
+}; // namespace Quadro
 
 #endif // _QUADRO_UTIL_HPP

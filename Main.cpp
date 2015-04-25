@@ -7,7 +7,7 @@ int main(int argc, char ** argv)
   QApplication::setApplicationName("Quadro");
   QApplication::setApplicationVersion("1.0");
 
-  Config config(app);
-  Browser::Window browser_window(config);
+  Quadro::Config config(app);
+  Quadro::Window browser_window(config);
   return app.exec();
 }

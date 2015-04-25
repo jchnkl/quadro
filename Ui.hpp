@@ -8,7 +8,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-namespace Browser {
+namespace Quadro {
 
 class MoveableFilter
   : public QObject
@@ -133,6 +133,6 @@ class Ui
     QPushButton m_ResizeButton;
 }; // class Ui
 
-}; // namespace Browser
+}; // namespace Quadro
 
 #endif // _QUADRO_BROWSER_HPP

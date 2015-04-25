@@ -16,7 +16,7 @@
 #include "WebView.hpp"
 #include "NetWmWindowType.hpp"
 
-namespace Browser {
+namespace Quadro {
 
 class Window
   : public QGroupBox
@@ -149,6 +149,6 @@ class Window
     std::shared_ptr<QObject> m_EventFilter;
 }; // class Window
 
-}; // namespace Browser
+}; // namespace Quadro
 
 #endif // _QUADRO_BROWSER_HPP

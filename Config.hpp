@@ -5,6 +5,8 @@
 #include <QCommandLineParser>
 #include "NetWmWindowType.hpp"
 
+namespace Quadro {
+
 class Config
 {
   public:
@@ -135,5 +137,7 @@ class Config
     bool m_fullscreen;
     NetWmWindowType::Hint m_window_type_hint;
 }; // Config
+
+}; // namespace Quadro
 
 #endif // _QUADRO_CONFIG_HPP

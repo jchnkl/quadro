@@ -4,7 +4,7 @@
 #include <QContextMenuEvent>
 #include <QWebView>
 
-namespace Browser {
+namespace Quadro {
 
 class WebView
   : public QWebView
@@ -22,6 +22,6 @@ class WebView
     void contextMenuSignal(QContextMenuEvent * event, WebView * webview);
 };
 
-}; // namespace Browser
+}; // namespace Quadro
 
 #endif // _QUADRO_WEBVIEW_HPP

@@ -91,7 +91,6 @@ class Window
     resizeEvent(QResizeEvent * event)
     {
       m_Ui.resize(event->size());
-      m_Ui.raise();
       event->accept();
     }
 

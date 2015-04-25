@@ -22,6 +22,13 @@ class WebView
   signals:
     void contextMenuSignal(QContextMenuEvent * event, WebView * webview);
 
+  public slots:
+    void
+    onLoadUrl(const QString & url)
+    {
+      this->load(QUrl::fromUserInput(url));
+    }
+
   public:
     WebView(const Config & config)
       : m_Ui(this)
@@ -100,11 +107,6 @@ class WebView
       QWebView::contextMenuEvent(e);
     }
 
-    void
-    onLoadUrl(const QString & url)
-    {
-      this->load(QUrl::fromUserInput(url));
-    }
 
   private:
     Ui m_Ui;

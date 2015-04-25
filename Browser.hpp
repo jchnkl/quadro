@@ -51,14 +51,6 @@ class Window
       // use grid layout
       this->setLayout(&m_Layout);
 
-      // create & set transparent palette for browser window
-      QPalette palette = m_View.palette();
-      palette.setBrush(QPalette::Base, Qt::transparent);
-      m_View.page()->setPalette(palette);
-
-      // enable transparency for underlying window
-      m_View.setAttribute(Qt::WA_TranslucentBackground, true);
-
       connect(&m_View, &WebView::urlChanged, this, &Window::onUrlChanged);
       connect(&m_View, &WebView::contextMenuSignal, this, &Window::onContextMenuSignal);
       connect(&m_Ui.urlBar(), &QLineEdit::returnPressed, this, &Window::onReturnPressed);

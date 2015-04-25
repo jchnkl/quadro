@@ -11,6 +11,18 @@ class WebView
 {
   Q_OBJECT
 
+  public:
+    WebView(void)
+    {
+      // create & set transparent palette for browser window
+      QPalette palette = this->palette();
+      palette.setBrush(QPalette::Base, Qt::transparent);
+      this->page()->setPalette(palette);
+
+      // enable transparency for underlying window
+      this->setAttribute(Qt::WA_TranslucentBackground, true);
+    }
+
   protected:
     void
     contextMenuEvent(QContextMenuEvent * e)

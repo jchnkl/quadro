@@ -92,9 +92,9 @@ class Ui
     Ui(QWidget * parent)
       : QGroupBox(parent)
     {
-      this->setObjectName("Ui");
+      this->setObjectName("QuadroUi");
       this->setWindowFlags(Qt::FramelessWindowHint);
-      this->setStyleSheet("QGroupBox#Ui { border: 0px; background-color: rgba(0,0,0,25%); }");
+      this->setStyleSheet("QGroupBox#QuadroUi { border: 0px; background-color: rgba(0,0,0,25%); }");
 
       m_HideButton.setIcon(QIcon("app_hide.svg"));
       m_MoveButton.setIcon(QIcon("move.svg"));

@@ -63,8 +63,6 @@ class Ui
   signals:
     void loadUrl(const QString & url);
     void changed(bool show);
-    void moveButtonPressed(void);
-    void resizeButtonPressed(void);
 
   public slots:
     void
@@ -98,61 +96,23 @@ class Ui
       this->setStyleSheet("QGroupBox#QuadroUi { border: 0px; background-color: rgba(0,0,0,25%); }");
 
       m_HideButton.setIcon(QIcon("app_hide.svg"));
-      m_MoveButton.setIcon(QIcon("move.svg"));
-      m_ResizeButton.setIcon(QIcon("resize.svg"));
 
       m_UrlBar.setWindowFlags(Qt::FramelessWindowHint);
-      m_MoveButton.setWindowFlags(Qt::FramelessWindowHint);
-      m_ResizeButton.setWindowFlags(Qt::FramelessWindowHint);
 
       m_GridLayout.setMargin(0);
       m_GridLayout.setAlignment(Qt::AlignTop | Qt::AlignHCenter);
       m_GridLayout.addWidget(&m_UrlBar, 0, 0);
-      m_GridLayout.addWidget(&m_MoveButton, 0, 1);
-      m_GridLayout.addWidget(&m_ResizeButton, 0, 2);
-      m_GridLayout.addWidget(&m_HideButton, 0, 3);
+      m_GridLayout.addWidget(&m_HideButton, 0, 1);
 
       this->setLayout(&m_GridLayout);
 
       connect(&m_HideButton, &QPushButton::pressed, this, &Ui::onHide);
-      connect(&m_MoveButton, &QPushButton::pressed, this, &Ui::onMoveButtonPressed);
-      connect(&m_ResizeButton, &QPushButton::pressed, this, &Ui::onResizeButtonPressed);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Ui::onReturnPressed);
 
       this->hide();
     }
 
-    QLineEdit &
-    urlBar(void)
-    {
-      return m_UrlBar;
-    }
-
-    QPushButton &
-    moveButton(void)
-    {
-      return m_MoveButton;
-    }
-
-    QPushButton &
-    resizeButton(void)
-    {
-      return m_ResizeButton;
-    }
-
   protected:
-    void
-    onMoveButtonPressed(void)
-    {
-      emit moveButtonPressed();
-    }
-
-    void
-    onResizeButtonPressed(void)
-    {
-      emit resizeButtonPressed();
-    }
-
     void
     onReturnPressed(void)
     {
@@ -194,8 +154,6 @@ class Ui
     QGridLayout m_GridLayout;
     QLineEdit m_UrlBar;
     QPushButton m_HideButton;
-    QPushButton m_MoveButton;
-    QPushButton m_ResizeButton;
 }; // class Ui
 
 }; // namespace Quadro

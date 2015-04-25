@@ -58,7 +58,7 @@ class Window
       this->setGeometry(config.x(), config.y(), config.width(), config.height());
 
       if (config.hasUrl()) {
-        this->loadUrl(QUrl::fromUserInput(config.url()));
+        m_View.load(QUrl::fromUserInput(config.url()));
       }
 
       if (config.fullscreen()) {
@@ -68,12 +68,6 @@ class Window
 
       this->show();
       m_Ui.hide();
-    }
-
-    void
-    loadUrl(const QUrl & url)
-    {
-      m_View.load(url);
     }
 
   protected:
@@ -130,7 +124,7 @@ class Window
     void
     onReturnPressed(void)
     {
-      loadUrl(QUrl::fromUserInput(m_Ui.urlBar().text()));
+      m_View.load(QUrl::fromUserInput(m_Ui.urlBar().text()));
       m_Ui.urlBar().selectAll();
     }
 

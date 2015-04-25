@@ -1,5 +1,5 @@
 #include <QApplication>
-#include "Browser.hpp"
+#include "WebView.hpp"
 
 int main(int argc, char ** argv)
 {
@@ -8,6 +8,6 @@ int main(int argc, char ** argv)
   QApplication::setApplicationVersion("1.0");
 
   Quadro::Config config(app);
-  Quadro::Window browser_window(config);
+  Quadro::WebView webview(config);
   return app.exec();
 }

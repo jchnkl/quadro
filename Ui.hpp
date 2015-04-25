@@ -61,8 +61,23 @@ class Ui
   Q_OBJECT
 
   signals:
+    void loadUrl(const QString & url);
     void moveButtonPressed(void);
     void resizeButtonPressed(void);
+
+  public slots:
+    void
+    onUrlChanged(const QUrl & url)
+    {
+      m_UrlBar.setText(url.toString());
+    }
+
+    void
+    onShow(bool)
+    {
+      this->show();
+      this->raise();
+    }
 
   public:
     Ui(QWidget * parent)
@@ -92,6 +107,9 @@ class Ui
       connect(&m_HideButton, &QPushButton::pressed, this, &QWidget::hide);
       connect(&m_MoveButton, &QPushButton::pressed, this, &Ui::onMoveButtonPressed);
       connect(&m_ResizeButton, &QPushButton::pressed, this, &Ui::onResizeButtonPressed);
+      connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Ui::onReturnPressed);
+
+      this->hide();
     }
 
     QLineEdit &
@@ -123,6 +141,13 @@ class Ui
     onResizeButtonPressed(void)
     {
       emit resizeButtonPressed();
+    }
+
+    void
+    onReturnPressed(void)
+    {
+      m_UrlBar.selectAll();
+      emit loadUrl(m_UrlBar.text());
     }
 
   private:

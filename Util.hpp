@@ -1,6 +1,7 @@
 #ifndef _QUADRO_UTIL_HPP
 #define _QUADRO_UTIL_HPP
 
+#include <iostream>
 #include <functional>
 #include <QObject>
 
@@ -28,5 +29,8 @@ void
 withAllChildren(QObject * obj, std::function<void(QObject *)> f);
 
 }; // namespace Quadro
+
+std::ostream &
+operator<<(std::ostream & os, Quadro::Direction d);
 
 #endif // _QUADRO_UTIL_HPP

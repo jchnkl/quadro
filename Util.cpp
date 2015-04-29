@@ -5,6 +5,31 @@
 #include <QPoint>
 #include "Util.hpp"
 
+std::ostream &
+operator<<(std::ostream & os, Quadro::Direction d)
+{
+  switch (d) {
+    case Quadro::Left:
+      return os << "Left";
+    case Quadro::Right:
+      return os << "Right";
+    case Quadro::Top:
+      return os << "Top";
+    case Quadro::Bottom:
+      return os << "Bottom";
+    case Quadro::TopLeft:
+      return os << "TopLeft";
+    case Quadro::BottomRight:
+      return os << "BottomRight";
+    case Quadro::TopRight:
+      return os << "TopRight";
+    case Quadro::BottomLeft:
+      return os << "BottomLeft";
+    case Quadro::None:
+      return os << "None";
+  };
+}
+
 void
 Quadro::withAllChildren(QObject * obj, std::function<void(QObject *)> f)
 {

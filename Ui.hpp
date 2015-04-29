@@ -12,6 +12,8 @@
 
 #include "Util.hpp"
 
+#define BORDER_SIZE 20
+
 namespace Quadro {
 
 class UiFrame
@@ -131,22 +133,21 @@ class Ui
   public:
     Ui(QWidget * parent)
       : QWidget(parent)
+      , m_Frame(this)
+      , m_UiWidget(this)
       , m_DoMouseMove(false)
     {
-      this->setObjectName("QuadroUi");
-      this->setWindowFlags(Qt::FramelessWindowHint);
-      this->setStyleSheet("QGroupBox#QuadroUi { border: 0px; background-color: rgba(0,0,0,25%); }");
-
       m_HideButton.setIcon(QIcon("app_hide.svg"));
-
-      m_UrlBar.setWindowFlags(Qt::FramelessWindowHint);
 
       m_GridLayout.setMargin(0);
       m_GridLayout.setAlignment(Qt::AlignTop | Qt::AlignHCenter);
       m_GridLayout.addWidget(&m_UrlBar, 0, 0);
       m_GridLayout.addWidget(&m_HideButton, 0, 1);
 
-      this->setLayout(&m_GridLayout);
+      m_UiWidget.setLayout(&m_GridLayout);
+
+      m_Frame.setLineWidth(BORDER_SIZE);
+      m_Frame.setFrameStyle(QFrame::Panel | QFrame::Raised);
 
       connect(&m_HideButton, &QPushButton::pressed, this, &Ui::onHide);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Ui::onReturnPressed);
@@ -155,6 +156,15 @@ class Ui
     }
 
   protected:
+    void
+    resizeEvent(QResizeEvent * e)
+    {
+      m_Frame.resize(e->size());
+      m_UiWidget.move(BORDER_SIZE, BORDER_SIZE);
+      m_UiWidget.resize(e->size() - QSize(2 * BORDER_SIZE, 2 * BORDER_SIZE));
+      QWidget::resizeEvent(e);
+    }
+
     void
     onReturnPressed(void)
     {
@@ -193,6 +203,9 @@ class Ui
   private:
     bool m_DoMouseMove;
     QPoint m_MouseOffset;
+
+    UiFrame m_Frame;
+    UiWidget m_UiWidget;
     QGridLayout m_GridLayout;
     QLineEdit m_UrlBar;
     QPushButton m_HideButton;

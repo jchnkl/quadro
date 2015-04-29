@@ -27,6 +27,7 @@ class UiFrame
   public:
     UiFrame(QWidget * parent)
       : QFrame(parent)
+      , m_MouseButtonPressed(false)
       , m_EmitResizeSignal(false)
     {
       this->setMouseTracking(true);
@@ -38,11 +39,14 @@ class UiFrame
     mouseMoveEvent(QMouseEvent * e)
     {
       emit mouseMoved(e);
-      Qt::CursorShape shape = cursorShape(e->pos());
-      if (shape != m_CurrentShape) {
-        QApplication::restoreOverrideCursor();
-        QApplication::setOverrideCursor(shape);
-        m_CurrentShape = shape;
+
+      if (! m_MouseButtonPressed) {
+        Qt::CursorShape shape = cursorShape(e->pos(), this->geometry());
+        if (shape != m_CurrentShape) {
+          QApplication::restoreOverrideCursor();
+          QApplication::setOverrideCursor(shape);
+          m_CurrentShape = shape;
+        }
       }
       // std::cerr << __PRETTY_FUNCTION__ << std::endl;
     }
@@ -50,6 +54,7 @@ class UiFrame
     void
     mousePressEvent(QMouseEvent * e)
     {
+      m_MouseButtonPressed = true;
       emit mousePressed(e);
       // std::cerr << __PRETTY_FUNCTION__ << std::endl;
     }
@@ -57,6 +62,7 @@ class UiFrame
     void
     mouseReleaseEvent(QMouseEvent * e)
     {
+      m_MouseButtonPressed = false;
       emit mouseReleased(e);
       // std::cerr << __PRETTY_FUNCTION__ << std::endl;
     }
@@ -76,6 +82,7 @@ class UiFrame
     }
 
   private:
+    bool m_MouseButtonPressed;
     bool m_EmitResizeSignal;
     Qt::CursorShape m_CurrentShape;
 }; // class UiFrame

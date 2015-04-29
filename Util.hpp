@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <functional>
+#include <QRect>
+#include <QPoint>
 #include <QObject>
 
 namespace Quadro {

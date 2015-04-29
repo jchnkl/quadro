@@ -1,8 +1,6 @@
 #ifndef _QUADRO_UTIL_CPP
 #define _QUADRO_UTIL_CPP
 
-#include <QRect>
-#include <QPoint>
 #include "Util.hpp"
 
 std::ostream &

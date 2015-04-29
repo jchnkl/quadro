@@ -82,10 +82,7 @@ class UiFrame
 
       } else {
         Qt::CursorShape shape = cursorShape(e->pos(), this->geometry());
-        if (shape != m_CurrentShape) {
-          m_CurrentShape = shape;
-          QGuiApplication::changeOverrideCursor(shape);
-        }
+        QGuiApplication::changeOverrideCursor(shape);
       }
     }
 
@@ -123,7 +120,6 @@ class UiFrame
     bool m_DoResize;
     QPoint m_ResizeOffset;
     Direction m_ResizeDirection;
-    Qt::CursorShape m_CurrentShape;
 }; // class UiFrame
 
 class UiWidget

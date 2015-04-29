@@ -133,7 +133,7 @@ class Ui
       : QWidget(parent)
       , m_Frame(this)
       , m_UiWidget(this)
-      , m_DoMouseMove(false)
+      , m_DoMove(false)
     {
       m_HideButton.setIcon(QIcon("app_hide.svg"));
 
@@ -174,8 +174,8 @@ class Ui
     mousePressEvent(QMouseEvent * e)
     {
       if (e->button() == Qt::LeftButton) {
-        m_DoMouseMove = true;
-        m_MouseOffset = e->pos();
+        m_DoMove = true;
+        m_MoveOffset = e->pos();
         QApplication::setOverrideCursor(Qt::SizeAllCursor);
       }
     }
@@ -184,7 +184,7 @@ class Ui
     mouseReleaseEvent(QMouseEvent * e)
     {
       if (e->button() == Qt::LeftButton) {
-        m_DoMouseMove = false;
+        m_DoMove = false;
         QApplication::restoreOverrideCursor();
       }
     }
@@ -192,14 +192,14 @@ class Ui
     void
     mouseMoveEvent(QMouseEvent * e)
     {
-      if (m_DoMouseMove) {
-        emit moveBy(e->pos() - m_MouseOffset);
+      if (m_DoMove) {
+        emit moveBy(e->pos() - m_MoveOffset);
       }
     }
 
   private:
-    bool m_DoMouseMove;
-    QPoint m_MouseOffset;
+    bool m_DoMove;
+    QPoint m_MoveOffset;
 
     UiFrame m_Frame;
     UiWidget m_UiWidget;

@@ -98,7 +98,7 @@ class UiWidget
 }; // class UiWidget
 
 class Ui
-  : public QGroupBox
+  : public QWidget
 {
   Q_OBJECT
 
@@ -130,7 +130,7 @@ class Ui
 
   public:
     Ui(QWidget * parent)
-      : QGroupBox(parent)
+      : QWidget(parent)
       , m_DoMouseMove(false)
     {
       this->setObjectName("QuadroUi");

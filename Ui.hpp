@@ -106,6 +106,7 @@ class Ui
 
   signals:
     void loadUrl(const QString & url);
+    void moveBy(const QPoint & offset);
 
   public slots:
     void
@@ -192,8 +193,7 @@ class Ui
     mouseMoveEvent(QMouseEvent * e)
     {
       if (m_DoMouseMove) {
-        QWidget * parent = this->parentWidget();
-        parent->move(parent->pos() + e->pos() - m_MouseOffset);
+        emit moveBy(e->pos() - m_MouseOffset);
       }
     }
 

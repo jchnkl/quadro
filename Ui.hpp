@@ -47,7 +47,6 @@ class UiFrame
           m_CurrentShape = shape;
         }
       }
-      // std::cerr << __PRETTY_FUNCTION__ << std::endl;
     }
 
     void

@@ -41,9 +41,6 @@ class WebView
       // set object name for style sheet
       this->setObjectName("QuadroWebView");
 
-      // remove the border
-      this->setStyleSheet("QGroupBox#QuadroWebView { border: 0px; }");
-
       // hint for window manager to leave away frames/window borders
       this->setWindowFlags(Qt::FramelessWindowHint);
 

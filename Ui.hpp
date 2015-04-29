@@ -1,8 +1,6 @@
 #ifndef _QUADRO_UI_HPP
 #define _QUADRO_UI_HPP
 
-#include <cmath>
-
 #include <QApplication>
 #include <QMouseEvent>
 #include <QHBoxLayout>

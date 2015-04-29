@@ -88,25 +88,27 @@ Quadro::direction(const QPoint & abspos, const QRect & rect)
   bool bottom_left  = angle > rad_225 - corner && angle < rad_225 + corner;
   bool bottom_right = angle > rad_315 - corner && angle < rad_315 + corner;
 
-  if (left) {
-    return Left;
-  } else if (right) {
-    return Right;
-  } else if (top) {
-    return Top;
-  } else if (bottom) {
-    return Bottom;
-  } else if (top_right) {
-    return TopRight;
+  Direction d = None;
+
+  if (top_right) {
+    d = TopRight;
   } else if (top_left) {
-    return TopLeft;
+    d = TopLeft;
   } else if (bottom_right) {
-    return BottomRight;
+    d = BottomRight;
   } else if (bottom_left) {
-    return BottomLeft;
+    d = BottomLeft;
+  } else if (left) {
+    d = Left;
+  } else if (right) {
+    d = Right;
+  } else if (top) {
+    d = Top;
+  } else if (bottom) {
+    d = Bottom;
   }
 
-  return None;
+  return d;
 }
 
 Qt::CursorShape

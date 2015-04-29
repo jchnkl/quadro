@@ -71,11 +71,8 @@ Quadro::direction(const QPoint & abspos, const QRect & rect)
   const double corner  = 5.0 * (M_PI / 180.0);
   const double rad_000 = 0;
   const double rad_045 = M_PI_4;
-  const double rad_090 = M_PI_2;
   const double rad_135 = M_PI_2 + M_PI_4;
-  const double rad_180 = M_PI;
   const double rad_225 = M_PI + M_PI_4;
-  const double rad_270 = M_PI + M_PI_2;
   const double rad_315 = M_PI + M_PI_2 + M_PI_4;
   const double rad_360 = 2 * M_PI;
 

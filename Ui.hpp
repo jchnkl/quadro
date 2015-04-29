@@ -106,7 +106,6 @@ class Ui
 
   signals:
     void loadUrl(const QString & url);
-    void changed(bool show);
 
   public slots:
     void
@@ -120,14 +119,12 @@ class Ui
     {
       this->show();
       this->raise();
-      emit changed(true);
     }
 
     void
     onHide(void)
     {
       this->hide();
-      emit changed(false);
     }
 
   public:

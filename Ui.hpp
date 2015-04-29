@@ -43,8 +43,7 @@ class UiFrame
       if (! m_MouseButtonPressed) {
         Qt::CursorShape shape = cursorShape(e->pos(), this->geometry());
         if (shape != m_CurrentShape) {
-          QApplication::restoreOverrideCursor();
-          QApplication::setOverrideCursor(shape);
+          QGuiApplication::changeOverrideCursor(shape);
           m_CurrentShape = shape;
         }
       }

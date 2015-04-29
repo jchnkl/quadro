@@ -234,14 +234,14 @@ class Ui
     }
 
   private:
-    bool m_DoMove;
-    QPoint m_MoveOffset;
-
     UiFrame m_Frame;
     UiWidget m_UiWidget;
     QGridLayout m_GridLayout;
     QLineEdit m_UrlBar;
     QPushButton m_HideButton;
+
+    bool m_DoMove;
+    QPoint m_MoveOffset;
 }; // class Ui
 
 }; // namespace Quadro

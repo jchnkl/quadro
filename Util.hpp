@@ -25,6 +25,9 @@ Direction
 direction(const QPoint & abspos, const QRect & rect);
 
 Qt::CursorShape
+cursorShape(Direction d);
+
+Qt::CursorShape
 cursorShape(const QPoint & abspos, const QRect & rect);
 
 void

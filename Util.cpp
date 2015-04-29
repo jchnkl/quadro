@@ -110,9 +110,9 @@ Quadro::direction(const QPoint & abspos, const QRect & rect)
 }
 
 Qt::CursorShape
-Quadro::cursorShape(const QPoint & abspos, const QRect & rect)
+Quadro::cursorShape(Direction d)
 {
-  switch (direction(abspos, rect)) {
+  switch (d) {
     case Left:
     case Right:
       return Qt::SizeHorCursor;
@@ -129,6 +129,11 @@ Quadro::cursorShape(const QPoint & abspos, const QRect & rect)
     default:
       return Qt::WhatsThisCursor;
   };
+}
+Qt::CursorShape
+Quadro::cursorShape(const QPoint & abspos, const QRect & rect)
+{
+  return cursorShape(direction(abspos, rect));
 }
 
 #endif // _QUADRO_UTIL_CPP

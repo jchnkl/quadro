@@ -79,6 +79,7 @@ class UiFrame
         };
 
         m_ResizeOffset = e->globalPos();
+        QGuiApplication::changeOverrideCursor(cursorShape(m_ResizeDirection));
 
       } else {
         Qt::CursorShape shape = cursorShape(e->pos(), this->geometry());

@@ -61,11 +61,11 @@ class UiFrame
             offset.setRight(e->globalX() - m_ResizeOffset.x());
             break;
           case BottomLeft:
-            offset.setBottom(m_ResizeOffset.y() - e->globalY());
+            offset.setBottom(e->globalY() - m_ResizeOffset.y());
             offset.setLeft(m_ResizeOffset.x() - e->globalX());
             break;
           case BottomRight:
-            offset.setBottom(m_ResizeOffset.y() - e->globalY());
+            offset.setBottom(e->globalY() - m_ResizeOffset.y());
             offset.setRight(e->globalX() - m_ResizeOffset.x());
             break;
           case None:

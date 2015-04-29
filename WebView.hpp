@@ -59,6 +59,7 @@ class WebView
       connect(this, &QWebView::urlChanged, &m_Ui, &Ui::onUrlChanged);
 
       connect(&m_Ui, &Ui::moveBy, this, &WebView::onMoveBy);
+      connect(&m_Ui, &Ui::resizeBy, this, &WebView::onResizeBy);
 
       this->setGeometry(config.x(), config.y(), config.width(), config.height());
 
@@ -79,6 +80,12 @@ class WebView
     onMoveBy(const QPoint & offset)
     {
       this->move(this->pos() + offset);
+    }
+
+    void
+    onResizeBy(const QMargins & offset)
+    {
+      this->setGeometry(this->geometry() + offset);
     }
 
     void

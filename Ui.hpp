@@ -22,31 +22,69 @@ class UiFrame
   Q_OBJECT
 
   signals:
-    void mousePressed(QMouseEvent * e);
-    void mouseReleased(QMouseEvent * e);
-    void mouseMoved(QMouseEvent * e);
+    void resizeBy(const QMargins & offset);
 
   public:
     UiFrame(QWidget * parent)
       : QFrame(parent)
-      , m_MouseButtonPressed(false)
-      , m_EmitResizeSignal(false)
+      , m_DoResize(false)
     {
       this->setMouseTracking(true);
     }
-
 
   protected:
     void
     mouseMoveEvent(QMouseEvent * e)
     {
-      emit mouseMoved(e);
+      if (m_DoResize) {
+        QMargins offset;
 
-      if (! m_MouseButtonPressed) {
+        switch (m_ResizeDirection) {
+          case Left:
+            offset.setLeft(m_ResizeOffset.x() - e->globalX());
+            break;
+          case Right:
+            offset.setRight(e->globalX() - m_ResizeOffset.x());
+            break;
+          case Top:
+            offset.setTop(m_ResizeOffset.y() - e->globalY());
+            break;
+          case Bottom:
+            offset.setBottom(e->globalY() - m_ResizeOffset.y());
+            break;
+          case TopLeft:
+            offset.setTop(m_ResizeOffset.y() - e->globalY());
+            offset.setLeft(m_ResizeOffset.x() - e->globalX());
+            break;
+          case TopRight:
+            offset.setTop(m_ResizeOffset.y() - e->globalY());
+            offset.setRight(e->globalX() - m_ResizeOffset.x());
+            break;
+          case BottomLeft:
+            offset.setBottom(m_ResizeOffset.y() - e->globalY());
+            offset.setLeft(m_ResizeOffset.x() - e->globalX());
+            break;
+          case BottomRight:
+            offset.setBottom(m_ResizeOffset.y() - e->globalY());
+            offset.setRight(e->globalX() - m_ResizeOffset.x());
+            break;
+          case None:
+            break;
+        };
+
+        switch (m_ResizeDirection) {
+          case None: break;
+          default:
+            emit resizeBy(offset);
+        };
+
+        m_ResizeOffset = e->globalPos();
+
+      } else {
         Qt::CursorShape shape = cursorShape(e->pos(), this->geometry());
         if (shape != m_CurrentShape) {
-          QGuiApplication::changeOverrideCursor(shape);
           m_CurrentShape = shape;
+          QGuiApplication::changeOverrideCursor(shape);
         }
       }
     }
@@ -54,36 +92,37 @@ class UiFrame
     void
     mousePressEvent(QMouseEvent * e)
     {
-      m_MouseButtonPressed = true;
-      emit mousePressed(e);
-      // std::cerr << __PRETTY_FUNCTION__ << std::endl;
+      if (e->button() == Qt::LeftButton) {
+        m_DoResize = true;
+        m_ResizeOffset = e->globalPos();
+        m_ResizeDirection = direction(e->pos(), this->geometry());
+      }
     }
 
     void
     mouseReleaseEvent(QMouseEvent * e)
     {
-      m_MouseButtonPressed = false;
-      emit mouseReleased(e);
-      // std::cerr << __PRETTY_FUNCTION__ << std::endl;
+      if (e->button() == Qt::LeftButton) {
+        m_DoResize = false;
+      }
     }
 
     void
     enterEvent(QEvent *)
     {
       QApplication::setOverrideCursor(cursorShape(this->cursor().pos(), this->geometry()));
-      // std::cerr << __PRETTY_FUNCTION__ << std::endl;
     }
 
     void
     leaveEvent(QEvent *)
     {
       QApplication::restoreOverrideCursor();
-      // std::cerr << __PRETTY_FUNCTION__ << std::endl;
     }
 
   private:
-    bool m_MouseButtonPressed;
-    bool m_EmitResizeSignal;
+    bool m_DoResize;
+    QPoint m_ResizeOffset;
+    Direction m_ResizeDirection;
     Qt::CursorShape m_CurrentShape;
 }; // class UiFrame
 
@@ -107,6 +146,7 @@ class Ui
   signals:
     void loadUrl(const QString & url);
     void moveBy(const QPoint & offset);
+    void resizeBy(const QMargins & offset);
 
   public slots:
     void
@@ -147,6 +187,7 @@ class Ui
       m_Frame.setLineWidth(BORDER_SIZE);
       m_Frame.setFrameStyle(QFrame::Panel | QFrame::Raised);
 
+      connect(&m_Frame, &UiFrame::resizeBy, this, &Ui::resizeBy);
       connect(&m_HideButton, &QPushButton::pressed, this, &Ui::onHide);
       connect(&m_UrlBar, &QLineEdit::returnPressed, this, &Ui::onReturnPressed);
 

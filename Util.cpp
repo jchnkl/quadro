@@ -26,6 +26,8 @@ operator<<(std::ostream & os, Quadro::Direction d)
     case Quadro::None:
       return os << "None";
   };
+
+  return os;
 }
 
 void

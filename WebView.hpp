@@ -9,6 +9,7 @@
 
 #include "Ui.hpp"
 #include "Config.hpp"
+#include "JsDBusBridge.hpp"
 
 namespace Quadro {
 
@@ -40,8 +41,13 @@ class WebView
     void
     contextMenuEvent(QContextMenuEvent * e);
 
+    void
+    onJsWindowObjectCleared(void);
+
   private:
     Ui m_Ui;
+    DBus m_DBus;
+    JsDBusBridge m_JsDBusBridge;
 };
 
 }; // namespace Quadro

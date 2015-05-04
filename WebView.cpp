@@ -4,6 +4,8 @@
 #include "WebView.hpp"
 #include "NetWmWindowType.hpp"
 
+#include <QWebFrame>
+
 namespace Quadro {
 
 void
@@ -36,6 +38,8 @@ WebView::WebView(const Config & config)
 
   connect(&m_Ui, &Ui::loadUrl, this, &WebView::onLoadUrl);
   connect(this, &QWebView::urlChanged, &m_Ui, &Ui::onUrlChanged);
+  connect(this->page()->mainFrame(), &QWebFrame::javaScriptWindowObjectCleared,
+          this, &WebView::onJsWindowObjectCleared);
 
   connect(&m_Ui, &Ui::moveBy, this, &WebView::onMoveBy);
   connect(&m_Ui, &Ui::resizeBy, this, &WebView::onResizeBy);
@@ -111,6 +115,13 @@ WebView::contextMenuEvent(QContextMenuEvent * e)
 
     QObject::disconnect(connection);
   }
+}
+
+void
+WebView::onJsWindowObjectCleared(void)
+{
+  this->page()->mainFrame()->addToJavaScriptWindowObject("jsDBusBridge", &m_JsDBusBridge);
+  this->page()->mainFrame()->addToJavaScriptWindowObject("dbus", &m_DBus);
 }
 
 }; // namespace Quadro

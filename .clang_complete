@@ -5,6 +5,7 @@
 
 -I/usr/include/qt
 -I/usr/include/qt/QtCore
+-I/usr/include/qt/QtDBus
 -I/usr/include/qt/QtGui
 -I/usr/include/qt/QtNetwork
 -I/usr/include/qt/QtWebKit

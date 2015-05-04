@@ -43,7 +43,12 @@ class DBus
     onSignal(const QDBusMessage & msg)
     {
       qDebug() << __PRETTY_FUNCTION__ << ": " << msg;
-      emit propertiesChanged(toVariant(msg.arguments().at(0)));
+
+      QVariantList variants;
+      for (const QVariant & variant : msg.arguments()) {
+        variants.push_back(toVariant(variant));
+      }
+      emit propertiesChanged(variants);
     }
 
   public:

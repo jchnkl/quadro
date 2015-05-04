@@ -19,23 +19,31 @@ class DBus
   Q_PROPERTY(QDBusConnection * sessionBus READ sessionBus)
 
   signals:
-    void propertiesChanged(void);
-    void propertiesChanged(const QVariantMap &);
+    // void propertiesChanged(void);
+    void propertiesChanged(const QVariant &);
+    // void propertiesChanged(const QVariantMap &);
 
   public slots:
 
-    void
-    onSignal(void)
-    {
-      qDebug() << __PRETTY_FUNCTION__;
-      emit propertiesChanged();
-    }
+    // void
+    // onSignal(void)
+    // {
+    //   qDebug() << __PRETTY_FUNCTION__;
+    //   emit propertiesChanged();
+    // }
+
+    // void
+    // onSignal(const QVariantMap & map)
+    // {
+    //   qDebug() << __PRETTY_FUNCTION__;
+    //   emit propertiesChanged(map);
+    // }
 
     void
-    onSignal(const QVariantMap & map)
+    onSignal(const QDBusMessage & msg)
     {
-      qDebug() << __PRETTY_FUNCTION__;
-      emit propertiesChanged(map);
+      qDebug() << __PRETTY_FUNCTION__ << ": " << msg;
+      emit propertiesChanged(toVariant(msg.arguments().at(0)));
     }
 
   public:
@@ -44,6 +52,27 @@ class DBus
       , m_SessionBus(QDBusConnection::sessionBus())
     {
       // qRegisterMetaType<QDBusConnection *>("QDBusConnection *");
+      {
+        auto service_name   = "org.freedesktop.DBus";
+        auto path_name      = "/org/freedesktop/DBus";
+        auto interface_name = "org.freedesktop.DBus";
+        auto signal_name    = "NameOwnerChanged";
+
+        qDebug() << "NameOwnerChange deliverable: " <<
+          m_SystemBus.connect(
+            service_name, path_name, interface_name, signal_name,
+            this, SLOT(onSignal(QDBusMessage)));
+
+        qDebug() << "PropertiesChanged deliverable: " <<
+          m_SystemBus.connect(
+              "org.freedesktop.NetworkManager",
+              "/org/freedesktop/NetworkManager/AccessPoint/391",
+              "org.freedesktop.NetworkManager.AccessPoint",
+              "PropertiesChanged",
+            this, SLOT(onSignal(QDBusMessage)));
+
+
+      }
     }
 
     // const QVariantList &
@@ -80,7 +109,8 @@ class DBus
                                       // "a{sv}",
                                       this,
                                       // SLOT(onSignal(void)));
-                                      SLOT(onSignal(QVariantMap)));
+                                      // SLOT(onSignal(QVariantMap)));
+                                      SLOT(onSignal(QDBusMessage)));
     }
 
     Q_INVOKABLE

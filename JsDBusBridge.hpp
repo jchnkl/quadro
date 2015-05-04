@@ -1,15 +1,6 @@
 #ifndef _QUADRO_JSDBUSBRIDGE_HPP
 #define _QUADRO_JSDBUSBRIDGE_HPP
 
-// #include <QContextMenuEvent>
-// #include <QDesktopWidget>
-// #include <QMenu>
-// #include <QWebView>
-// #include <QX11Info>
-
-// #include "Ui.hpp"
-// #include "Config.hpp"
-
 #include <iostream>
 #include <algorithm>
 #include <QtDBus>
@@ -20,104 +11,25 @@
 
 namespace Quadro {
 
-class Foo
-  : public QObject
-{
-  Q_OBJECT
-
-  public:
-    Foo(void)
-    {
-    }
-
-    Foo(const Foo & foo)
-      // : QObject(static_cast<const QObject &>(foo))
-    {
-    }
-};
-
-};
-
-const QDBusArgument &
-operator<<(const QDBusArgument & arg, const Quadro::Foo & foo);
-// {
-//   return arg;
-// }
-
-const QDBusArgument &
-operator>>(const QDBusArgument & arg, Quadro::Foo & foo);
-// {
-//   return arg;
-// }
-
-Q_DECLARE_METATYPE(Quadro::Foo)
-
-namespace Quadro {
-
-// QList<QVariant>
-// toList(const QDBusArgument & dba)
-// {
-//   QList<QVariant> tmp;
-//   dba >> tmp;
-//   return tmp;
-// }
-
 class DBus
   :public QObject
 {
   Q_OBJECT
-  // Q_PROPERTY(QVariantList reply READ reply)
   Q_PROPERTY(QDBusConnection * systemBus READ systemBus)
   Q_PROPERTY(QDBusConnection * sessionBus READ sessionBus)
 
   signals:
-    // void propertiesChanged(void);
-    // void propertiesChanged(const QString &);
+    void propertiesChanged(void);
     void propertiesChanged(const QVariantMap &);
-    // void propertiesChanged(const QVariantList &);
-    // void propertiesChanged(const QDBusArgument &);
 
   public slots:
 
-    // void
-    // onSignal(void)
-    // {
-    //   qDebug() << __PRETTY_FUNCTION__;
-    //   emit propertiesChanged();
-    // }
-
     void
-    onSignal(const QList<QVariant> &)
+    onSignal(void)
     {
       qDebug() << __PRETTY_FUNCTION__;
-      // emit propertiesChanged();
+      emit propertiesChanged();
     }
-
-    // void
-    // onSignal(const Foo &)
-    // {
-    //   qDebug() << __PRETTY_FUNCTION__;
-    //   // emit propertiesChanged();
-    // }
-
-    // void
-    // onSignal(const QString & str)
-    // {
-    //   qDebug() << __PRETTY_FUNCTION__;
-    //   emit propertiesChanged(str);
-    // }
-
-    // void
-    // onSignal(const QStringList &)
-    // {
-    //   qDebug() << __PRETTY_FUNCTION__;
-    // }
-
-    // void
-    // onSignal(const QByteArray &)
-    // {
-    //   qDebug() << __PRETTY_FUNCTION__;
-    // }
 
     void
     onSignal(const QVariantMap & map)
@@ -126,27 +38,12 @@ class DBus
       emit propertiesChanged(map);
     }
 
-    // void
-    // onSignal(const QVariantList & lst)
-    // {
-    //   qDebug() << __PRETTY_FUNCTION__;
-    //   // emit propertiesChanged(lst);
-    // }
-
-    // void
-    // onSignal(const QDBusArgument & arg)
-    // {
-    //   qDebug() << __PRETTY_FUNCTION__;
-    //   // emit propertiesChanged(arg);
-    // }
-
   public:
     DBus(void)
       : m_SystemBus(QDBusConnection::systemBus())
       , m_SessionBus(QDBusConnection::sessionBus())
     {
       // qRegisterMetaType<QDBusConnection *>("QDBusConnection *");
-      qDBusRegisterMetaType<Foo>();
     }
 
     // const QVariantList &
@@ -183,22 +80,7 @@ class DBus
                                       // "a{sv}",
                                       this,
                                       // SLOT(onSignal(void)));
-                                      // SLOT(onSignal(Foo)));
-                                      // SLOT(onSignal(QVariantList)));
-                                      // SLOT(onSignal(QString)));
-                                      // SLOT(onSignal(QVariantMap)));
-                                      // SLOT(onSignal(QStringList)));
-                                      // SLOT(onSignal(QByteArray)));
-                                      // SLOT(onSignal(QDBusArgument)));
-                                      SLOT(onSignal(QList<QVariant>)));
-
-            // service_name, path_name, interface_name, signal_name,
-            // // "a{sv}",
-            // // "a{si}",
-            // // this, SLOT(onPropertiesChanged(QVariant)));
-            // // this, SLOT(onPropertiesChanged(QDBusVariant)));
-            // this, SLOT(onPropertiesChanged(QDBusArgument)));
-            // this, SLOT(onPropertiesChanged(QVariantMap)));
+                                      SLOT(onSignal(QVariantMap)));
     }
 
     Q_INVOKABLE

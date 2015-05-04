@@ -9,4 +9,4 @@ TARGET = quadro
 TEMPLATE = app
 
 HEADERS += WebView.hpp Ui.hpp Config.hpp Util.hpp JsDBusBridge.hpp Ewmh.hpp NetWmWindowType.hpp
-SOURCES += Main.cpp WebView.cpp Ui.cpp Config.cpp Util.cpp JsDBusBridge.cpp
+SOURCES += Main.cpp WebView.cpp Ui.cpp Config.cpp Util.cpp

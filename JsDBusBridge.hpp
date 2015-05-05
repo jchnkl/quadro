@@ -39,30 +39,7 @@ class DBus
     DBus(void)
       : m_SystemBus(QDBusConnection::systemBus())
       , m_SessionBus(QDBusConnection::sessionBus())
-    {
-      // qRegisterMetaType<QDBusConnection *>("QDBusConnection *");
-      {
-        auto service_name   = "org.freedesktop.DBus";
-        auto path_name      = "/org/freedesktop/DBus";
-        auto interface_name = "org.freedesktop.DBus";
-        auto signal_name    = "NameOwnerChanged";
-
-        qDebug() << "NameOwnerChange deliverable: " <<
-          m_SystemBus.connect(
-            service_name, path_name, interface_name, signal_name,
-            this, SLOT(onSignal(QDBusMessage)));
-
-        qDebug() << "PropertiesChanged deliverable: " <<
-          m_SystemBus.connect(
-              "org.freedesktop.NetworkManager",
-              "/org/freedesktop/NetworkManager/AccessPoint/391",
-              "org.freedesktop.NetworkManager.AccessPoint",
-              "PropertiesChanged",
-            this, SLOT(onSignal(QDBusMessage)));
-
-
-      }
-    }
+    {}
 
     // const QVariantList &
     // reply(void)

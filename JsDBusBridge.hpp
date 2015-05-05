@@ -7,12 +7,6 @@
 #include <QObject>
 #include <QVariant>
 
-QVariant
-toVariant(const QVariant & variant);
-
-QVariant
-toVariant(const QDBusArgument & arg);
-
 class DBusConnection
   : public QObject
 {

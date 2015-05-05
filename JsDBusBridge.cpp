@@ -4,6 +4,15 @@
 #include "JsDBusBridge.hpp"
 
 QVariant
+toVariant(const QDBusArgument & arg);
+
+QVariant
+toVariant(const QVariant & variant);
+
+QVariant
+unmarshall(const QDBusMessage & msg);
+
+QVariant
 toVariant(const QVariant & variant)
 {
   qDebug() << __PRETTY_FUNCTION__ << ": " << variant;
@@ -165,6 +174,24 @@ toVariant(const QDBusArgument & arg)
   };
 }
 
+QVariant
+unmarshall(const QDBusMessage & msg)
+{
+  QVariantList variants = msg.arguments();
+
+  std::transform(variants.begin(), variants.end(), variants.begin(),
+      [&](const QVariant & variant)
+      {
+        return toVariant(variant);
+      });
+
+  if (variants.length() == 1) {
+    return variants.at(0);
+  } else {
+    return variants;
+  }
+}
+
 const QDBusConnection &
 DBusConnection::bus(void) const
 {
@@ -174,13 +201,7 @@ DBusConnection::bus(void) const
 void
 DBusConnection::onSignal(const QDBusMessage & msg)
 {
-  qDebug() << __PRETTY_FUNCTION__ << ": " << msg;
-
-  QVariantList variants;
-  for (const QVariant & variant : msg.arguments()) {
-    variants.push_back(toVariant(variant));
-  }
-  emit propertiesChanged(variants);
+  emit propertiesChanged(unmarshall(msg));
 }
 
 QVariant
@@ -202,22 +223,8 @@ DBusConnection::call(const QString & service,
         method, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
 
   if (msg.type() == QDBusMessage::ReplyMessage) {
-    QVariantList variants = msg.arguments();
-
-    std::transform(variants.begin(), variants.end(), variants.begin(),
-        [&](const QVariant & variant)
-        {
-          return toVariant(variant);
-        });
-
-    if (variants.length() == 1) {
-      return variants.at(0);
-    } else {
-      return variants;
-    }
-
+    return unmarshall(msg);
   } else {
-
     return QVariant();
   }
 }

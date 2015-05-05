@@ -171,6 +171,18 @@ DBusConnection::bus(void) const
   return const_cast<DBusConnection *>(this)->bus();
 }
 
+void
+DBusConnection::onSignal(const QDBusMessage & msg)
+{
+  qDebug() << __PRETTY_FUNCTION__ << ": " << msg;
+
+  QVariantList variants;
+  for (const QVariant & variant : msg.arguments()) {
+    variants.push_back(toVariant(variant));
+  }
+  emit propertiesChanged(variants);
+}
+
 QVariant
 DBusConnection::call(const QString & service,
                      const QString & path,
@@ -236,18 +248,6 @@ QDBusConnection &
 DBusSessionConnection::bus(void)
 {
   return m_SessionBus;
-}
-
-void
-DBus::onSignal(const QDBusMessage & msg)
-{
-  qDebug() << __PRETTY_FUNCTION__ << ": " << msg;
-
-  QVariantList variants;
-  for (const QVariant & variant : msg.arguments()) {
-    variants.push_back(toVariant(variant));
-  }
-  emit propertiesChanged(variants);
 }
 
 DBusConnection *

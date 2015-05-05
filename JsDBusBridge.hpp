@@ -18,6 +18,12 @@ class DBusConnection
 {
   Q_OBJECT
 
+  signals:
+    void propertiesChanged(const QVariant &);
+
+  public slots:
+    void onSignal(const QDBusMessage &);
+
   public:
     virtual QDBusConnection & bus(void) = 0;
     virtual const QDBusConnection & bus(void) const;
@@ -69,12 +75,6 @@ class DBus
   Q_OBJECT
   Q_PROPERTY(DBusConnection * system READ system)
   Q_PROPERTY(DBusConnection * session READ session)
-
-  signals:
-    void propertiesChanged(const QVariant &);
-
-  public slots:
-    void onSignal(const QDBusMessage & msg);
 
   public:
     DBusConnection * system(void);

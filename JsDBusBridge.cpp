@@ -165,4 +165,55 @@ toVariant(const QDBusArgument & arg)
   };
 }
 
+DBusSystemConnection::DBusSystemConnection(void)
+  : m_SystemBus(QDBusConnection::systemBus())
+{}
+
+DBusSystemConnection::DBusSystemConnection(const DBusSystemConnection & c)
+  : QObject()
+  , m_SystemBus(c.m_SystemBus)
+{}
+
+DBusSystemConnection &
+DBusSystemConnection::operator=(const DBusSystemConnection & c)
+{
+  this->m_SystemBus = c.m_SystemBus;
+  return *this;
+}
+
+QDBusConnection &
+DBusSystemConnection::bus(void)
+{
+  return m_SystemBus;
+}
+
+namespace Quadro {
+
+DBus::DBus(void)
+{
+  qRegisterMetaType<DBusConnection *>("DBusConnection *");
+  qRegisterMetaType<DBusSystemConnection>("DBusSystemConnection");
+  qRegisterMetaType<DBusSessionConnection>("DBusSessionConnection");
+}
+
+void
+DBus::onSignal(const QDBusMessage & msg)
+{
+  qDebug() << __PRETTY_FUNCTION__ << ": " << msg;
+
+  QVariantList variants;
+  for (const QVariant & variant : msg.arguments()) {
+    variants.push_back(toVariant(variant));
+  }
+  emit propertiesChanged(variants);
+}
+
+DBusConnection *
+DBus::system(void)
+{
+  return &m_SystemConnection;
+}
+
+}; // namespace Quadro
+
 #endif // _QUADRO_JSDBUSBRIDGE_CPP

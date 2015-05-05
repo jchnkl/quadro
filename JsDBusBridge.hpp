@@ -59,19 +59,13 @@ class DBusSystemConnection
   Q_OBJECT
 
   public:
-    DBusSystemConnection(void)
-      : m_SystemBus(QDBusConnection::systemBus())
-    {}
+    DBusSystemConnection(void);
 
-    DBusSystemConnection(const DBusSystemConnection & c)
-      : m_SystemBus(c.m_SystemBus)
-    {}
+    DBusSystemConnection(const DBusSystemConnection &);
 
-    const QDBusConnection&
-    bus(void) const
-    {
-      return m_SystemBus;
-    }
+    DBusSystemConnection & operator=(const DBusSystemConnection &);
+
+    QDBusConnection & bus(void);
 
   private:
     QDBusConnection m_SystemBus;
@@ -119,34 +113,17 @@ class DBus
 
   public slots:
 
-    void
-    onSignal(const QDBusMessage & msg)
-    {
-      qDebug() << __PRETTY_FUNCTION__ << ": " << msg;
-
-      QVariantList variants;
-      for (const QVariant & variant : msg.arguments()) {
-        variants.push_back(toVariant(variant));
-      }
-      emit propertiesChanged(variants);
-    }
+    void onSignal(const QDBusMessage & msg);
 
   public:
+    DBus(void);
+
+    DBusConnection * system(void);
 
     // {
     // }
 
-    const DBusConnection &
-    system(void)
-    {
-      return m_SystemConnection;
-    }
 
-    const DBusConnection &
-    session(void)
-    {
-      return m_SessionConnection;
-    }
 
     Q_INVOKABLE
       // void

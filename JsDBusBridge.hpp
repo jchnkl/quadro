@@ -62,8 +62,6 @@ class DBusSessionConnection
     QDBusConnection m_SessionBus;
 }; // class DBusSessionConnection
 
-namespace Quadro {
-
 class DBus
   :public QObject
 {
@@ -86,7 +84,5 @@ class DBus
     DBusSessionConnection m_SessionConnection;
 
 }; // class DBus
-
-}; // namespace Quadro
 
 #endif // _QUADRO_JSDBUSBRIDGE_HPP

@@ -232,8 +232,6 @@ DBusSessionConnection::bus(void) const
   return m_SessionBus;
 }
 
-namespace Quadro {
-
 void
 DBus::onSignal(const QDBusMessage & msg)
 {
@@ -257,7 +255,5 @@ DBus::session(void)
 {
   return &m_SessionConnection;
 }
-
-}; // namespace Quadro
 
 #endif // _QUADRO_JSDBUSBRIDGE_CPP

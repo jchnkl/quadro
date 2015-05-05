@@ -36,7 +36,6 @@ class DBusConnection
          const QVariant & arg7 = QVariant(),
          const QVariant & arg8 = QVariant()) const;
 
-
 }; // class DBusConnection
 
 class DBusSystemConnection
@@ -76,22 +75,11 @@ class DBus
     void propertiesChanged(const QVariant &);
 
   public slots:
-
     void onSignal(const QDBusMessage & msg);
 
   public:
-
     DBusConnection * system(void);
     DBusConnection * session(void);
-
-    // {
-    // }
-
-
-
-
-
-  protected:
 
   private:
     DBusSystemConnection m_SystemConnection;

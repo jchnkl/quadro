@@ -206,7 +206,7 @@ DBusConnection::bus(void) const
 void
 DBusConnection::onSignal(const QDBusMessage & msg)
 {
-  emit propertiesChanged(unmarshall(msg));
+  emit notify(unmarshall(msg));
 }
 
 QVariant

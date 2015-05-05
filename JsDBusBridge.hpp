@@ -13,7 +13,7 @@ class DBusConnection
   Q_OBJECT
 
   signals:
-    void propertiesChanged(const QVariant &);
+    void notify(const QVariant &);
 
   public slots:
     void onSignal(const QDBusMessage &);

@@ -222,6 +222,16 @@ DBusConnection::call(const QString & service,
   }
 }
 
+bool
+DBusConnection::connect(const QString & service,
+                        const QString & path,
+                        const QString & interface,
+                        const QString & name)
+{
+  return this->bus().connect(service, path, interface, name,
+                             this, SLOT(onSignal(QDBusMessage)));
+}
+
 DBusSystemConnection::DBusSystemConnection(void)
   : m_SystemBus(QDBusConnection::systemBus())
 {}

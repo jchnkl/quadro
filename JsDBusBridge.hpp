@@ -43,6 +43,13 @@ class DBusConnection
          const QVariant & arg7 = QVariant(),
          const QVariant & arg8 = QVariant()) const;
 
+    Q_INVOKABLE
+    bool
+    connect(const QString & service,
+            const QString & path,
+            const QString & interface,
+            const QString & name);
+
 }; // class DBusConnection
 
 class DBusSystemConnection

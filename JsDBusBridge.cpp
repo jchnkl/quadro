@@ -3,6 +3,11 @@
 
 #include "JsDBusBridge.hpp"
 
+// TODO: Unmarshalling still needs fixing, e.g. for:
+// dbus-send --session --print-reply --type=method_call
+//   --dest=org.gnome.Identity /org/gnome/Identity
+//   org.freedesktop.DBus.ObjectManager.GetManagedObjects
+
 QVariant
 toVariant(const QDBusArgument & arg);
 

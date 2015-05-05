@@ -67,32 +67,8 @@ class DBusConnection
          const QVariant & arg5 = QVariant(),
          const QVariant & arg6 = QVariant(),
          const QVariant & arg7 = QVariant(),
-         const QVariant & arg8 = QVariant()) const
-    {
-      QDBusMessage msg =
-        QDBusInterface(service, path, interface, this->bus()).call(
-            method, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+         const QVariant & arg8 = QVariant()) const;
 
-      if (msg.type() == QDBusMessage::ReplyMessage) {
-        QVariantList variants = msg.arguments();
-
-        std::transform(variants.begin(), variants.end(), variants.begin(),
-            [&](const QVariant & variant)
-            {
-              return toVariant(variant);
-            });
-
-        if (variants.length() == 1) {
-          return variants.at(0);
-        } else {
-          return variants;
-        }
-
-      } else {
-
-        return QVariant();
-      }
-    }
 
 }; // class DBusConnection
 

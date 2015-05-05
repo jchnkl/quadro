@@ -165,6 +165,45 @@ toVariant(const QDBusArgument & arg)
   };
 }
 
+QVariant
+DBusConnection::call(const QString & service,
+                     const QString & path,
+                     const QString & interface,
+                     const QString & method,
+                     const QVariant & arg1,
+                     const QVariant & arg2,
+                     const QVariant & arg3,
+                     const QVariant & arg4,
+                     const QVariant & arg5,
+                     const QVariant & arg6,
+                     const QVariant & arg7,
+                     const QVariant & arg8) const
+{
+  QDBusMessage msg =
+    QDBusInterface(service, path, interface, this->bus()).call(
+        method, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+
+  if (msg.type() == QDBusMessage::ReplyMessage) {
+    QVariantList variants = msg.arguments();
+
+    std::transform(variants.begin(), variants.end(), variants.begin(),
+        [&](const QVariant & variant)
+        {
+          return toVariant(variant);
+        });
+
+    if (variants.length() == 1) {
+      return variants.at(0);
+    } else {
+      return variants;
+    }
+
+  } else {
+
+    return QVariant();
+  }
+}
+
 DBusSystemConnection::DBusSystemConnection(void)
   : m_SystemBus(QDBusConnection::systemBus())
 {}

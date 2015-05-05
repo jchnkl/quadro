@@ -89,62 +89,11 @@ class DBus
 
 
 
-    Q_INVOKABLE
-      // void
-    QVariant
-    // call(QDBusConnection * bus,
-    call(
-         const DBusConnection & c,
-         const QString & service,
-         const QString & path,
-         const QString & interface,
-         const QString & method,
-         const QVariant & arg1 = QVariant(),
-         const QVariant & arg2 = QVariant(),
-         const QVariant & arg3 = QVariant(),
-         const QVariant & arg4 = QVariant(),
-         const QVariant & arg5 = QVariant(),
-         const QVariant & arg6 = QVariant(),
-         const QVariant & arg7 = QVariant(),
-         const QVariant & arg8 = QVariant())
-    {
-      QDBusMessage msg =
-        QDBusInterface(service, path, interface, c.bus()).call(
-        // QDBusInterface(service, path, interface, *bus).call(
-            method, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
-            // method);
 
-      // qDebug() << "msg: " << msg;
-      qDebug() << "msg.type(): " << msg.type();
-      if (msg.type() == QDBusMessage::ReplyMessage) {
-        QVariantList result;
-        // m_Reply.clear();
-        QVariantList variants = msg.arguments();
-
-        for (QVariant variant : variants) {
-          result.append(toVariant(variant));
-        }
-
-        qDebug() << "result: " << result;
-        // qDebug() << "result.length(): " << m_Reply.length();
-
-        // return result;
-
-        if (result.length() == 1) {
-          return result.at(0);
-        } else {
-          return result;
-        }
-
-      } else {
-        return QVariant();
-      }
-    }
 
   protected:
 
   private:
-    // QVariantList m_Reply;
     DBusSystemConnection m_SystemConnection;
     DBusSessionConnection m_SessionConnection;
 

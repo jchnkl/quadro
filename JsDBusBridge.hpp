@@ -105,8 +105,8 @@ class DBus
   :public QObject
 {
   Q_OBJECT
-  Q_PROPERTY(QDBusConnection * systemBus READ systemBus)
-  Q_PROPERTY(QDBusConnection * sessionBus READ sessionBus)
+  Q_PROPERTY(QDBusConnection system READ system)
+  Q_PROPERTY(QDBusConnection session READ session)
 
   signals:
     void propertiesChanged(const QVariant &);
@@ -126,54 +126,28 @@ class DBus
     }
 
   public:
-    DBus(void)
-      : m_SystemBus(QDBusConnection::systemBus())
-      , m_SessionBus(QDBusConnection::sessionBus())
-    {}
 
-    // const QVariantList &
-    // reply(void)
     // {
-    //   return m_Reply;
     // }
 
-    QDBusConnection *
-    systemBus(void)
+    const DBusConnection &
+    system(void)
     {
-      return &m_SystemBus;
+      return m_SystemConnection;
     }
 
-    QDBusConnection *
-    sessionBus(void)
+    const DBusConnection &
+    session(void)
     {
-      return &m_SessionBus;
-    }
-
-    Q_INVOKABLE
-    void
-    systemConnectPropertyChanged(const QString & service,
-                                 const QString & path,
-                                 const QString & interface,
-                                 const QString & name)
-                  // QObject * receiver,
-                  // const char * slot)
-    {
-      // m_SystemBus.connect(service, path, interface, name, receiver, slot);
-
-      qDebug() << __PRETTY_FUNCTION__ << "DELIVERABLE: "
-               << m_SystemBus.connect(service, path, interface, name,
-                                      // "a{sv}",
-                                      this,
-                                      // SLOT(onSignal(void)));
-                                      // SLOT(onSignal(QVariantMap)));
-                                      SLOT(onSignal(QDBusMessage)));
+      return m_SessionConnection;
     }
 
     Q_INVOKABLE
       // void
     QVariant
     // call(QDBusConnection * bus,
-    systemCall(
+    call(
+         const DBusConnection & c,
          const QString & service,
          const QString & path,
          const QString & interface,
@@ -188,7 +162,7 @@ class DBus
          const QVariant & arg8 = QVariant())
     {
       QDBusMessage msg =
-        QDBusInterface(service, path, interface, m_SystemBus).call(
+        QDBusInterface(service, path, interface, c.bus()).call(
         // QDBusInterface(service, path, interface, *bus).call(
             method, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
             // method);
@@ -386,8 +360,8 @@ class DBus
 
   private:
     // QVariantList m_Reply;
-    QDBusConnection m_SystemBus;
-    QDBusConnection m_SessionBus;
+    DBusSystemConnection m_SystemConnection;
+    DBusSessionConnection m_SessionConnection;
 
 }; // class DBus
 

@@ -13,39 +13,6 @@ toVariant(const QVariant & variant);
 QVariant
 toVariant(const QDBusArgument & arg);
 
-// class DBusConnection
-//   : public QObject
-// {
-//   Q_OBJECT
-//
-//   public:
-//     DBusConnection(void)
-//       : m_SystemBus(QDBusConnection::systemBus())
-//       , m_SessionBus(QDBusConnection::systemBus())
-//     {}
-//
-//     DBusConnection(const DBusConnection & c)
-//       : m_SystemBus(c.m_SystemBus)
-//       , m_SessionBus(c.m_SessionBus)
-//     {}
-//
-//     const QDBusConnection&
-//     systemBus(void)
-//     {
-//       return m_SystemBus;
-//     }
-//
-//     const QDBusConnection&
-//     sessionBus(void)
-//     {
-//       return m_SessionBus;
-//     }
-//
-//   private:
-//     QDBusConnection m_SystemBus;
-//     QDBusConnection m_SessionBus;
-// }; // class DBusConnection
-
 class DBusConnection
   : public QObject
 {

@@ -70,6 +70,7 @@ class DBus
 {
   Q_OBJECT
   Q_PROPERTY(DBusConnection * system READ system)
+  Q_PROPERTY(DBusConnection * session READ session)
 
   signals:
     void propertiesChanged(const QVariant &);
@@ -81,6 +82,7 @@ class DBus
   public:
 
     DBusConnection * system(void);
+    DBusConnection * session(void);
 
     // {
     // }

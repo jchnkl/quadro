@@ -252,6 +252,12 @@ DBus::system(void)
   return &m_SystemConnection;
 }
 
+DBusConnection *
+DBus::session(void)
+{
+  return &m_SessionConnection;
+}
+
 }; // namespace Quadro
 
 #endif // _QUADRO_JSDBUSBRIDGE_CPP

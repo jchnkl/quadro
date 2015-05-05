@@ -47,16 +47,58 @@ toVariant(const QDBusArgument & arg);
 // }; // class DBusConnection
 
 class DBusConnection
+  : public QObject
 {
+  Q_OBJECT
+
   public:
-    virtual const QDBusConnection& bus(void) const = 0;
+    virtual const QDBusConnection & bus(void) const = 0;
+
+    Q_INVOKABLE
+    QVariant
+    call(const QString & service,
+         const QString & path,
+         const QString & interface,
+         const QString & method,
+         const QVariant & arg1 = QVariant(),
+         const QVariant & arg2 = QVariant(),
+         const QVariant & arg3 = QVariant(),
+         const QVariant & arg4 = QVariant(),
+         const QVariant & arg5 = QVariant(),
+         const QVariant & arg6 = QVariant(),
+         const QVariant & arg7 = QVariant(),
+         const QVariant & arg8 = QVariant()) const
+    {
+      QDBusMessage msg =
+        QDBusInterface(service, path, interface, this->bus()).call(
+            method, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+
+      if (msg.type() == QDBusMessage::ReplyMessage) {
+        QVariantList variants = msg.arguments();
+
+        std::transform(variants.begin(), variants.end(), variants.begin(),
+            [&](const QVariant & variant)
+            {
+              return toVariant(variant);
+            });
+
+        if (variants.length() == 1) {
+          return variants.at(0);
+        } else {
+          return variants;
+        }
+
+      } else {
+
+        return QVariant();
+      }
+    }
+
 }; // class DBusConnection
 
 class DBusSystemConnection
-  : public QObject
-  , public DBusConnection
+  : public DBusConnection
 {
-  Q_OBJECT
 
   public:
     DBusSystemConnection(void);
@@ -65,7 +107,7 @@ class DBusSystemConnection
 
     DBusSystemConnection & operator=(const DBusSystemConnection &);
 
-    QDBusConnection & bus(void);
+    const QDBusConnection & bus(void) const;
 
   private:
     QDBusConnection m_SystemBus;
@@ -105,8 +147,7 @@ class DBus
   :public QObject
 {
   Q_OBJECT
-  Q_PROPERTY(QDBusConnection system READ system)
-  Q_PROPERTY(QDBusConnection session READ session)
+  Q_PROPERTY(DBusConnection * system READ system)
 
   signals:
     void propertiesChanged(const QVariant &);

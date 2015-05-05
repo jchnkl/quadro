@@ -170,8 +170,7 @@ DBusSystemConnection::DBusSystemConnection(void)
 {}
 
 DBusSystemConnection::DBusSystemConnection(const DBusSystemConnection & c)
-  : QObject()
-  , m_SystemBus(c.m_SystemBus)
+  : m_SystemBus(c.m_SystemBus)
 {}
 
 DBusSystemConnection &
@@ -181,8 +180,8 @@ DBusSystemConnection::operator=(const DBusSystemConnection & c)
   return *this;
 }
 
-QDBusConnection &
-DBusSystemConnection::bus(void)
+const QDBusConnection &
+DBusSystemConnection::bus(void) const
 {
   return m_SystemBus;
 }

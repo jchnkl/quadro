@@ -212,13 +212,6 @@ DBusSystemConnection::DBusSystemConnection(const DBusSystemConnection & c)
   : m_SystemBus(c.m_SystemBus)
 {}
 
-DBusSystemConnection &
-DBusSystemConnection::operator=(const DBusSystemConnection & c)
-{
-  this->m_SystemBus = c.m_SystemBus;
-  return *this;
-}
-
 const QDBusConnection &
 DBusSystemConnection::bus(void) const
 {

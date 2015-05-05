@@ -45,11 +45,7 @@ class DBusSystemConnection
 
   public:
     DBusSystemConnection(void);
-
     DBusSystemConnection(const DBusSystemConnection &);
-
-    DBusSystemConnection & operator=(const DBusSystemConnection &);
-
     const QDBusConnection & bus(void) const;
 
   private:

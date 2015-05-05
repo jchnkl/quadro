@@ -218,14 +218,21 @@ DBusSystemConnection::bus(void) const
   return m_SystemBus;
 }
 
-namespace Quadro {
+DBusSessionConnection::DBusSessionConnection(void)
+  : m_SessionBus(QDBusConnection::systemBus())
+{}
 
-DBus::DBus(void)
+DBusSessionConnection::DBusSessionConnection(const DBusSessionConnection & c)
+  : m_SessionBus(c.m_SessionBus)
+{}
+
+const QDBusConnection &
+DBusSessionConnection::bus(void) const
 {
-  qRegisterMetaType<DBusConnection *>("DBusConnection *");
-  qRegisterMetaType<DBusSystemConnection>("DBusSystemConnection");
-  qRegisterMetaType<DBusSessionConnection>("DBusSessionConnection");
+  return m_SessionBus;
 }
+
+namespace Quadro {
 
 void
 DBus::onSignal(const QDBusMessage & msg)

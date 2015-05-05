@@ -42,7 +42,6 @@ class DBusConnection
 class DBusSystemConnection
   : public DBusConnection
 {
-
   public:
     DBusSystemConnection(void);
     DBusSystemConnection(const DBusSystemConnection &);
@@ -53,32 +52,16 @@ class DBusSystemConnection
 }; // class DBusSystemConnection
 
 class DBusSessionConnection
-  : public QObject
-  , public DBusConnection
+  : public DBusConnection
 {
-  Q_OBJECT
-
   public:
-    DBusSessionConnection(void)
-      : m_SessionBus(QDBusConnection::systemBus())
-    {}
-
-    DBusSessionConnection(const DBusSessionConnection & c)
-      : m_SessionBus(c.m_SessionBus)
-    {}
-
-    const QDBusConnection&
-    bus(void) const
-    {
-      return m_SessionBus;
-    }
+    DBusSessionConnection(void);
+    DBusSessionConnection(const DBusSessionConnection &);
+    const QDBusConnection & bus(void) const;
 
   private:
     QDBusConnection m_SessionBus;
 }; // class DBusSessionConnection
-
-Q_DECLARE_METATYPE(DBusSystemConnection)
-Q_DECLARE_METATYPE(DBusSessionConnection)
 
 namespace Quadro {
 
@@ -96,7 +79,6 @@ class DBus
     void onSignal(const QDBusMessage & msg);
 
   public:
-    DBus(void);
 
     DBusConnection * system(void);
 

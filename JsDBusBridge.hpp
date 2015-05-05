@@ -7,7 +7,97 @@
 #include <QObject>
 #include <QVariant>
 
-// Q_DECLARE_METATYPE(QDBusConnection)
+// class DBusConnection
+//   : public QObject
+// {
+//   Q_OBJECT
+//
+//   public:
+//     DBusConnection(void)
+//       : m_SystemBus(QDBusConnection::systemBus())
+//       , m_SessionBus(QDBusConnection::systemBus())
+//     {}
+//
+//     DBusConnection(const DBusConnection & c)
+//       : m_SystemBus(c.m_SystemBus)
+//       , m_SessionBus(c.m_SessionBus)
+//     {}
+//
+//     const QDBusConnection&
+//     systemBus(void)
+//     {
+//       return m_SystemBus;
+//     }
+//
+//     const QDBusConnection&
+//     sessionBus(void)
+//     {
+//       return m_SessionBus;
+//     }
+//
+//   private:
+//     QDBusConnection m_SystemBus;
+//     QDBusConnection m_SessionBus;
+// }; // class DBusConnection
+
+class DBusConnection
+{
+  public:
+    virtual const QDBusConnection& bus(void) const = 0;
+}; // class DBusConnection
+
+class DBusSystemConnection
+  : public QObject
+  , public DBusConnection
+{
+  Q_OBJECT
+
+  public:
+    DBusSystemConnection(void)
+      : m_SystemBus(QDBusConnection::systemBus())
+    {}
+
+    DBusSystemConnection(const DBusSystemConnection & c)
+      : m_SystemBus(c.m_SystemBus)
+    {}
+
+    const QDBusConnection&
+    bus(void) const
+    {
+      return m_SystemBus;
+    }
+
+  private:
+    QDBusConnection m_SystemBus;
+}; // class DBusSystemConnection
+
+class DBusSessionConnection
+  : public QObject
+  , public DBusConnection
+{
+  Q_OBJECT
+
+  public:
+    DBusSessionConnection(void)
+      : m_SessionBus(QDBusConnection::systemBus())
+    {}
+
+    DBusSessionConnection(const DBusSessionConnection & c)
+      : m_SessionBus(c.m_SessionBus)
+    {}
+
+    const QDBusConnection&
+    bus(void) const
+    {
+      return m_SessionBus;
+    }
+
+  private:
+    QDBusConnection m_SessionBus;
+}; // class DBusSessionConnection
+
+Q_DECLARE_METATYPE(DBusSystemConnection)
+Q_DECLARE_METATYPE(DBusSessionConnection)
 
 namespace Quadro {
 

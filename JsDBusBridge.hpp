@@ -209,6 +209,7 @@ class DBus
 
 }; // class DBus
 
+/*
 class JsDBusBridge
   : public QObject
 {
@@ -502,6 +503,7 @@ class JsDBusBridge
     // QDBusConnection m_SystemBus;
     QVariantList m_VariantList;
 };
+*/
 
 }; // namespace Quadro
 

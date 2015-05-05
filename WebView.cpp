@@ -120,7 +120,6 @@ WebView::contextMenuEvent(QContextMenuEvent * e)
 void
 WebView::onJsWindowObjectCleared(void)
 {
-  this->page()->mainFrame()->addToJavaScriptWindowObject("jsDBusBridge", &m_JsDBusBridge);
   this->page()->mainFrame()->addToJavaScriptWindowObject("dbus", &m_DBus);
 }
 

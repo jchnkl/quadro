@@ -47,7 +47,6 @@ class WebView
   private:
     Ui m_Ui;
     DBus m_DBus;
-    JsDBusBridge m_JsDBusBridge;
 };
 
 }; // namespace Quadro

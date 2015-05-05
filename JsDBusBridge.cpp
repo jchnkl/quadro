@@ -165,6 +165,12 @@ toVariant(const QDBusArgument & arg)
   };
 }
 
+const QDBusConnection &
+DBusConnection::bus(void) const
+{
+  return const_cast<DBusConnection *>(this)->bus();
+}
+
 QVariant
 DBusConnection::call(const QString & service,
                      const QString & path,
@@ -212,8 +218,8 @@ DBusSystemConnection::DBusSystemConnection(const DBusSystemConnection & c)
   : m_SystemBus(c.m_SystemBus)
 {}
 
-const QDBusConnection &
-DBusSystemConnection::bus(void) const
+QDBusConnection &
+DBusSystemConnection::bus(void)
 {
   return m_SystemBus;
 }
@@ -226,8 +232,8 @@ DBusSessionConnection::DBusSessionConnection(const DBusSessionConnection & c)
   : m_SessionBus(c.m_SessionBus)
 {}
 
-const QDBusConnection &
-DBusSessionConnection::bus(void) const
+QDBusConnection &
+DBusSessionConnection::bus(void)
 {
   return m_SessionBus;
 }

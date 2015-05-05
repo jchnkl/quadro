@@ -19,7 +19,8 @@ class DBusConnection
   Q_OBJECT
 
   public:
-    virtual const QDBusConnection & bus(void) const = 0;
+    virtual QDBusConnection & bus(void) = 0;
+    virtual const QDBusConnection & bus(void) const;
 
     Q_INVOKABLE
     QVariant
@@ -44,7 +45,7 @@ class DBusSystemConnection
   public:
     DBusSystemConnection(void);
     DBusSystemConnection(const DBusSystemConnection &);
-    const QDBusConnection & bus(void) const;
+    QDBusConnection & bus(void);
 
   private:
     QDBusConnection m_SystemBus;
@@ -56,7 +57,7 @@ class DBusSessionConnection
   public:
     DBusSessionConnection(void);
     DBusSessionConnection(const DBusSessionConnection &);
-    const QDBusConnection & bus(void) const;
+    QDBusConnection & bus(void);
 
   private:
     QDBusConnection m_SessionBus;

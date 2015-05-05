@@ -19,25 +19,9 @@ class DBus
   Q_PROPERTY(QDBusConnection * sessionBus READ sessionBus)
 
   signals:
-    // void propertiesChanged(void);
     void propertiesChanged(const QVariant &);
-    // void propertiesChanged(const QVariantMap &);
 
   public slots:
-
-    // void
-    // onSignal(void)
-    // {
-    //   qDebug() << __PRETTY_FUNCTION__;
-    //   emit propertiesChanged();
-    // }
-
-    // void
-    // onSignal(const QVariantMap & map)
-    // {
-    //   qDebug() << __PRETTY_FUNCTION__;
-    //   emit propertiesChanged(map);
-    // }
 
     void
     onSignal(const QDBusMessage & msg)

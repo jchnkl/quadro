@@ -9,16 +9,16 @@
 //   org.freedesktop.DBus.ObjectManager.GetManagedObjects
 
 QVariant
-toVariant(const QDBusArgument & arg);
+fromVariant(const QVariant & variant);
 
 QVariant
-toVariant(const QVariant & variant);
+fromArgument(const QDBusArgument & arg);
 
 QVariant
 unmarshall(const QDBusMessage & msg);
 
 QVariant
-toVariant(const QVariant & variant)
+fromVariant(const QVariant & variant)
 {
   qDebug() << __PRETTY_FUNCTION__ << ": " << variant;
   switch (variant.type()) {
@@ -26,7 +26,7 @@ toVariant(const QVariant & variant)
 
       if (variant.canConvert<QDBusVariant>()) {
         qDebug() << "case QVariant::UserType (QDBusVariant)";
-        return toVariant(variant.value<QDBusVariant>().variant());
+        return fromVariant(variant.value<QDBusVariant>().variant());
         // toVariant(qvariant_cast<QDBusVariant>(variant).variant());
 
       } else if (variant.canConvert<QVariantMap>()) {
@@ -35,7 +35,7 @@ toVariant(const QVariant & variant)
         std::transform(tmp.begin(), tmp.end(), tmp.begin(),
             [&](const QVariant & var)
             {
-              return toVariant(var);
+              return fromVariant(var);
             });
         return tmp;
 
@@ -51,7 +51,7 @@ toVariant(const QVariant & variant)
                      << "\n\tvar.type(): " << var.type()
                      << "\n\tvar: " << var
                      << "\n\tvar.value<QDBusObjectPath>().path(): " << var.value<QDBusObjectPath>().path();
-              return toVariant(var);
+              return fromVariant(var);
             });
         return tmp;
 
@@ -69,7 +69,7 @@ toVariant(const QVariant & variant)
 
       } else {
         qDebug() << "case QVariant::UserType (QDBusArgument)";
-        return toVariant(variant.value<QDBusArgument>());
+        return fromArgument(variant.value<QDBusArgument>());
       }
 
     case QVariant::Map:
@@ -87,7 +87,7 @@ toVariant(const QVariant & variant)
 }
 
 QVariant
-toVariant(const QDBusArgument & arg)
+fromArgument(const QDBusArgument & arg)
 {
   // qDebug() << "arg.currentType(): " << arg.currentType();
   switch (arg.currentType()) {
@@ -113,7 +113,7 @@ toVariant(const QDBusArgument & arg)
 
       arg.beginArray();
       while (! arg.atEnd()) {
-        QVariant var = toVariant(arg);
+        QVariant var = fromArgument(arg);
         tmp.push_back(var);
       }
       arg.endArray();
@@ -134,7 +134,7 @@ toVariant(const QDBusArgument & arg)
             //          ;
 
             // return var.value<QDBusObjectPath>().path();
-            return toVariant(var);
+            return fromVariant(var);
           });
 
       // return QVariant();
@@ -146,7 +146,7 @@ toVariant(const QDBusArgument & arg)
       QVariantList tmp_var_list;
       arg.beginStructure();
       while (! arg.atEnd()) {
-        QVariant var = toVariant(arg);
+        QVariant var = fromArgument(arg);
         tmp_var_list.push_back(var);
       }
       arg.endStructure();
@@ -165,7 +165,7 @@ toVariant(const QDBusArgument & arg)
             //          << "\n\tvar.type(): " << var.type()
             //          << "\n\tvar: " << var
             //          << "\n\tvar.value<QDBusObjectPath>().path(): " << var.value<QDBusObjectPath>().path();
-            return toVariant(var);
+            return fromVariant(var);
           });
 
       return tmp;
@@ -187,7 +187,7 @@ unmarshall(const QDBusMessage & msg)
   std::transform(variants.begin(), variants.end(), variants.begin(),
       [&](const QVariant & variant)
       {
-        return toVariant(variant);
+        return fromVariant(variant);
       });
 
   if (variants.length() == 1) {

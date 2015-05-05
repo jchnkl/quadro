@@ -3,11 +3,12 @@
 
 #include <iostream>
 #include <algorithm>
+#include <memory>
 #include <QtDBus>
 #include <QObject>
 #include <QVariant>
 
-class DBusConnection
+class DBusSignal
   : public QObject
 {
   Q_OBJECT
@@ -17,6 +18,21 @@ class DBusConnection
 
   public slots:
     void onSignal(const QDBusMessage &);
+
+  public:
+    static
+    std::shared_ptr<DBusSignal>
+    connect(QDBusConnection & c,
+            const QString & service,
+            const QString & path,
+            const QString & interface,
+            const QString & name);
+}; // DBusSignal
+
+class DBusConnection
+  : public QObject
+{
+  Q_OBJECT
 
   public:
     virtual QDBusConnection & bus(void) = 0;
@@ -38,12 +54,17 @@ class DBusConnection
          const QVariant & arg8 = QVariant()) const;
 
     Q_INVOKABLE
-    bool
+    DBusSignal *
     connect(const QString & service,
             const QString & path,
             const QString & interface,
             const QString & name);
 
+  private:
+    QHash<QString, std::shared_ptr<DBusSignal>> m_Signals;
+
+    QString
+    key(const QString &, const QString &, const QString &, const QString &);
 }; // class DBusConnection
 
 class DBusSystemConnection
@@ -80,6 +101,7 @@ class DBus
   public:
     DBus(void)
     {
+      qRegisterMetaType<DBusSignal *>();
       qRegisterMetaType<DBusConnection *>();
     }
 
@@ -89,7 +111,6 @@ class DBus
   private:
     DBusSystemConnection m_SystemConnection;
     DBusSessionConnection m_SessionConnection;
-
 }; // class DBus
 
 #endif // _QUADRO_JSDBUSBRIDGE_HPP

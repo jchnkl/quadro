@@ -254,7 +254,7 @@ DBusSystemConnection::bus(void)
 }
 
 DBusSessionConnection::DBusSessionConnection(void)
-  : m_SessionBus(QDBusConnection::systemBus())
+  : m_SessionBus(QDBusConnection::sessionBus())
 {}
 
 DBusSessionConnection::DBusSessionConnection(const DBusSessionConnection & c)

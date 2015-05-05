@@ -78,6 +78,11 @@ class DBus
   Q_PROPERTY(DBusConnection * session READ session)
 
   public:
+    DBus(void)
+    {
+      qRegisterMetaType<DBusConnection *>();
+    }
+
     DBusConnection * system(void);
     DBusConnection * session(void);
 

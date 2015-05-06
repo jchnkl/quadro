@@ -144,8 +144,8 @@ fromArgument(const QDBusArgument & arg)
         // try to convert the key (which can also be an QDBusObjectPath) to
         // a string. On failure, emit a warning and dismiss the entry.
         try {
-          QString key = toString(fromVariant(key));
-          tmp.insert(key, fromVariant(value));
+          QString mapkey = toString(fromVariant(key));
+          tmp.insert(mapkey, fromVariant(value));
         } catch (const std::exception & e) {
           qWarning() << e.what();
         }

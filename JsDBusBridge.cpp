@@ -17,6 +17,25 @@ fromArgument(const QDBusArgument & arg);
 QVariant
 unmarshall(const QDBusMessage & msg);
 
+QString
+toString(const QVariant & variant);
+
+QString
+toString(const QVariant & variant)
+{
+  QString result = variant.value<QString>();
+
+  if (! result.isNull()) {
+    return result;
+  }
+
+  throw std::runtime_error(std::string(__PRETTY_FUNCTION__)
+                           + ": cannot convert "
+                           + std::string(variant.typeName())
+                           + " to QString."
+                           + " This is probably a bug in the remote service");
+}
+
 QVariant
 fromVariant(const QVariant & variant)
 {

@@ -34,17 +34,14 @@ toString(const QVariant & variant)
 QVariant
 fromVariant(const QVariant & variant)
 {
-  qDebug() << __PRETTY_FUNCTION__ << ": " << variant;
   switch (variant.type()) {
     case QVariant::UserType:
 
       if (variant.canConvert<QDBusVariant>()) {
-        qDebug() << "case QVariant::UserType (QDBusVariant)";
         return fromVariant(variant.value<QDBusVariant>().variant());
         // toVariant(qvariant_cast<QDBusVariant>(variant).variant());
 
       } else if (variant.canConvert<QVariantMap>()) {
-        qDebug() << "case QVariant::UserType (QVariantMap)";
         QVariantMap tmp = variant.value<QVariantMap>();
         std::transform(tmp.begin(), tmp.end(), tmp.begin(),
             [&](const QVariant & var)
@@ -54,35 +51,24 @@ fromVariant(const QVariant & variant)
         return tmp;
 
       } else if (variant.canConvert<QVariantList>()) {
-        qDebug() << "case QVariant::UserType (QVariantList)";
-        qDebug() << "QVariantList";
         QVariantList tmp = variant.value<QVariantList>();
         std::transform(tmp.begin(), tmp.end(), tmp.begin(),
             [&](const QVariant & var)
             {
-              // qDebug() << "QVariantList";
-            qDebug() << __PRETTY_FUNCTION__ << ":"
-                     << "\n\tvar.type(): " << var.type()
-                     << "\n\tvar: " << var
-                     << "\n\tvar.value<QDBusObjectPath>().path(): " << var.value<QDBusObjectPath>().path();
               return fromVariant(var);
             });
         return tmp;
 
       } else if (variant.canConvert<QByteArray>()) {
-        qDebug() << "case QVariant::UserType (QByteArray)";
         return QString(variant.value<QByteArray>().constData());
 
       } else if (variant.canConvert<QDBusSignature>()) {
-        qDebug() << "case QVariant::UserType (QDBusSignature)";
         return variant.value<QDBusSignature>().signature();
 
       } else if (variant.canConvert<QDBusObjectPath>()) {
-        qDebug() << "case QVariant::UserType (QDBusObjectPath)";
         return variant.value<QDBusObjectPath>().path();
 
       } else {
-        qDebug() << "case QVariant::UserType (QDBusArgument)";
         return fromArgument(variant.value<QDBusArgument>());
       }
 
@@ -97,12 +83,9 @@ fromVariant(const QVariant & variant)
 QVariant
 fromArgument(const QDBusArgument & arg)
 {
-  // qDebug() << "arg.currentType(): " << arg.currentType();
   switch (arg.currentType()) {
     case QDBusArgument::BasicType:
     {
-      // QVariant var = arg.asVariant();
-      // qDebug() << "var: " << var.type() << " \"" << var << "\"";
       return arg.asVariant();
     }
 
@@ -126,21 +109,9 @@ fromArgument(const QDBusArgument & arg)
       }
       arg.endArray();
 
-      // qDebug() << "arrayType: " << tmp;
-      qDebug() << __PRETTY_FUNCTION__ << ": " << tmp.length();
-      for (auto d : tmp) {
-        qDebug() << "d: " << d;
-      }
       std::transform(tmp.begin(), tmp.end(), tmp.begin(),
           [&](const QVariant & var)
           {
-            // qDebug() << __PRETTY_FUNCTION__ << ":"
-            //          << "\n\tvar.type(): " << var.type()
-            //          << "\n\tvar: " << var
-            //          // << "\n\tvar.value<QDBusObjectPath>().path(): " << var.value<QDBusObjectPath>().path()
-            //          << "\n\tvar.value..: " << var.value<QDBusObjectPath>().path();
-            //          ;
-
             // return var.value<QDBusObjectPath>().path();
             return fromVariant(var);
           });

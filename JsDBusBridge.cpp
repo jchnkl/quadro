@@ -15,6 +15,9 @@ unmarshall(const QDBusMessage & msg);
 QString
 toString(const QVariant & variant);
 
+QVariantList &
+transformVariants(QVariantList & variants);
+
 QString
 toString(const QVariant & variant)
 {
@@ -31,6 +34,17 @@ toString(const QVariant & variant)
                            + " This is probably a bug in the remote service");
 }
 
+template<typename Iterator>
+void
+transformVariants(Iterator begin, Iterator end)
+{
+  std::transform(begin, end, begin,
+      [&](const QVariant & var)
+      {
+        return fromVariant(var);
+      });
+}
+
 QVariant
 fromVariant(const QVariant & variant)
 {
@@ -42,20 +56,12 @@ fromVariant(const QVariant & variant)
 
       } else if (variant.canConvert<QVariantMap>()) {
         QVariantMap tmp = variant.value<QVariantMap>();
-        std::transform(tmp.begin(), tmp.end(), tmp.begin(),
-            [&](const QVariant & var)
-            {
-              return fromVariant(var);
-            });
+        transformVariants(tmp.begin(), tmp.end());
         return tmp;
 
       } else if (variant.canConvert<QVariantList>()) {
         QVariantList tmp = variant.value<QVariantList>();
-        std::transform(tmp.begin(), tmp.end(), tmp.begin(),
-            [&](const QVariant & var)
-            {
-              return fromVariant(var);
-            });
+        transformVariants(tmp.begin(), tmp.end());
         return tmp;
 
       } else if (variant.canConvert<QByteArray>()) {
@@ -104,11 +110,7 @@ fromArgument(const QDBusArgument & arg)
       }
       arg.endArray();
 
-      std::transform(tmp.begin(), tmp.end(), tmp.begin(),
-          [&](const QVariant & var)
-          {
-            return fromVariant(var);
-          });
+      transformVariants(tmp.begin(), tmp.end());
 
       return tmp;
     }
@@ -166,11 +168,7 @@ unmarshall(const QDBusMessage & msg)
 {
   QVariantList variants = msg.arguments();
 
-  std::transform(variants.begin(), variants.end(), variants.begin(),
-      [&](const QVariant & variant)
-      {
-        return fromVariant(variant);
-      });
+  transformVariants(variants.begin(), variants.end());
 
   if (variants.length() == 1) {
     return variants.at(0);

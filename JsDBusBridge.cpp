@@ -91,12 +91,6 @@ fromVariant(const QVariant & variant)
         return fromArgument(variant.value<QDBusArgument>());
       }
 
-    case QVariant::Map:
-      qDebug() << "case QVariant::Map";
-      return variant;
-    case QVariant::List:
-      qDebug() << "case QVariant::List";
-      return variant;
     default:
       return variant;
       break;

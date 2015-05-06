@@ -39,7 +39,6 @@ fromVariant(const QVariant & variant)
 
       if (variant.canConvert<QDBusVariant>()) {
         return fromVariant(variant.value<QDBusVariant>().variant());
-        // toVariant(qvariant_cast<QDBusVariant>(variant).variant());
 
       } else if (variant.canConvert<QVariantMap>()) {
         QVariantMap tmp = variant.value<QVariantMap>();
@@ -76,8 +75,6 @@ fromVariant(const QVariant & variant)
       return variant;
       break;
   };
-//
-//       return QVariant();
 }
 
 QVariant
@@ -99,8 +96,6 @@ fromArgument(const QDBusArgument & arg)
     case QDBusArgument::ArrayType:
     {
       QVariantList tmp;
-      // QList<QDBusObjectPath> tmp;
-      // arg >> tmp;
 
       arg.beginArray();
       while (! arg.atEnd()) {
@@ -112,11 +107,9 @@ fromArgument(const QDBusArgument & arg)
       std::transform(tmp.begin(), tmp.end(), tmp.begin(),
           [&](const QVariant & var)
           {
-            // return var.value<QDBusObjectPath>().path();
             return fromVariant(var);
           });
 
-      // return QVariant();
       return tmp;
     }
 

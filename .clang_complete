@@ -1,8 +1,6 @@
--fPIC
+-w
+-fPIE
 -std=c++11
-
-# pkg-config --cflags Qt5Widgets Qt5WebKitWidgets
-
 -I/usr/include/qt
 -I/usr/include/qt/QtCore
 -I/usr/include/qt/QtDBus

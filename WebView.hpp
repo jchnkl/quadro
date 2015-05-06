@@ -13,6 +13,16 @@
 
 namespace Quadro {
 
+class WebPage
+  : public QWebPage
+{
+  Q_OBJECT
+  protected:
+    void javaScriptConsoleMessage(const QString & message,
+                                  int lineNumber,
+                                  const QString & sourceID);
+}; // class WebPage
+
 class WebView
   : public QWebView
 {
@@ -47,6 +57,7 @@ class WebView
   private:
     Ui m_Ui;
     DBus m_DBus;
+    WebPage m_WebPage;
 };
 
 }; // namespace Quadro

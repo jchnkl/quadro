@@ -4,9 +4,24 @@
 #include "WebView.hpp"
 #include "NetWmWindowType.hpp"
 
+#include <iostream>
 #include <QWebFrame>
 
 namespace Quadro {
+
+void
+WebPage::javaScriptConsoleMessage(const QString & message,
+                                  int lineNumber,
+                                  const QString & sourceID)
+{
+  std::cerr << "<"
+            << sourceID.toStdString()
+            << "|"
+            << std::to_string(lineNumber)
+            << "> "
+            << message.toStdString()
+            << std::endl;
+}
 
 void
 WebView::onLoadUrl(const QString & url)
@@ -17,6 +32,8 @@ WebView::onLoadUrl(const QString & url)
 WebView::WebView(const Config & config)
   : m_Ui(this)
 {
+  this->setPage(&m_WebPage);
+
   // create & set transparent palette for browser window
   QPalette palette = this->palette();
   palette.setBrush(QPalette::Base, Qt::transparent);

@@ -3,11 +3,6 @@
 
 #include "JsDBusBridge.hpp"
 
-// TODO: Unmarshalling still needs fixing, e.g. for:
-// dbus-send --session --print-reply --type=method_call
-//   --dest=org.gnome.Identity /org/gnome/Identity
-//   org.freedesktop.DBus.ObjectManager.GetManagedObjects
-
 QVariant
 fromVariant(const QVariant & variant);
 
@@ -169,17 +164,27 @@ fromArgument(const QDBusArgument & arg)
     case QDBusArgument::MapType:
     {
       QVariantMap tmp;
-      arg >> tmp;
 
-      std::transform(tmp.begin(), tmp.end(), tmp.begin(),
-          [&](const QVariant & var)
-          {
-            // qDebug() << __PRETTY_FUNCTION__ << ":"
-            //          << "\n\tvar.type(): " << var.type()
-            //          << "\n\tvar: " << var
-            //          << "\n\tvar.value<QDBusObjectPath>().path(): " << var.value<QDBusObjectPath>().path();
-            return fromVariant(var);
-          });
+      arg.beginMap();
+      while (! arg.atEnd()) {
+        QVariant key;
+        QVariant value;
+
+        arg.beginMapEntry();
+        key = fromArgument(arg);
+        value = fromArgument(arg);
+        arg.endMapEntry();
+
+        // try to convert the key (which can also be an QDBusObjectPath) to
+        // a string. On failure, emit a warning and dismiss the entry.
+        try {
+          QString key = toString(fromVariant(key));
+          tmp.insert(key, fromVariant(value));
+        } catch (const std::exception & e) {
+          qWarning() << e.what();
+        }
+      }
+      arg.endMap();
 
       return tmp;
     }

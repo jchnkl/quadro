@@ -206,6 +206,12 @@ DBusConnection::bus(void) const
   return const_cast<DBusConnection *>(this)->bus();
 }
 
+void
+DBusConnection::reset(void)
+{
+  m_Signals.clear();
+}
+
 QVariant
 DBusConnection::call(const QString & service,
                      const QString & path,
@@ -284,6 +290,13 @@ QDBusConnection &
 DBusSessionConnection::bus(void)
 {
   return m_SessionBus;
+}
+
+void
+DBus::reset(void)
+{
+  m_SystemConnection.reset();
+  m_SessionConnection.reset();
 }
 
 DBusConnection *

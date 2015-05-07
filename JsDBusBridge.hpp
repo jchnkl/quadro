@@ -38,6 +38,8 @@ class DBusConnection
     virtual QDBusConnection & bus(void) = 0;
     virtual const QDBusConnection & bus(void) const;
 
+    void reset(void);
+
     Q_INVOKABLE
     QVariant
     call(const QString & service,
@@ -105,6 +107,7 @@ class DBus
       qRegisterMetaType<DBusConnection *>();
     }
 
+    void reset(void);
     DBusConnection * system(void);
     DBusConnection * session(void);
 

@@ -255,6 +255,22 @@ DBusConnection::connect(const QString & service,
   }
 }
 
+void
+DBusConnection::disconnect(const QString & service,
+                           const QString & path,
+                           const QString & interface,
+                           const QString & name)
+{
+  auto sigkey = this->key(service, path, interface, name);
+  auto signal = m_Signals.find(sigkey);
+
+  if (signal->first < 2) {
+    m_Signals.erase(signal);
+  } else {
+    --(signal->first);
+  }
+}
+
 QString
 DBusConnection::key(const QString & a,
                     const QString & b,

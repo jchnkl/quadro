@@ -62,6 +62,13 @@ class DBusConnection
             const QString & interface,
             const QString & name);
 
+    Q_INVOKABLE
+    void
+    disconnect(const QString & service,
+               const QString & path,
+               const QString & interface,
+               const QString & name);
+
   private:
     QHash<QString, QPair<std::size_t, std::shared_ptr<DBusSignal>>> m_Signals;
 

@@ -271,6 +271,16 @@ DBusConnection::disconnect(const QString & service,
   }
 }
 
+bool
+DBusConnection::isConnected(const QString & service,
+                            const QString & path,
+                            const QString & interface,
+                            const QString & name)
+{
+  auto sigkey = this->key(service, path, interface, name);
+  return m_Signals.find(sigkey) != m_Signals.end();
+}
+
 QString
 DBusConnection::key(const QString & a,
                     const QString & b,

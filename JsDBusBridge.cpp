@@ -248,10 +248,10 @@ DBusConnection::connect(const QString & service,
 
   if (signal == m_Signals.end()) {
     auto sigobj = DBusSignal::connect(this->bus(), service, path, interface, name);
-    m_Signals[sigkey] = sigobj;
+    m_Signals[sigkey] = { 1, sigobj };
     return sigobj.get();
   } else {
-    return signal->get();
+    return signal->second.get();
   }
 }
 

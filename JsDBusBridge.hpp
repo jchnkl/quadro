@@ -63,7 +63,7 @@ class DBusConnection
             const QString & name);
 
   private:
-    QHash<QString, std::shared_ptr<DBusSignal>> m_Signals;
+    QHash<QString, QPair<std::size_t, std::shared_ptr<DBusSignal>>> m_Signals;
 
     QString
     key(const QString &, const QString &, const QString &, const QString &);

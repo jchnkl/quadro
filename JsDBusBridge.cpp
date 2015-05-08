@@ -200,6 +200,20 @@ DBusSignal::connect(DBusConnection & c,
   }
 }
 
+void
+DBusSignal::connectNotify(const QMetaMethod & signal)
+{
+  int recv = receivers(SIGNAL(notify(QVariant)));
+  emit receiversChanged(this, recv);
+}
+
+void
+DBusSignal::disconnectNotify(const QMetaMethod & signal)
+{
+  int recv = receivers(SIGNAL(notify(QVariant)));
+  emit receiversChanged(this, recv);
+}
+
 const QDBusConnection &
 DBusConnection::bus(void) const
 {
@@ -251,6 +265,8 @@ DBusConnection::connect(const QString & service,
 
   if (sigit == m_Signals.end()) {
     auto sigobj = DBusSignal::connect(*this, service, path, interface, name);
+    QObject::connect(sigobj, &DBusSignal::receiversChanged,
+                     this, &DBusConnection::onReceiversChanged);
     m_Signals[sigkey] = sigobj;
     return sigobj;
   } else {
@@ -271,6 +287,20 @@ DBusConnection::disconnect(const QString & service,
     m_Signals.erase(signal);
   } else {
     --(signal->first);
+  }
+}
+
+void
+DBusConnection::onReceiversChanged(DBusSignal * ptr, int recvs)
+{
+  if (recvs == 0) {
+    for (auto sigit = m_Signals.begin(); sigit != m_Signals.end(); ++sigit) {
+      if (ptr == *sigit) {
+        (*sigit)->deleteLater();
+        m_Signals.erase(sigit);
+        return;
+      }
+    }
   }
 }
 

@@ -209,6 +209,9 @@ DBusConnection::bus(void) const
 void
 DBusConnection::reset(void)
 {
+  for (auto s : m_Signals) {
+    s->deleteLater();
+  }
   m_Signals.clear();
 }
 

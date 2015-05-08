@@ -2,35 +2,35 @@
 // Requires 'org.freedesktop.NetworkManager.js'
 // <script src="org.freedesktop.NetworkManager.js" type='text/javascript'></script>
 
-var Wireless = function ()
+var Wireless = function (device)
 {
   // public
-  this.id     = null;
   this.device = null;
-  this.icon   = null;
 
   // private
   this.essidDiv    = null;
   this.strengthDiv = null;
-  this.apPath    = null;
-  this.apSignal       = null;
+  this.apPath      = null;
+  this.apSignal    = null;
 
-  this.init   = init;
-  this.showEssid = showEssid;
-  this.showStrength = showStrength;
+  this.run                   = run;
+  this.showEssid             = showEssid;
+  this.showStrength          = showStrength;
 
-  this.onState = onState;
-  this.onDisconnected = onDisconnected;
-  this.onPrepare = onPrepare;
-  this.onActivated = onActivated;
+  this.onState               = onState;
+  this.onDisconnected        = onDisconnected;
+  this.onPrepare             = onPrepare;
+  this.onActivated           = onActivated;
 
   this.installStrengthSignal = installStrengthSignal;
-  this.removeStrengthSignal = removeStrengthSignal;
-  this.onStrengthChange = onStrengthChange;
+  this.removeStrengthSignal  = removeStrengthSignal;
+  this.onStrengthChange      = onStrengthChange;
 };
 
-function init()
+function run(device)
 {
+  this.device = device;
+
   // create essid div; child container of wireless
   this.essidDiv = document.createElement('div');
   this.essidDiv.id = 'essid';

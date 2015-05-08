@@ -47,8 +47,7 @@ function onLoad()
   wirelessDiv.id = 'wireless';
   document.body.appendChild(wirelessDiv);
 
-  wireless.device = 'wlan0';
-  wireless.init();
+  wireless.run('wlan0');
 
   wirelessDiv.appendChild(wireless.essidDiv);
   wirelessDiv.appendChild(wireless.strengthDiv);

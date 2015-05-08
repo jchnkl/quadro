@@ -17,36 +17,27 @@ class DBusSignal
 
   signals:
     void notify(const QVariant &);
+    void receiversChanged(DBusSignal *, int);
 
   public slots:
     void onSignal(const QDBusMessage &);
 
   public:
-    DBusSignal(void)
+    DBusSignal(QObject * parent)
+      : QObject(parent)
     {}
-
-    DBusSignal(const DBusSignal & other)
-      : QObject(other)
-    {}
-
-    ~DBusSignal(void)
-    {
-      qDebug() << __PRETTY_FUNCTION__;
-    }
-
-    DBusSignal & operator=(const DBusSignal & other)
-    {
-      return *this;
-    }
 
     static
-    DBusSignal
+    DBusSignal *
     connect(DBusConnection & c,
             const QString & service,
             const QString & path,
             const QString & interface,
             const QString & name);
 
+  protected:
+    void connectNotify(const QMetaMethod & signal);
+    void disconnectNotify(const QMetaMethod & signal);
 }; // DBusSignal
 
 class DBusConnection
@@ -82,9 +73,11 @@ class DBusConnection
            const QString & interface,
            const QString & name);
 
+  protected:
+    void onReceiversChanged(DBusSignal * ptr, int recvs);
 
   private:
-    QHash<QString, DBusSignal> m_Signals;
+    QHash<QString, DBusSignal *> m_Signals;
 
     QString
     key(const QString &, const QString &, const QString &, const QString &);

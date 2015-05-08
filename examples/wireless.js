@@ -35,12 +35,10 @@ function init()
   // create essid div; child container of wireless
   this.essidDiv = document.createElement('div');
   this.essidDiv.id = 'essid';
-  // wireless.appendChild(this.essidDiv);
 
   // create strength div; child container of wireless
   this.strengthDiv = document.createElement('div');
   this.strengthDiv.id = 'strength';
-  // wireless.appendChild(this.strengthDiv);
 
   // get device path for this.device (e.g. 'wlan0')
   var devPath = nmGetDevicePath(this.device);
@@ -66,7 +64,6 @@ function showEssid(essid)
 
 function showStrength(strength)
 {
-  // this.strengthDiv.innerHTML = 'Strength: ' + strength;
   this.strengthDiv.innerHTML = wlanIcon(strength);
 }
 
@@ -111,11 +108,6 @@ function removeStrengthSignal()
 {
   if (this.apSignal != null) {
     this.apSignal.notify.disconnect(this, onStrengthChange);
-    // dbus.system.disconnect(
-    //   'org.freedesktop.NetworkManager',
-    //   this.apPath,
-    //   'org.freedesktop.NetworkManager.AccessPoint',
-    //   'PropertiesChanged');
   }
   this.apSignal = null;
 }
@@ -135,47 +127,6 @@ function onStrengthChange(obj)
   var strength = obj['Strength'].charCodeAt(0);
   if (strength != null) {
     this.showStrength(strength);
-  }
-}
-
-function update(obj)
-{
-  var log = 'update';
-  for (var p in obj) {
-    log += '\n\tobj[' + p + '] = ' + obj[p];
-  }
-  console.log(log);
-
-  // console.log('update: this.id: ' + this.id);
-  // console.log('update: this.device: ' + this.device);
-
-  var strength = obj['Strength'].charCodeAt(0);
-
-  if (strength != null) {
-    // document.getElementById(this.id).innerHTML = 'Strength: ' + strength;
-    this.strengthDiv.innerHTML = 'Strength: ' + strength;
-
-  } else if (obj['ActiveAccessPoint'] != null) {
-    this.removeStrengthSignal();
-    // this.apSignal.notify.disconnect(update.bind(this));
-
-    this.apPath = obj['ActiveAccessPoint'];
-
-    this.installStrengthSignal();
-
-    // this.apSignal = dbus.system.connect(
-    //     'org.freedesktop.NetworkManager',
-    //     this.apPath,
-    //     'org.freedesktop.NetworkManager.AccessPoint',
-    //     'PropertiesChanged');
-
-//     var signal = dbus.system.connect(
-//         'org.freedesktop.NetworkManager',
-//         obj['ActiveAccessPoint'],
-//         'org.freedesktop.NetworkManager.AccessPoint',
-//         'PropertiesChanged');
-//
-//     signal.notify.connect(update.bind(this));
   }
 }
 
@@ -278,69 +229,3 @@ function percentClass(classes, percent)
   var n = 100 / classes;
   return Math.round(percent/n) * n;
 }
-
-// function nmGetActiveAccessPointStrength()
-// {
-//   return nmGetStrength(nmGetActiveAccessPointPath(nmGetWlan0Path()));
-// }
-
-/*
-function updateWlan(obj)
-{
-  var strength = obj['Strength'].charCodeAt(0);
-  document.getElementById('wlanbox').innerHTML = 'Strength: ' + strength;
-  document.getElementById('wlanbox').innerHTML += '<br>';
-  document.getElementById('wlanbox').innerHTML += wlanStrengthIcon(strength);
-
-//   if (obj['PrimaryConnection'] != null) {
-//     // dbus['propertiesChanged(QVariantMap)'].disconnect(updateWlan);
-//
-//     dbus.systemConnectPropertyChanged('org.freedesktop.NetworkManager',
-//                                       nmGetActiveAccessPointPath(nmGetWlan0Path()),
-//                                       'org.freedesktop.NetworkManager.AccessPoint',
-//                                       'PropertiesChanged');
-//   }
-}
-
-
-function showAllProperties(obj)
-{
-  var res = [];
-  for (var property in obj) {
-    var value = obj[property];
-    res += ['<br>object[' + property + '] = \"' + value + '\" (type: ' + typeof value + ')'];
-    if (typeof value == 'object' ) {
-      res += '<br>{' + showAllProperties(value) + '<br>}';
-    }
-  }
-  return res;
-}
-
-function loadJsDBusBridge()
-{
-    var system  = dbus.system;
-    {
-      var path   = '/org/freedesktop/NetworkManager';
-      var iface  = 'org.freedesktop.NetworkManager';
-      var method = 'GetDeviceByIpIface';
-      var arg    = 'wlan0';
-      html += 'CALL: ' + dbus.system.call(nmService, path, iface, method, arg);
-      html += '<br>';
-    }
-
-    var session = dbus.session;
-
-    var nmApPropertiesSignal = system.connect('org.freedesktop.NetworkManager',
-                                              nmGetActiveAccessPointPath(nmGetWlan0Path()),
-                                              'org.freedesktop.NetworkManager.AccessPoint',
-                                              'PropertiesChanged');
-
-    nmApPropertiesSignal.notify.connect(updateWlan);
-
-  } catch (e) {
-    html += e;
-  }
-
-  document.getElementById('main').innerHTML = html;
-}
-*/

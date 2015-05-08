@@ -275,22 +275,6 @@ DBusConnection::signal(const QString & service,
 }
 
 void
-DBusConnection::disconnect(const QString & service,
-                           const QString & path,
-                           const QString & interface,
-                           const QString & name)
-{
-  auto sigkey = this->key(service, path, interface, name);
-  auto signal = m_Signals.find(sigkey);
-
-  if (signal->first < 2) {
-    m_Signals.erase(signal);
-  } else {
-    --(signal->first);
-  }
-}
-
-void
 DBusConnection::onReceiversChanged(DBusSignal * ptr, int recvs)
 {
   if (recvs == 0) {
@@ -302,16 +286,6 @@ DBusConnection::onReceiversChanged(DBusSignal * ptr, int recvs)
       }
     }
   }
-}
-
-bool
-DBusConnection::isConnected(const QString & service,
-                            const QString & path,
-                            const QString & interface,
-                            const QString & name)
-{
-  auto sigkey = this->key(service, path, interface, name);
-  return m_Signals.find(sigkey) != m_Signals.end();
 }
 
 QString

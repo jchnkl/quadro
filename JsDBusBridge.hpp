@@ -68,24 +68,10 @@ class DBusConnection
 
     Q_INVOKABLE
     DBusSignal *
-    connect(const QString & service,
-            const QString & path,
-            const QString & interface,
-            const QString & name);
-
-    Q_INVOKABLE
-    void
-    disconnect(const QString & service,
-               const QString & path,
-               const QString & interface,
-               const QString & name);
-
-    Q_INVOKABLE
-    bool
-    isConnected(const QString & service,
-                const QString & path,
-                const QString & interface,
-                const QString & name);
+    signal(const QString & service,
+           const QString & path,
+           const QString & interface,
+           const QString & name);
 
   protected:
     void onReceiversChanged(DBusSignal * ptr, int recvs);

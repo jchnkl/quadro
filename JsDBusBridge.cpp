@@ -255,10 +255,10 @@ DBusConnection::call(const QString & service,
 }
 
 DBusSignal *
-DBusConnection::connect(const QString & service,
-                        const QString & path,
-                        const QString & interface,
-                        const QString & name)
+DBusConnection::signal(const QString & service,
+                       const QString & path,
+                       const QString & interface,
+                       const QString & name)
 {
   auto sigkey = this->key(service, path, interface, name);
   auto sigit = m_Signals.find(sigkey);

@@ -23,7 +23,7 @@ Config::Config(const QCoreApplication & app)
   QCommandLineOption widthOption = makeOption(QStringList() << "width", "window width", "width");
   QCommandLineOption heightOption = makeOption(QStringList() << "height", "window height", "height");
   QCommandLineOption urlOption = makeOption(QStringList() << "u" << "url", "URL to load at startup", "url");
-  QCommandLineOption fullscreenOption = makeOption(QStringList() << "f" << "fullscreen", "Set window to fullscreen mode", "fullscreen");
+  QCommandLineOption fullscreenOption(QStringList() << "f" << "fullscreen", "Set window to fullscreen mode");
   QCommandLineOption windowTypeOption = makeOption(QStringList() << "t" << "type", "Set window type: normal, desktop, dock (default: normal)", "type");
 
   parser.addOption(xOption);

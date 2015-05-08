@@ -207,7 +207,7 @@ DBusConnection::bus(void) const
 }
 
 void
-DBusConnection::reset(void)
+DBusConnection::doReset(void)
 {
   m_Signals.clear();
 }
@@ -293,11 +293,18 @@ DBusSessionConnection::bus(void)
   return m_SessionBus;
 }
 
-void
-DBus::reset(void)
+DBus::DBus(void)
 {
-  m_SystemConnection.reset();
-  m_SessionConnection.reset();
+  qRegisterMetaType<DBusSignal *>();
+  qRegisterMetaType<DBusConnection *>();
+  connect(this, &DBus::reset, &m_SystemConnection, &DBusConnection::doReset);
+  connect(this, &DBus::reset, &m_SessionConnection, &DBusConnection::doReset);
+}
+
+void
+DBus::doReset(void)
+{
+  emit reset();
 }
 
 DBusConnection *

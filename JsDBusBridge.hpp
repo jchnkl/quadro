@@ -36,11 +36,12 @@ class DBusConnection
 {
   Q_OBJECT
 
+  public slots:
+    void doReset(void);
+
   public:
     virtual QDBusConnection & bus(void) = 0;
     virtual const QDBusConnection & bus(void) const;
-
-    void reset(void);
 
     Q_INVOKABLE
     QVariant
@@ -102,14 +103,14 @@ class DBus
   Q_PROPERTY(DBusConnection * system READ system)
   Q_PROPERTY(DBusConnection * session READ session)
 
-  public:
-    DBus(void)
-    {
-      qRegisterMetaType<DBusSignal *>();
-      qRegisterMetaType<DBusConnection *>();
-    }
-
+  signals:
     void reset(void);
+
+  public slots:
+    void doReset(void);
+
+  public:
+    DBus(void);
     DBusConnection * system(void);
     DBusConnection * session(void);
 

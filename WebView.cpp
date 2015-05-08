@@ -57,6 +57,8 @@ WebView::WebView(const Config & config)
   connect(this, &QWebView::urlChanged, &m_Ui, &Ui::onUrlChanged);
   connect(this->page()->mainFrame(), &QWebFrame::javaScriptWindowObjectCleared,
           this, &WebView::onJsWindowObjectCleared);
+  connect(this->page()->mainFrame(), &QWebFrame::javaScriptWindowObjectCleared,
+          &m_DBus, &DBus::reset);
 
   connect(&m_Ui, &Ui::moveBy, this, &WebView::onMoveBy);
   connect(&m_Ui, &Ui::resizeBy, this, &WebView::onResizeBy);
@@ -137,7 +139,6 @@ WebView::contextMenuEvent(QContextMenuEvent * e)
 void
 WebView::onJsWindowObjectCleared(void)
 {
-  m_DBus.reset();
   this->page()->mainFrame()->addToJavaScriptWindowObject("dbus", &m_DBus);
 }
 

@@ -14,7 +14,6 @@ var Wireless = function ()
   this.apSignal       = null;
 
   this.init   = init;
-  this.update = update;
   this.showEssid = showEssid;
   this.showStrength = showStrength;
 
@@ -27,8 +26,6 @@ var Wireless = function ()
   this.removeStrengthSignal = removeStrengthSignal;
   this.onStrengthChange = onStrengthChange;
 };
-
-var iconbasename = 'nm-signal-';
 
 function init()
 {

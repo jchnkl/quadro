@@ -8,6 +8,8 @@
 #include <QObject>
 #include <QVariant>
 
+class DBusConnection;
+
 class DBusSignal
   : public QObject
 {
@@ -20,9 +22,13 @@ class DBusSignal
     void onSignal(const QDBusMessage &);
 
   public:
+    DBusSignal(QObject * parent)
+      : QObject(parent)
+    {}
+
     static
-    std::shared_ptr<DBusSignal>
-    connect(QDBusConnection & c,
+    DBusSignal *
+    connect(DBusConnection & c,
             const QString & service,
             const QString & path,
             const QString & interface,
@@ -77,7 +83,7 @@ class DBusConnection
                 const QString & name);
 
   private:
-    QHash<QString, QPair<std::size_t, std::shared_ptr<DBusSignal>>> m_Signals;
+    QHash<QString, DBusSignal *> m_Signals;
 
     QString
     key(const QString &, const QString &, const QString &, const QString &);

@@ -183,16 +183,16 @@ DBusSignal::onSignal(const QDBusMessage & msg)
   emit notify(unmarshall(msg));
 }
 
-std::shared_ptr<DBusSignal>
-DBusSignal::connect(QDBusConnection & c,
+DBusSignal *
+DBusSignal::connect(DBusConnection & c,
                     const QString & service,
                     const QString & path,
                     const QString & interface,
                     const QString & name)
 {
-  auto obj = std::make_shared<DBusSignal>();
-  bool connected = c.connect(service, path, interface, name,
-                             obj.get(), SLOT(onSignal(QDBusMessage)));
+  auto obj = new DBusSignal(&c);
+  bool connected = c.bus().connect(service, path, interface, name,
+                                   obj, SLOT(onSignal(QDBusMessage)));
   if (connected) {
     return obj;
   } else {
@@ -244,14 +244,14 @@ DBusConnection::connect(const QString & service,
                         const QString & name)
 {
   auto sigkey = this->key(service, path, interface, name);
-  auto signal = m_Signals.find(sigkey);
+  auto sigit = m_Signals.find(sigkey);
 
-  if (signal == m_Signals.end()) {
-    auto sigobj = DBusSignal::connect(this->bus(), service, path, interface, name);
-    m_Signals[sigkey] = { 1, sigobj };
-    return sigobj.get();
+  if (sigit == m_Signals.end()) {
+    auto sigobj = DBusSignal::connect(*this, service, path, interface, name);
+    m_Signals[sigkey] = sigobj;
+    return sigobj;
   } else {
-    return signal->second.get();
+    return *sigit;
   }
 }
 

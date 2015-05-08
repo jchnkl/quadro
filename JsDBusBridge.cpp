@@ -183,36 +183,24 @@ DBusSignal::onSignal(const QDBusMessage & msg)
   emit notify(unmarshall(msg));
 }
 
-DBusSignal *
+DBusSignal
 DBusSignal::connect(DBusConnection & c,
                     const QString & service,
                     const QString & path,
                     const QString & interface,
                     const QString & name)
 {
-  auto obj = new DBusSignal(&c);
+  DBusSignal obj;
   bool connected = c.bus().connect(service, path, interface, name,
-                                   obj, SLOT(onSignal(QDBusMessage)));
+                                   &obj, SLOT(onSignal(QDBusMessage)));
   if (connected) {
     return obj;
   } else {
-    return nullptr;
+    throw std::runtime_error(__PRETTY_FUNCTION__);
   }
 }
 
-void
-DBusSignal::connectNotify(const QMetaMethod & signal)
-{
-  int recv = receivers(SIGNAL(notify(QVariant)));
-  emit receiversChanged(this, recv);
-}
 
-void
-DBusSignal::disconnectNotify(const QMetaMethod & signal)
-{
-  int recv = receivers(SIGNAL(notify(QVariant)));
-  emit receiversChanged(this, recv);
-}
 
 const QDBusConnection &
 DBusConnection::bus(void) const
@@ -223,9 +211,6 @@ DBusConnection::bus(void) const
 void
 DBusConnection::reset(void)
 {
-  for (auto s : m_Signals) {
-    s->deleteLater();
-  }
   m_Signals.clear();
 }
 
@@ -264,29 +249,20 @@ DBusConnection::signal(const QString & service,
   auto sigit = m_Signals.find(sigkey);
 
   if (sigit == m_Signals.end()) {
-    auto sigobj = DBusSignal::connect(*this, service, path, interface, name);
-    QObject::connect(sigobj, &DBusSignal::receiversChanged,
-                     this, &DBusConnection::onReceiversChanged);
-    m_Signals[sigkey] = sigobj;
-    return sigobj;
+
+    try {
+      DBusSignal obj = DBusSignal::connect(*this, service, path, interface, name);
+      m_Signals.insert(sigkey, obj);
+      return &m_Signals[sigkey];
+    } catch (...) {
+      return nullptr;
+    }
+
   } else {
-    return *sigit;
+    return &*sigit;
   }
 }
 
-void
-DBusConnection::onReceiversChanged(DBusSignal * ptr, int recvs)
-{
-  if (recvs == 0) {
-    for (auto sigit = m_Signals.begin(); sigit != m_Signals.end(); ++sigit) {
-      if (ptr == *sigit) {
-        (*sigit)->deleteLater();
-        m_Signals.erase(sigit);
-        return;
-      }
-    }
-  }
-}
 
 QString
 DBusConnection::key(const QString & a,

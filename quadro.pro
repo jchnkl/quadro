@@ -6,5 +6,5 @@ PKGCONFIG += xcb xcb-ewmh
 TARGET = quadro
 TEMPLATE = app
 
-HEADERS += WebView.hpp Ui.hpp Config.hpp Util.hpp JsDBusBridge.hpp FileBridge.hpp Ewmh.hpp NetWmWindowType.hpp
-SOURCES += Main.cpp WebView.cpp Ui.cpp Config.cpp Util.cpp JsDBusBridge.cpp FileBridge.cpp
+HEADERS += WebView.hpp Ui.hpp Config.hpp Util.hpp DBusBridge.hpp FileBridge.hpp Ewmh.hpp NetWmWindowType.hpp
+SOURCES += Main.cpp WebView.cpp Ui.cpp Config.cpp Util.cpp DBusBridge.cpp FileBridge.cpp

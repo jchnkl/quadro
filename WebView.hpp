@@ -9,7 +9,7 @@
 
 #include "Ui.hpp"
 #include "Config.hpp"
-#include "JsDBusBridge.hpp"
+#include "DBusBridge.hpp"
 #include "FileBridge.hpp"
 
 namespace Quadro {

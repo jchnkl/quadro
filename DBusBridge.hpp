@@ -1,5 +1,5 @@
-#ifndef _QUADRO_JSDBUSBRIDGE_HPP
-#define _QUADRO_JSDBUSBRIDGE_HPP
+#ifndef _QUADRO_DBUSBRIDGE_HPP
+#define _QUADRO_DBUSBRIDGE_HPP
 
 #include <iostream>
 #include <algorithm>
@@ -119,4 +119,4 @@ class DBus
     DBusSessionConnection m_SessionConnection;
 }; // class DBus
 
-#endif // _QUADRO_JSDBUSBRIDGE_HPP
+#endif // _QUADRO_DBUSBRIDGE_HPP

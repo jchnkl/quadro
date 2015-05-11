@@ -1,7 +1,7 @@
-#ifndef _QUADRO_JSDBUSBRIDGE_CPP
-#define _QUADRO_JSDBUSBRIDGE_CPP
+#ifndef _QUADRO_DBUSBRIDGE_CPP
+#define _QUADRO_DBUSBRIDGE_CPP
 
-#include "JsDBusBridge.hpp"
+#include "DBusBridge.hpp"
 
 QVariant
 fromVariant(const QVariant & variant);
@@ -319,4 +319,4 @@ DBus::session(void)
   return &m_SessionConnection;
 }
 
-#endif // _QUADRO_JSDBUSBRIDGE_CPP
+#endif // _QUADRO_DBUSBRIDGE_CPP

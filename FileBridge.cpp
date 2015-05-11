@@ -36,27 +36,13 @@ bool
 FileHandle::failed(void)
 {
   return m_failed;
-  // return m_state != std::ios_base::goodbit;
 }
 
 QString
 FileHandle::reason(void)
 {
   return m_reason;
-  // return QString::fromStdString(showIostate(m_state));
 }
-
-// bool
-// FileHandle::good(void)
-// {
-//   return m_state == std::ios_base::goodbit;
-// }
-
-// std::ios_base::iostate
-// FileHandle::state(void)
-// {
-//   return m_state;
-// }
 
 
 void
@@ -64,7 +50,6 @@ FileHandle::read(const QString & filename)
 {
   try {
     std::fstream file(filename.toStdString(), std::ios::in);
-    // m_state = file.rdstate();
 
     if (file.good()) {
       m_failed = false;
@@ -82,17 +67,9 @@ FileHandle::read(const QString & filename)
   }
 }
 
-// void setFailed(const std::string & reason)
-// {
-//   m_failed = true;
-// }
-
 File::File(void)
 {
-  // qRegisterMetaType<FileHandle>();
   qRegisterMetaType<FileHandle *>();
-  // qRegisterMetaType<std::string>();
-  // qRegisterMetaType<std::ios_base::iostate>();
 }
 
 FileHandle *

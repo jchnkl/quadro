@@ -10,6 +10,7 @@
 #include "Ui.hpp"
 #include "Config.hpp"
 #include "JsDBusBridge.hpp"
+#include "FileBridge.hpp"
 
 namespace Quadro {
 
@@ -57,6 +58,7 @@ class WebView
   private:
     Ui m_Ui;
     DBus m_DBus;
+    File m_File;
     WebPage m_WebPage;
 };
 

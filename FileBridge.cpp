@@ -2,8 +2,6 @@
 #define _QUADRO_FILEBRIDGE_CPP
 
 #include <fstream>
-#include <sstream>
-#include <iostream>
 #include "FileBridge.hpp"
 
 std::string
@@ -21,73 +19,26 @@ showIostate(std::ios_base::iostate state)
   };
 }
 
-FileHandle::FileHandle(const QString & filename)
-{
-  read(filename);
-}
-
-const QString &
-FileHandle::content(void)
-{
-  return m_content;
-}
-
-bool
-FileHandle::failed(void)
-{
-  return m_failed;
-}
-
-QString
-FileHandle::reason(void)
-{
-  return m_reason;
-}
-
-
-void
-FileHandle::read(const QString & filename)
+QVariantMap
+File::read(const QString & filename)
 {
   try {
     std::fstream file(filename.toStdString(), std::ios::in);
 
     if (file.good()) {
-      m_failed = false;
       std::string content;
       file >> content;
-      m_content = QString::fromStdString(content);
+      return { { "content", QString::fromStdString(content) }
+             , { "error", QVariant() }
+             };
+
     } else {
-      m_failed = true;
-      m_reason = QString::fromStdString(showIostate(file.rdstate()));
+      throw std::runtime_error(showIostate(file.rdstate()));
     }
 
   } catch (const std::exception & e) {
-    m_failed = true;
-    m_reason = e.what();
+    return { { "content", QVariant() }, { "error",  e.what() } };
   }
-}
-
-File::File(void)
-{
-  qRegisterMetaType<FileHandle *>();
-}
-
-FileHandle *
-File::open(const QString & filename)
-{
-  if (m_FileHandles.find(filename) == m_FileHandles.end()) {
-    QSharedPointer<FileHandle> handle(new FileHandle(filename));
-    m_FileHandles.insert(filename, handle);
-    return handle.data();
-  } else {
-    return m_FileHandles.value(filename).data();
-  }
-}
-
-void
-File::close(const QString & filename)
-{
-  m_FileHandles.remove(filename);
 }
 
 #endif // _QUADRO_FILEBRIDGE_CPP

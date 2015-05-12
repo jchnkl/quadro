@@ -11,7 +11,6 @@ var Wireless = function (device)
   this.essidDiv    = null;
   this.strengthDiv = null;
   this.apPath      = null;
-  this.apSignal    = null;
 
   this.run                   = run;
   this.showEssid             = showEssid;
@@ -47,14 +46,14 @@ function run(device)
   this.switchState(nmGetDeviceState(devPath));
 
   // get signal object for StateChanged signal for this.device
-  var signal = dbus.system.signal(
+  dbus.system.attach(
       'org.freedesktop.NetworkManager',
       devPath,
       'org.freedesktop.NetworkManager.Device',
       'StateChanged');
 
   // connect to StateChanged signals with callback
-  signal.notify.connect(this, onState);
+  dbus.system.notify.connect(this, onState);
 }
 
 function showEssid(essid)
@@ -107,27 +106,31 @@ function onActivated()
 
 function removeStrengthSignal()
 {
-  if (this.apSignal != null) {
-    this.apSignal.notify.disconnect(this, onStrengthChange);
-  }
-  this.apSignal = null;
-}
-
-function installStrengthSignal()
-{
-  this.apSignal = dbus.system.signal(
+    dbus.system.notify.disconnect(this, onStrengthChange);
+  dbus.system.detach(
       'org.freedesktop.NetworkManager',
       this.apPath,
       'org.freedesktop.NetworkManager.AccessPoint',
       'PropertiesChanged');
-  this.apSignal.notify.connect(this, onStrengthChange);
 }
 
-function onStrengthChange(obj)
+function installStrengthSignal()
 {
-  var strength = obj['Strength'].charCodeAt(0);
-  if (strength != null) {
-    this.showStrength(strength);
+  dbus.system.attach(
+      'org.freedesktop.NetworkManager',
+      this.apPath,
+      'org.freedesktop.NetworkManager.AccessPoint',
+      'PropertiesChanged');
+  dbus.system.notify.connect(this, onStrengthChange);
+}
+
+function onStrengthChange(msg)
+{
+  if (msg.signal == 'PropertiesChanged') {
+    var strength = msg.contents['Strength'].charCodeAt(0);
+    if (strength != null) {
+      this.showStrength(strength);
+    }
   }
 }
 

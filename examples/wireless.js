@@ -16,6 +16,7 @@ var Wireless = function (device)
   this.run                   = run;
   this.showEssid             = showEssid;
   this.showStrength          = showStrength;
+  this.switchState           = switchState;
 
   this.onState               = onState;
   this.onDisconnected        = onDisconnected;
@@ -43,7 +44,7 @@ function run(device)
   var devPath = nmGetDevicePath(this.device);
 
   // get state and initialize view
-  this.onState([nmGetDeviceState(devPath)]);
+  this.switchState(nmGetDeviceState(devPath));
 
   // get signal object for StateChanged signal for this.device
   var signal = dbus.system.signal(
@@ -66,9 +67,15 @@ function showStrength(strength)
   this.strengthDiv.innerHTML = wlanIcon(strength);
 }
 
-function onState(states)
+function onState(msg)
 {
-  var state = states[0];
+  if (msg.signal == 'StateChanged') {
+    this.switchState(msg.contents[0]);
+  }
+}
+
+function switchState(state)
+{
   if (state == NM_DEVICE_STATE_DISCONNECTED) {
     this.onDisconnected();
   } else if (state == NM_DEVICE_STATE_PREPARE) {

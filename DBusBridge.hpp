@@ -10,34 +10,16 @@
 
 class DBusConnection;
 
-class DBusSignal
-  : public QObject
-{
-  Q_OBJECT
-
-  signals:
-    void notify(const QVariant &);
-
-  public slots:
-    void onSignal(const QDBusMessage &);
-
-  public:
-    static
-    QSharedPointer<DBusSignal>
-    connect(DBusConnection & c,
-            const QString & service,
-            const QString & path,
-            const QString & interface,
-            const QString & name);
-}; // DBusSignal
-
 class DBusConnection
   : public QObject
 {
   Q_OBJECT
 
+  signals:
+    void notify(const QVariantMap &);
+
   public slots:
-    void doReset(void);
+    void onSignal(const QDBusMessage &);
 
   public:
     virtual QDBusConnection & bus(void) = 0;
@@ -59,17 +41,18 @@ class DBusConnection
          const QVariant & arg8 = QVariant()) const;
 
     Q_INVOKABLE
-    DBusSignal *
-    signal(const QString & service,
+    bool
+    attach(const QString & service,
            const QString & path,
            const QString & interface,
            const QString & name);
 
-  private:
-    QHash<QString, QSharedPointer<DBusSignal>> m_Signals;
-
-    QString
-    key(const QString &, const QString &, const QString &, const QString &);
+    Q_INVOKABLE
+    bool
+    detach(const QString & service,
+           const QString & path,
+           const QString & interface,
+           const QString & name);
 }; // class DBusConnection
 
 class DBusSystemConnection
@@ -102,12 +85,6 @@ class DBus
   Q_OBJECT
   Q_PROPERTY(DBusConnection * system READ system)
   Q_PROPERTY(DBusConnection * session READ session)
-
-  signals:
-    void reset(void);
-
-  public slots:
-    void doReset(void);
 
   public:
     DBus(void);

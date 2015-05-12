@@ -177,39 +177,10 @@ unmarshall(const QDBusMessage & msg)
   }
 }
 
-void
-DBusSignal::onSignal(const QDBusMessage & msg)
-{
-  emit notify(unmarshall(msg));
-}
-
-QSharedPointer<DBusSignal>
-DBusSignal::connect(DBusConnection & c,
-                    const QString & service,
-                    const QString & path,
-                    const QString & interface,
-                    const QString & name)
-{
-  QSharedPointer<DBusSignal> obj(new DBusSignal);
-  bool connected = c.bus().connect(service, path, interface, name,
-                                   obj.data(), SLOT(onSignal(QDBusMessage)));
-  if (connected) {
-    return obj;
-  } else {
-    return QSharedPointer<DBusSignal>();
-  }
-}
-
 const QDBusConnection &
 DBusConnection::bus(void) const
 {
   return const_cast<DBusConnection *>(this)->bus();
-}
-
-void
-DBusConnection::doReset(void)
-{
-  m_Signals.clear();
 }
 
 QVariant
@@ -237,32 +208,35 @@ DBusConnection::call(const QString & service,
   }
 }
 
-DBusSignal *
-DBusConnection::signal(const QString & service,
+bool
+DBusConnection::attach(const QString & service,
                        const QString & path,
                        const QString & interface,
                        const QString & name)
 {
-  auto sigkey = this->key(service, path, interface, name);
-  auto sigit = m_Signals.find(sigkey);
-
-  if (sigit == m_Signals.end()) {
-    auto obj = DBusSignal::connect(*this, service, path, interface, name);
-    m_Signals[sigkey] = obj;
-    return obj.data();
-
-  } else {
-    return sigit->data();
-  }
+  return this->bus().connect(
+      service, path, interface, name, this, SLOT(onSignal(QDBusMessage)));
 }
 
-QString
-DBusConnection::key(const QString & a,
-                    const QString & b,
-                    const QString & c,
-                    const QString & d)
+bool
+DBusConnection::detach(const QString & service,
+                       const QString & path,
+                       const QString & interface,
+                       const QString & name)
 {
-  return a + b + c + d;
+  return this->bus().disconnect(
+      service, path, interface, name, this, SLOT(onSignal(QDBusMessage)));
+}
+
+void
+DBusConnection::onSignal(const QDBusMessage & msg)
+{
+  emit notify({ { "service",   msg.service() }
+              , { "path",      msg.path() }
+              , { "interface", msg.interface() }
+              , { "signal",    msg.member() }
+              , { "contents",  unmarshall(msg) }
+              });
 }
 
 DBusSystemConnection::DBusSystemConnection(void)
@@ -295,16 +269,7 @@ DBusSessionConnection::bus(void)
 
 DBus::DBus(void)
 {
-  qRegisterMetaType<DBusSignal *>();
   qRegisterMetaType<DBusConnection *>();
-  connect(this, &DBus::reset, &m_SystemConnection, &DBusConnection::doReset);
-  connect(this, &DBus::reset, &m_SessionConnection, &DBusConnection::doReset);
-}
-
-void
-DBus::doReset(void)
-{
-  emit reset();
 }
 
 DBusConnection *

@@ -93,7 +93,9 @@ function onDisconnected()
 
 function onPrepare()
 {
-  this.essidDiv.innerHTML = 'Connecting to ' + nmGetActiveConnectionId(this.device);
+  var img = '<img id=\"icon\" src=\"' + 'nm-signal-connecting.svg' + '\"' + '</img>';
+  this.essidDiv.innerHTML  = img;
+  this.essidDiv.innerHTML += 'Connecting to ' + nmGetActiveConnectionId(this.device);
 }
 
 function onActivated()

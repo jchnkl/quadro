@@ -106,7 +106,11 @@ function onActivated()
 
 function removeStrengthSignal()
 {
+  try {
     dbus.system.notify.disconnect(this, onStrengthChange);
+  } catch (err) {
+  }
+
   dbus.system.detach(
       'org.freedesktop.NetworkManager',
       this.apPath,

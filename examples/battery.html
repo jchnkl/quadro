@@ -6,7 +6,7 @@ body {
   background-color: rgba(255,255,255,1.0);
 }
 
-#wireless {
+#battery {
   opacity: 1.0;
   background-color: #FFCC00;
   float: left;
@@ -17,130 +17,58 @@ body {
   font-size: 18px;
 }
 
-#wireless > #essid {
-  -webkit-order: 2;
-  /* opacity: 0.75; */
-  /* background-color: #FFCC00; */
-}
-
-#wireless > #strength {
+#battery > #status {
   -webkit-order: 1;
   /* opacity: 0.75; */
   /* background-color: #FFCC00; */
 }
 
-/* #wireless > #strength > #icon { */
-#icon {
-  width: 100px;
+#battery > #time {
+  -webkit-order: 2;
+  /* opacity: 0.75; */
+  /* background-color: #FFCC00; */
+}
+
+#battery > #status > #icon {
+  width: 30px;
 }
 
     </style>
 
-    <script src="org.freedesktop.UPower.js" type='text/javascript'></script>
-    <!-- <script src="wireless.js" type='text/javascript'></script> -->
+    <!-- <script src="org.freedesktop.UPower.js" type='text/javascript'></script> -->
+    <script src="tp_smapi.js" type='text/javascript'></script>
+    <script src="battery.js" type='text/javascript'></script>
     <script type='text/javascript'>
-
-// var wireless = new Wireless;
-
-function getIconPath(iconName)
-{
-  return '/usr/share/icons/gnome/scalable/status/' + iconName + '.svg';
-}
 
 function onLoad()
 {
-  var dev = '/org/freedesktop/UPower/devices/battery_BAT0';
-  document.getElementById('battery').innerHTML = 'Battery';
-  document.getElementById('battery').innerHTML += '<br>';
-  document.getElementById('battery').innerHTML += upowerOnBattery();
-  document.getElementById('battery').innerHTML += '<br>';
-  document.getElementById('battery').innerHTML += upowerGetDeviceProperty(dev, 'Percentage');
-  document.getElementById('battery').innerHTML += '<br>';
+  var batteryDiv = document.createElement('div');
+  batteryDiv.id = 'battery';
+  document.body.appendChild(batteryDiv);
 
-  var properties = upowerGetDeviceProperties(dev);
+  var statusDiv = document.createElement('div');
+  statusDiv.id = 'status';
+  batteryDiv.appendChild(statusDiv);
 
-  document.getElementById('battery').innerHTML +=
-    '<img id=\"icon\" src=\"' + getIconPath(properties['IconName']) + '\" alt=\"'
-    + properties['IconName'] + '\"></img>'
+  var timeDiv = document.createElement('div');
+  timeDiv.id = 'time';
+  batteryDiv.appendChild(timeDiv);
 
-  // for (p in properties) {
-  //   var tmp = 'properties[' + p + '] = ' + properties[p];
-  //   document.getElementById('battery').innerHTML += '<br>';
-  //   document.getElementById('battery').innerHTML += tmp;
-  // }
+  var remPercent = TpSmapi.remainingPercent(0);
 
-  var smapi_state_file = '/sys/devices/platform/smapi/BAT0/state';
-  var state = file.read(smapi_state_file);
+  var img = '<img id=\"icon\" src=\"' + regularIcon(remPercent) + '\"'
+          + ' alt=\"' + remPercent + '\"></img>';
 
-  document.getElementById('battery').innerHTML += '<br>';
-  if (state.error == null) {
-    document.getElementById('battery').innerHTML += 'state.content: ' + state.content;
-  } else {
-    document.getElementById('battery').innerHTML += 'state.error: ' + state.error;
+  statusDiv.innerHTML = img;
+
+  var remRunTime = remainingRunningTime();
+  if (remRunTime != null) {
+    timeDiv.innerHTML += remRunTime.hours + ':' + remRunTime.minutes;
   }
-
-  /*
-  document.getElementById('battery').innerHTML += '<br>';
-  // document.getElementById('battery').innerHTML += file.read(smapi_state_file);
-  var state = file.open(smapi_state_file);
-
-  // document.getElementById('battery').innerHTML += 'typeof file: ' + typeof file + '<br>';
-  // for (p in file) {
-  //   document.getElementById('battery').innerHTML += 'state[' + p + '] = ' + file[p];
-  //   document.getElementById('battery').innerHTML += '<br>';
-  // }
-
-  document.getElementById('battery').innerHTML += 'typeof state: ' + typeof state + '<br>';
-  for (p in state) {
-    document.getElementById('battery').innerHTML += 'state[' + p + '] = ' + state[p];
-    document.getElementById('battery').innerHTML += '<br>';
-  }
-
-  document.getElementById('battery').innerHTML += 'content: ' + state.content;
-  document.getElementById('battery').innerHTML += '<br>';
-  */
-
-  /*
-  var test = file.test;
-  document.getElementById('battery').innerHTML += 'typeof test: ' + typeof test;
-  document.getElementById('battery').innerHTML += '<br>';
-  document.getElementById('battery').innerHTML += 'typeof test.content: ' + typeof test.content;
-  document.getElementById('battery').innerHTML += '<br>';
-  document.getElementById('battery').innerHTML += 'typeof test.error: ' + typeof test.error;
-  document.getElementById('battery').innerHTML += '<br>';
-  document.getElementById('battery').innerHTML += 'test.content: ' + test.content;
-  document.getElementById('battery').innerHTML += '<br>';
-  document.getElementById('battery').innerHTML += 'test.error: ' + test.error;
-  document.getElementById('battery').innerHTML += '<br>';
-
-  for (p in test) {
-    document.getElementById('battery').innerHTML += 'test[' + p + '] = ' + test[p];
-    document.getElementById('battery').innerHTML += '<br>';
-  }
-
-  var test2 = file.test2;
-  document.getElementById('battery').innerHTML += 'typeof test2: ' + typeof test2;
-  document.getElementById('battery').innerHTML += '<br>';
-  document.getElementById('battery').innerHTML += 'typeof test2.content: ' + typeof test2.content;
-  document.getElementById('battery').innerHTML += '<br>';
-  document.getElementById('battery').innerHTML += 'typeof test2.error: ' + typeof test2.error;
-  document.getElementById('battery').innerHTML += '<br>';
-  document.getElementById('battery').innerHTML += 'test2.content: ' + test2.content;
-  document.getElementById('battery').innerHTML += '<br>';
-  document.getElementById('battery').innerHTML += 'test2.error: ' + test2.error;
-  document.getElementById('battery').innerHTML += '<br>';
-
-  for (p in test2) {
-    document.getElementById('battery').innerHTML += 'test2[' + p + '] = ' + test2[p];
-    document.getElementById('battery').innerHTML += '<br>';
-  }
-  */
-
 }
+
     </script>
   </head>
   <body onload='onLoad();'>
-    <div id='battery'>
-    </div>
   </body>
 </html>

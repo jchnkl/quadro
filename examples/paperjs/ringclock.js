@@ -1,11 +1,11 @@
 var center = new Point(200, 200);
 
-var hor_color      = '#FFBA00';
-var hor_text_color = '#997000';
-var min_color      = '#8EBB00';
-var min_text_color = '#557000';
-var sec_color      = '#00A9EF';
-var sec_text_color = '#00658F';
+var hor_color      = '#eea551';
+var hor_text_color = '#d97e15';
+var min_color      = '#b7ba52';
+var min_text_color = '#8d8f39';
+var sec_color      = '#85b3c4';
+var sec_text_color = '#508fa6';
 
 var hor_radius = 180;
 var min_radius = 148;

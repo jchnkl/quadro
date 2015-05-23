@@ -29,10 +29,6 @@ var hor_strokewidth = 30;
 var min_strokewidth = 30;
 var sec_strokewidth = 30;
 
-var bg_circle = new Path.Circle(center, sec_radius + sec_strokewidth / 2 + 10);
-bg_circle.fillColor = '#f0f0f0';
-bg_circle.opacity = 0.5;
-
 var hor_circle = new Path.Arc(arcPath(center, 360, hor_radius));
 hor_circle.opacity = opacity;
 hor_circle.strokeWidth = hor_strokewidth;
@@ -48,7 +44,7 @@ sec_circle.opacity = opacity;
 sec_circle.strokeWidth = sec_strokewidth;
 sec_circle.strokeColor = '#8f8f8f';
 
-var base_layer = new Layer([bg_circle, hor_circle, min_circle, sec_circle]);
+var base_layer = new Layer([hor_circle, min_circle, sec_circle]);
 
 var hands_layer = new Layer();
 

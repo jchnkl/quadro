@@ -20,17 +20,17 @@ var opacity = 0.25;
 var hor_circle = new Path.Arc(arcPath(center, 360, hor_radius));
 hor_circle.opacity = opacity;
 hor_circle.strokeWidth = hor_strokewidth;
-hor_circle.strokeColor = '#8f8f8f';
+hor_circle.strokeColor = hor_color;
 
 var min_circle = new Path.Arc(arcPath(center, 360, min_radius));
 min_circle.opacity = opacity;
 min_circle.strokeWidth = min_strokewidth;
-min_circle.strokeColor = '#8f8f8f';
+min_circle.strokeColor = min_color;
 
 var sec_circle = new Path.Arc(arcPath(center, 360, sec_radius));
 sec_circle.opacity = opacity;
 sec_circle.strokeWidth = sec_strokewidth;
-sec_circle.strokeColor = '#8f8f8f';
+sec_circle.strokeColor = sec_color;
 
 var base_layer = new Layer([hor_circle, min_circle, sec_circle]);
 

@@ -1,6 +1,11 @@
 var center = new Point(200, 200);
 
-var opacity = 0.25;
+var hor_color      = '#FFBA00';
+var hor_text_color = '#997000';
+var min_color      = '#8EBB00';
+var min_text_color = '#557000';
+var sec_color      = '#00A9EF';
+var sec_text_color = '#00658F';
 
 var hor_radius = 180;
 var min_radius = 148;
@@ -9,6 +14,8 @@ var sec_radius = 116;
 var hor_strokewidth = 30;
 var min_strokewidth = 30;
 var sec_strokewidth = 30;
+
+var opacity = 0.25;
 
 var hor_circle = new Path.Arc(arcPath(center, 360, hor_radius));
 hor_circle.opacity = opacity;
@@ -116,11 +123,11 @@ setInterval(function() {
         , angle       : hor_angle
         , radius      : hor_radius
         , strokeWidth : hor_strokewidth
-        , strokeColor : '#FFBA00'
-        , headColor   : '#997000'
-        , arcColor    : '#FFBA00'
-        , tailColor   : '#FFBA00'
-        , textColor   : '#FFBA00'
+        , strokeColor : hor_color
+        , headColor   : hor_text_color
+        , arcColor    : hor_color
+        , tailColor   : hor_color
+        , textColor   : hor_color
         , textContent : hours
         , fontSize    : '18'
         , fontFamily  : 'Ubuntu Light'
@@ -143,11 +150,11 @@ setInterval(function() {
         , angle       : min_angle
         , radius      : min_radius
         , strokeWidth : min_strokewidth
-        , strokeColor : '#8EBB00'
-        , headColor   : '#557000'
-        , arcColor    : '#8EBB00'
-        , tailColor   : '#8EBB00'
-        , textColor   : '#8EBB00'
+        , strokeColor : min_color
+        , headColor   : min_text_color
+        , arcColor    : min_color
+        , tailColor   : min_color
+        , textColor   : min_color
         , textContent : minutes
         , fontSize    : '18'
         , fontFamily  : 'Ubuntu Light'
@@ -170,11 +177,11 @@ setInterval(function() {
         , angle       : sec_angle
         , radius      : sec_radius
         , strokeWidth : sec_strokewidth
-        , strokeColor : '#00A9EF'
-        , headColor   : '#00658F'
-        , arcColor    : '#00A9EF'
-        , tailColor   : '#00A9EF'
-        , textColor   : '#00A9EF'
+        , strokeColor : sec_color
+        , headColor   : sec_text_color
+        , arcColor    : sec_color
+        , tailColor   : sec_color
+        , textColor   : sec_color
         , textContent : seconds
         , fontSize    : '18'
         , fontFamily  : 'Ubuntu Light'

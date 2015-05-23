@@ -21,19 +21,17 @@ var center = new Point(250, 250);
 
 var opacity = 0.25;
 
-var hor_radius = 175;
-var min_radius = 149;
-var sec_radius = 133;
+var hor_radius = 180;
+var min_radius = 148;
+var sec_radius = 116;
 
 var hor_strokewidth = 30;
-var min_strokewidth = 20;
-var sec_strokewidth = 10;
+var min_strokewidth = 30;
+var sec_strokewidth = 30;
 
 var bg_circle = new Path.Circle(center, sec_radius + sec_strokewidth / 2 + 10);
 bg_circle.fillColor = '#f0f0f0';
 bg_circle.opacity = 0.5;
-
-// TODO: hor layer, min layer, sec layer
 
 var hor_circle = new Path.Arc(arcPath(center, 360, hor_radius));
 hor_circle.opacity = opacity;
@@ -79,55 +77,42 @@ function hand(options)
 
   var path = arcPath(center, angle, radius);
 
-  // var head = new Path.Circle(path.to, strokeWidth / 2);
-  // head.fillColor = headColor;
-  // head.strokeWidth = 2;
-  // head.strokeColor = arcColor;
+  var head = new Path.Circle(path.to, strokeWidth / 2);
+  head.fillColor = headColor;
+  head.strokeWidth = 2;
+  head.strokeColor = arcColor;
 
   var arc = new Path.Arc(path);
   arc.strokeWidth = strokeWidth;
   arc.strokeColor = arcColor;
 
-  // var tail = new Path.Circle(path.from, strokeWidth / 2);
-  // tail.fillColor = tailColor;
+  var tail = new Path.Circle(path.from, strokeWidth / 2);
+  tail.fillColor = tailColor;
 
-  // var text = new PointText(path.to);
-  // text.content = textContent;
-  // text.fillColor = textColor;
-  // text.fontSize = fontSize;
-  // text.fontFamily = fontFamily;
-  // text.justification = 'center';
-  // text.position = path.to;
+  var text = new PointText(path.to);
+  text.content = textContent;
+  text.fillColor = textColor;
+  text.fontSize = fontSize;
+  text.fontFamily = fontFamily;
+  text.justification = 'center';
+  text.position = path.to;
 
-  // return { head: head, arc: arc, tail: tail, text: text };
-  // return { head: head, arc: arc, text: text };
-  // return { head: head, arc: arc };
-  return { arc: arc };
+  return { head: head, arc: arc, tail: tail, text: text };
 }
 
 setInterval(function() {
 
   var date = new Date();
 
-  // var cur_hour = 0;
-  // var cur_minute = 0;
-  // var cur_second = 0;
-
   var cur_hour = date.getHours();
   var cur_minute = date.getMinutes();
-  // var cur_minute = (minute + 1) % 60;
   var cur_second = date.getSeconds();
+  // var cur_minute = (minute + 1) % 60;
   // var cur_second = (second + 1) % 60;
 
   if (cur_hour != hour) {
-    console.log('cur_hour != hour');
-
-    if (cur_hour == 0) {
-      cur_hour = 24;
-    }
-
     hour = cur_hour;
-    var hours = ('00' + date.getHours()).slice(-2);
+    var hours = ('00' + cur_hour).slice(-2);
     var hor_angle = (cur_hour % 12 / 12) * 360;
 
     var hor_options =
@@ -141,7 +126,7 @@ setInterval(function() {
         , tailColor   : '#FFBA00'
         , textColor   : '#FFBA00'
         , textContent : hours
-        , fontSize    : '20'
+        , fontSize    : '18'
         , fontFamily  : 'Ubuntu Light'
         };
 
@@ -149,21 +134,12 @@ setInterval(function() {
 
     hor_layer.removeChildren();
     hor_layer.addChildren(
-        // [hor_hand.arc, hor_hand.tail, hor_hand.head, hor_hand.text]);
-        // [hor_hand.arc, hor_hand.head, hor_hand.text]);
-        // [hor_hand.arc, hor_hand.head]);
-        [hor_hand.arc]);
+        [hor_hand.arc, hor_hand.tail, hor_hand.head, hor_hand.text]);
   }
 
   if (cur_minute != minute) {
-    console.log('cur_minute != minute');
-
-    if (cur_minute == 0) {
-      cur_minute = 60;
-    }
-
     minute = cur_minute;
-    var minutes = ('00' + date.getMinutes()).slice(-2);
+    var minutes = ('00' + cur_minute).slice(-2);
     var min_angle = (cur_minute / 60) * 360;
 
     var min_options =
@@ -177,7 +153,7 @@ setInterval(function() {
         , tailColor   : '#8EBB00'
         , textColor   : '#8EBB00'
         , textContent : minutes
-        , fontSize    : '20'
+        , fontSize    : '18'
         , fontFamily  : 'Ubuntu Light'
         };
 
@@ -185,24 +161,10 @@ setInterval(function() {
 
     min_layer.removeChildren();
     min_layer.addChildren(
-        // [min_hand.arc, min_hand.tail, min_hand.head, min_hand.text]);
-        // [min_hand.arc, min_hand.head, min_hand.text]);
-        // [min_hand.arc, min_hand.head]);
-        [min_hand.arc]);
+        [min_hand.arc, min_hand.tail, min_hand.head, min_hand.text]);
   }
 
   if (cur_second != second) {
-
-    if (cur_second == 0) {
-      cur_second = 60;
-    }
-
-    // console.log('cur_second != second: ' + seconds);
-
-    // if (cur_second == 0) {
-    //   second = null;
-    // }
-
     second = cur_second;
     var seconds = ('00' + cur_second).slice(-2);
     var sec_angle = (second / 60) * 360;
@@ -218,7 +180,7 @@ setInterval(function() {
         , tailColor   : '#00A9EF'
         , textColor   : '#00A9EF'
         , textContent : seconds
-        , fontSize    : '20'
+        , fontSize    : '18'
         , fontFamily  : 'Ubuntu Light'
         };
 
@@ -226,16 +188,8 @@ setInterval(function() {
 
     sec_layer.removeChildren();
     sec_layer.addChildren(
-        // [sec_hand.arc, sec_hand.tail, sec_hand.head, sec_hand.text]);
-        // [sec_hand.arc, sec_hand.head, sec_hand.text]);
-        // [sec_hand.arc, sec_hand.head]);
-        [sec_hand.arc]);
+        [sec_hand.arc, sec_hand.tail, sec_hand.head, sec_hand.text]);
   }
-
-  // hands_layer.addChildren([ hor_hand.arc, hor_hand.tail, hor_hand.head, hor_hand.text
-  //                         , min_hand.arc, min_hand.tail, min_hand.head, min_hand.text
-  //                         , sec_hand.arc, sec_hand.tail, sec_hand.head, sec_hand.text
-  //                         ]);
 
   paper.view.update();
 

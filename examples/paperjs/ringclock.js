@@ -1,4 +1,4 @@
-var center = new Point(250, 250);
+var center = new Point(200, 200);
 
 var opacity = 0.25;
 

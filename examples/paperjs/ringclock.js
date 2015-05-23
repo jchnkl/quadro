@@ -110,8 +110,6 @@ setInterval(function() {
   var cur_hour = date.getHours();
   var cur_minute = date.getMinutes();
   var cur_second = date.getSeconds();
-  // var cur_minute = (minute + 1) % 60;
-  // var cur_second = (second + 1) % 60;
 
   if (cur_hour != hour) {
     hour = cur_hour;

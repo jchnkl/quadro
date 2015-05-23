@@ -59,8 +59,8 @@ var min_layer = new Layer();
 var sec_layer = new Layer();
 
 var hour = null;
-var minute = 59;
-var second = 57;
+var minute = null;
+var second = null;
 
 function hand(options)
 {

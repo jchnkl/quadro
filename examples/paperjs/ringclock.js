@@ -1,22 +1,3 @@
-function toRad(angle)
-{
-  return angle / 180.0 * Math.PI;
-}
-
-function arcPath(center, angle, radius)
-{
-  var rad         = toRad(angle);
-      from_rel    = new Point(0, -radius);
-      through_rel = new Point(Math.sin(rad / 2) * radius, -Math.cos(rad / 2) * radius);
-      to_rel      = new Point(Math.sin(rad) * radius, -Math.cos(rad) * radius);
-
-      from_abs    = new Point(center) + from_rel;
-      through_abs = new Point(center) + through_rel;
-      to_abs      = new Point(center) + to_rel;
-
-  return { from: from_abs, through: through_abs, to: to_abs };
-}
-
 var center = new Point(250, 250);
 
 var opacity = 0.25;
@@ -55,6 +36,25 @@ var sec_layer = new Layer();
 var hour = null;
 var minute = null;
 var second = null;
+
+function toRad(angle)
+{
+  return angle / 180.0 * Math.PI;
+}
+
+function arcPath(center, angle, radius)
+{
+  var rad         = toRad(angle);
+      from_rel    = new Point(0, -radius);
+      through_rel = new Point(Math.sin(rad / 2) * radius, -Math.cos(rad / 2) * radius);
+      to_rel      = new Point(Math.sin(rad) * radius, -Math.cos(rad) * radius);
+
+      from_abs    = new Point(center) + from_rel;
+      through_abs = new Point(center) + through_rel;
+      to_abs      = new Point(center) + to_rel;
+
+  return { from: from_abs, through: through_abs, to: to_abs };
+}
 
 function hand(options)
 {

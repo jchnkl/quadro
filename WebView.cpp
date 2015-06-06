@@ -2,6 +2,7 @@
 #define _QUADRO_WEBVIEW_CPP
 
 #include "WebView.hpp"
+#include "NetWmState.hpp"
 #include "NetWmWindowType.hpp"
 
 #include <iostream>
@@ -68,9 +69,34 @@ WebView::WebView(const Config & config)
 
   QRect desktop_rect = QApplication::desktop()->screenGeometry();
 
-  if (config.fullscreen()) {
-    QRect desktop_rect = QApplication::desktop()->screenGeometry();
-    this->setGeometry(desktop_rect);
+  if (config.windowTypeHint() == NetWmWindowType::Normal) {
+    NetWmState wmState(ewmh, this->winId());
+
+    if (config.fullscreen()) {
+      wmState.requestChange(XCB_EWMH_WM_STATE_ADD,
+                            ewmh->_NET_WM_STATE_MAXIMIZED_VERT,
+                            ewmh->_NET_WM_STATE_MAXIMIZED_HORZ,
+                            XCB_EWMH_CLIENT_SOURCE_TYPE_OTHER);
+
+    } else if (config.max_vertical()) {
+      wmState.requestChangeMaximizeVert(XCB_EWMH_WM_STATE_ADD,
+                                        XCB_EWMH_CLIENT_SOURCE_TYPE_OTHER);
+
+    } else if (config.max_horizontal()) {
+      wmState.requestChangeMaximizeHorz(XCB_EWMH_WM_STATE_ADD,
+                                        XCB_EWMH_CLIENT_SOURCE_TYPE_OTHER);
+    }
+
+  } else {
+    if (config.fullscreen()) {
+      this->setGeometry(desktop_rect);
+
+    } else if (config.max_vertical()) {
+      this->resize(this->width(), desktop_rect.height());
+
+    } else if (config.max_horizontal()) {
+      this->resize(desktop_rect.width(), this->height());
+    }
   }
 
   if (config.hasUrl()) {

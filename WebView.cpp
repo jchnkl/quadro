@@ -59,13 +59,12 @@ WebView::WebView(const Config & config)
 
   this->setGeometry(config.x(), config.y(), config.width(), config.height());
 
-  // call show before doing any EWMH stuff
-  this->show();
-
   Ewmh ewmh(QX11Info::connection());
   NetWmWindowType windowType(ewmh, this->winId());
-
   windowType.clear(NetWmWindowType::Same).add(config.windowTypeHint());
+
+  // this is tricky: must come after window type hint, but before state hint
+  this->show();
 
   QRect desktop_rect = QApplication::desktop()->screenGeometry();
 

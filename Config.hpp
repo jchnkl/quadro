@@ -33,6 +33,12 @@ class Config
     bool
     fullscreen(void) const;
 
+    bool
+    max_vertical(void) const;
+
+    bool
+    max_horizontal(void) const;
+
     NetWmWindowType::Hint
     windowTypeHint(void) const;
 
@@ -47,6 +53,8 @@ class Config
     unsigned int m_height;
     QString m_url;
     bool m_fullscreen;
+    bool m_max_vertical;
+    bool m_max_horizontal;
     NetWmWindowType::Hint m_window_type_hint;
 }; // Config
 

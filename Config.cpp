@@ -24,6 +24,8 @@ Config::Config(const QCoreApplication & app)
   QCommandLineOption heightOption = makeOption(QStringList() << "height", "window height", "height");
   QCommandLineOption urlOption = makeOption(QStringList() << "u" << "url", "URL to load at startup", "url");
   QCommandLineOption fullscreenOption(QStringList() << "f" << "fullscreen", "Set window to fullscreen mode");
+  QCommandLineOption maxVertOption(QStringList() << "maximize-vertical", "Maximize window vertically");
+  QCommandLineOption maxHorzOption(QStringList() << "maximize-horizontal", "Maximize window horizontally");
   QCommandLineOption windowTypeOption = makeOption(QStringList() << "t" << "type", "Set window type: normal, desktop, dock (default: normal)", "type");
 
   parser.addOption(xOption);
@@ -32,6 +34,8 @@ Config::Config(const QCoreApplication & app)
   parser.addOption(heightOption);
   parser.addOption(urlOption);
   parser.addOption(fullscreenOption);
+  parser.addOption(maxVertOption);
+  parser.addOption(maxHorzOption);
   parser.addOption(windowTypeOption);
 
   parser.process(app);
@@ -54,6 +58,8 @@ Config::Config(const QCoreApplication & app)
 
   m_url = parser.value(urlOption);
   m_fullscreen = parser.isSet(fullscreenOption);
+  m_max_vertical = parser.isSet(maxVertOption);
+  m_max_horizontal = parser.isSet(maxHorzOption);
 
   auto type = parser.value(windowTypeOption);
   if (type == "normal") {
@@ -105,6 +111,18 @@ bool
 Config::fullscreen(void) const
 {
   return m_fullscreen;
+}
+
+bool
+Config::max_vertical(void) const
+{
+  return m_max_vertical;
+}
+
+bool
+Config::max_horizontal(void) const
+{
+  return m_max_horizontal;
 }
 
 NetWmWindowType::Hint

@@ -32,6 +32,14 @@ WebView::onLoadUrl(const QString & url)
 WebView::WebView(const Config & config)
   : m_Ui(this)
 {
+  connect(&m_Ui, &Ui::loadUrl, this, &WebView::onLoadUrl);
+  connect(this, &QWebView::urlChanged, &m_Ui, &Ui::onUrlChanged);
+  connect(this->page()->mainFrame(), &QWebFrame::javaScriptWindowObjectCleared,
+          this, &WebView::onJsWindowObjectCleared);
+
+  connect(&m_Ui, &Ui::moveBy, this, &WebView::onMoveBy);
+  connect(&m_Ui, &Ui::resizeBy, this, &WebView::onResizeBy);
+
   this->setPage(&m_WebPage);
 
   // create & set transparent palette for browser window
@@ -48,31 +56,26 @@ WebView::WebView(const Config & config)
   // make window background transparent
   this->setAttribute(Qt::WA_TranslucentBackground, true);
 
+  this->setGeometry(config.x(), config.y(), config.width(), config.height());
+
+  // call show before doing any EWMH stuff
+  this->show();
+
   Ewmh ewmh(QX11Info::connection());
   NetWmWindowType windowType(ewmh, this->winId());
 
   windowType.clear(NetWmWindowType::Same).add(config.windowTypeHint());
 
-  connect(&m_Ui, &Ui::loadUrl, this, &WebView::onLoadUrl);
-  connect(this, &QWebView::urlChanged, &m_Ui, &Ui::onUrlChanged);
-  connect(this->page()->mainFrame(), &QWebFrame::javaScriptWindowObjectCleared,
-          this, &WebView::onJsWindowObjectCleared);
-
-  connect(&m_Ui, &Ui::moveBy, this, &WebView::onMoveBy);
-  connect(&m_Ui, &Ui::resizeBy, this, &WebView::onResizeBy);
-
-  this->setGeometry(config.x(), config.y(), config.width(), config.height());
-
-  if (config.hasUrl()) {
-    this->load(QUrl::fromUserInput(config.url()));
-  }
+  QRect desktop_rect = QApplication::desktop()->screenGeometry();
 
   if (config.fullscreen()) {
     QRect desktop_rect = QApplication::desktop()->screenGeometry();
     this->setGeometry(desktop_rect);
   }
 
-  this->show();
+  if (config.hasUrl()) {
+    this->load(QUrl::fromUserInput(config.url()));
+  }
 }
 
 void

@@ -33,6 +33,8 @@ WebView::onLoadUrl(const QString & url)
 WebView::WebView(const Config & config)
   : m_Ui(this)
 {
+  this->setPage(&m_WebPage);
+
   connect(&m_Ui, &Ui::loadUrl, this, &WebView::onLoadUrl);
   connect(this, &QWebView::urlChanged, &m_Ui, &Ui::onUrlChanged);
   connect(this->page()->mainFrame(), &QWebFrame::javaScriptWindowObjectCleared,
@@ -40,8 +42,6 @@ WebView::WebView(const Config & config)
 
   connect(&m_Ui, &Ui::moveBy, this, &WebView::onMoveBy);
   connect(&m_Ui, &Ui::resizeBy, this, &WebView::onResizeBy);
-
-  this->setPage(&m_WebPage);
 
   // create & set transparent palette for browser window
   QPalette palette = this->palette();

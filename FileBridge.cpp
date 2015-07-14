@@ -2,6 +2,7 @@
 #define _QUADRO_FILEBRIDGE_CPP
 
 #include <fstream>
+#include <sstream>
 #include "FileBridge.hpp"
 
 std::string
@@ -26,9 +27,9 @@ File::read(const QString & filename)
     std::fstream file(filename.toStdString(), std::ios::in);
 
     if (file.good()) {
-      std::string content;
-      file >> content;
-      return { { "content", QString::fromStdString(content) }
+      std::stringstream content;
+      content << file.rdbuf();
+      return { { "content", QString::fromStdString(content.str()) }
              , { "error", QVariant() }
              };
 

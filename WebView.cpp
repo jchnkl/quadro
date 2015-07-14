@@ -165,8 +165,8 @@ WebView::contextMenuEvent(QContextMenuEvent * e)
 void
 WebView::onJsWindowObjectCleared(void)
 {
-  this->page()->mainFrame()->addToJavaScriptWindowObject("dbus", &m_DBus);
-  this->page()->mainFrame()->addToJavaScriptWindowObject("file", &m_File);
+  this->page()->mainFrame()->addToJavaScriptWindowObject("DBus", &m_DBus);
+  this->page()->mainFrame()->addToJavaScriptWindowObject("File", &m_File);
 }
 
 }; // namespace Quadro

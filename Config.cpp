@@ -6,7 +6,8 @@
 namespace Quadro {
 
 Config::Config(const QCoreApplication & app)
-  : m_x(0)
+  : m_screen(-1)
+  , m_x(0)
   , m_y(0)
   , m_width(800)
   , m_height(600)
@@ -18,6 +19,7 @@ Config::Config(const QCoreApplication & app)
   parser.addHelpOption();
   parser.addVersionOption();
 
+  QCommandLineOption screenOption = makeOption(QStringList() << "s" << "screen", "The screen where quadro should appear", "screen");
   QCommandLineOption xOption = makeOption(QStringList() << "x", "x position on screen", "x");
   QCommandLineOption yOption = makeOption(QStringList() << "y", "y position on screen", "y");
   QCommandLineOption widthOption = makeOption(QStringList() << "width", "window width", "width");
@@ -28,6 +30,7 @@ Config::Config(const QCoreApplication & app)
   QCommandLineOption maxHorzOption(QStringList() << "maximize-horizontal", "Maximize window horizontally");
   QCommandLineOption windowTypeOption = makeOption(QStringList() << "t" << "type", "Set window type: normal, desktop, dock (default: normal)", "type");
 
+  parser.addOption(screenOption);
   parser.addOption(xOption);
   parser.addOption(yOption);
   parser.addOption(widthOption);
@@ -39,6 +42,10 @@ Config::Config(const QCoreApplication & app)
   parser.addOption(windowTypeOption);
 
   parser.process(app);
+
+  if (parser.isSet(screenOption)) {
+    m_screen = parser.value(screenOption);
+  }
 
   if (parser.isSet(xOption)) {
     m_x = X(std::stod(parser.value(xOption).toStdString()));
@@ -69,6 +76,12 @@ Config::Config(const QCoreApplication & app)
   } else if (type == "dock") {
     m_window_type_hint = NetWmWindowType::Dock;
   }
+}
+
+const QString &
+Config::screen(void) const
+{
+  return m_screen;
 }
 
 const PositionValue<X> &

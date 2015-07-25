@@ -42,6 +42,9 @@ class Config
   public:
     Config(const QCoreApplication & app);
 
+    const QString &
+    screen(void) const;
+
     const PositionValue<X> &
     x(void) const;
 
@@ -77,6 +80,7 @@ class Config
     makeOption(QStringList & list, const char * description, const char * valueName);
 
   private:
+    QString m_screen;
     PositionValue<X> m_x;
     PositionValue<Y> m_y;
     unsigned int m_width;

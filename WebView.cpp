@@ -70,7 +70,10 @@ WebView::WebView(const Config & config)
     y = desktop_rect.height() - config.height() + y;
   }
 
-  this->setGeometry(x, y, config.width(), config.height());
+  this->setGeometry(x + desktop_rect.x(),
+                    y + desktop_rect.y(),
+                    config.width(),
+                    config.height());
 
   Ewmh ewmh(QX11Info::connection());
   NetWmWindowType windowType(ewmh, this->winId());

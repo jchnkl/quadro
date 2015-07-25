@@ -41,11 +41,11 @@ Config::Config(const QCoreApplication & app)
   parser.process(app);
 
   if (parser.isSet(xOption)) {
-    m_x = std::stoi(parser.value(xOption).toStdString());
+    m_x = X(std::stod(parser.value(xOption).toStdString()));
   }
 
   if (parser.isSet(yOption)) {
-    m_y = std::stoi(parser.value(yOption).toStdString());
+    m_y = Y(std::stod(parser.value(yOption).toStdString()));
   }
 
   if (parser.isSet(widthOption)) {
@@ -71,13 +71,13 @@ Config::Config(const QCoreApplication & app)
   }
 }
 
-int
+const PositionValue<X> &
 Config::x(void) const
 {
   return m_x;
 }
 
-int
+const PositionValue<Y> &
 Config::y(void) const
 {
   return m_y;

@@ -57,7 +57,20 @@ WebView::WebView(const Config & config)
   // make window background transparent
   this->setAttribute(Qt::WA_TranslucentBackground, true);
 
-  this->setGeometry(config.x(), config.y(), config.width(), config.height());
+  QRect desktop_rect = QApplication::desktop()->screenGeometry();
+
+  int x = config.x().value();
+  int y = config.y().value();
+
+  if (config.x().isNegative()) {
+    x = desktop_rect.width() - config.width() + x;
+  }
+
+  if (config.y().isNegative()) {
+    y = desktop_rect.height() - config.height() + y;
+  }
+
+  this->setGeometry(x, y, config.width(), config.height());
 
   Ewmh ewmh(QX11Info::connection());
   NetWmWindowType windowType(ewmh, this->winId());
@@ -65,8 +78,6 @@ WebView::WebView(const Config & config)
 
   // this is tricky: must come after window type hint, but before state hint
   this->show();
-
-  QRect desktop_rect = QApplication::desktop()->screenGeometry();
 
   if (config.windowTypeHint() == NetWmWindowType::Normal) {
     NetWmState wmState(ewmh, this->winId());

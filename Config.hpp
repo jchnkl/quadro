@@ -7,15 +7,45 @@
 
 namespace Quadro {
 
+template <typename Derived>
+class PositionValue : public Derived {
+  public:
+    template <typename T>
+    PositionValue(T t) : Derived(t) {}
+    bool isNegative(void) const
+    {
+      return std::signbit(static_cast<const Derived *>(this)->value());
+    }
+};
+
+template <typename ValueT>
+class Value {
+  public:
+    Value(ValueT value) : m_value(value) {}
+    ValueT value(void) const { return m_value; }
+  protected:
+    ValueT m_value;
+};
+
+class X : public Value<double> {
+  public:
+    X(double v) : Value(v) {}
+};
+
+class Y : public Value<double> {
+  public:
+    Y(double v) : Value(v) {}
+};
+
 class Config
 {
   public:
     Config(const QCoreApplication & app);
 
-    int
+    const PositionValue<X> &
     x(void) const;
 
-    int
+    const PositionValue<Y> &
     y(void) const;
 
     unsigned int
@@ -47,8 +77,8 @@ class Config
     makeOption(QStringList & list, const char * description, const char * valueName);
 
   private:
-    int m_x;
-    int m_y;
+    PositionValue<X> m_x;
+    PositionValue<Y> m_y;
     unsigned int m_width;
     unsigned int m_height;
     QString m_url;

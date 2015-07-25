@@ -1,6 +1,8 @@
 #ifndef _QUADRO_WEBVIEW_CPP
 #define _QUADRO_WEBVIEW_CPP
 
+#include <QScreen>
+
 #include "WebView.hpp"
 #include "NetWmState.hpp"
 #include "NetWmWindowType.hpp"
@@ -32,6 +34,7 @@ WebView::onLoadUrl(const QString & url)
 
 WebView::WebView(const Config & config)
   : m_Ui(this)
+  , m_Config(config)
 {
   this->setPage(&m_WebPage);
 
@@ -57,7 +60,8 @@ WebView::WebView(const Config & config)
   // make window background transparent
   this->setAttribute(Qt::WA_TranslucentBackground, true);
 
-  QRect desktop_rect = QApplication::desktop()->screenGeometry();
+  QScreen * screen = getScreen();
+  QRect desktop_rect = screen->geometry();
 
   int x = config.x().value();
   int y = config.y().value();
@@ -181,6 +185,17 @@ WebView::onJsWindowObjectCleared(void)
 {
   this->page()->mainFrame()->addToJavaScriptWindowObject("DBus", &m_DBus);
   this->page()->mainFrame()->addToJavaScriptWindowObject("File", &m_File);
+}
+
+QScreen *
+WebView::getScreen(void)
+{
+  for (auto * screen : QGuiApplication::screens()) {
+    if (screen->name() == m_Config.screen()) {
+      return screen;
+    }
+  }
+  return QGuiApplication::primaryScreen();
 }
 
 }; // namespace Quadro

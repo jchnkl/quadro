@@ -55,8 +55,12 @@ class WebView
     void
     onJsWindowObjectCleared(void);
 
+    QScreen *
+    getScreen(void);
+
   private:
     Ui m_Ui;
+    Config m_Config;
     DBus m_DBus;
     File m_File;
     WebPage m_WebPage;

@@ -33,18 +33,12 @@ WebView::onLoadUrl(const QString & url)
 }
 
 WebView::WebView(const Config & config)
-  : m_Ui(this)
-  , m_Config(config)
+  : m_Config(config)
 {
   this->setPage(&m_WebPage);
 
-  connect(&m_Ui, &Ui::loadUrl, this, &WebView::onLoadUrl);
-  connect(this, &QWebView::urlChanged, &m_Ui, &Ui::onUrlChanged);
   connect(this->page()->mainFrame(), &QWebFrame::javaScriptWindowObjectCleared,
           this, &WebView::onJsWindowObjectCleared);
-
-  connect(&m_Ui, &Ui::moveBy, this, &WebView::onMoveBy);
-  connect(&m_Ui, &Ui::resizeBy, this, &WebView::onResizeBy);
 
   // create & set transparent palette for browser window
   QPalette palette = this->palette();
@@ -134,50 +128,24 @@ WebView::onResizeBy(const QMargins & offset)
 }
 
 void
-WebView::resizeEvent(QResizeEvent * e)
-{
-  m_Ui.resize(e->size());
-  QWebView::resizeEvent(e);
-}
-
-void
 WebView::contextMenuEvent(QContextMenuEvent * e)
 {
-  if (m_Ui.isVisible()) {
-    QMenu menu;
+  QMenu * menu            = this->page()->createStandardContextMenu();
+  QMenu * windowMenu      = menu->addMenu("Window Type");
+  QAction * desktopAction = windowMenu->addAction("Desktop");
+  QAction * dockAction    = windowMenu->addAction("Dock");
+  QAction * normalAction  = windowMenu->addAction("Normal");
 
-    QAction * hideUiAction = menu.addAction("Hide UI");
-    hideUiAction->setIcon(QIcon("app_hide.svg"));
+  QObject::connect(desktopAction, &QAction::triggered, this,
+      [&](void) { changeNetWmWindowType(NetWmWindowType::Desktop); });
 
-    QMetaObject::Connection connection =
-      QObject::connect(hideUiAction, &QAction::triggered, &m_Ui, &Ui::onHide);
+  QObject::connect(dockAction, &QAction::triggered, this,
+      [&](void) { changeNetWmWindowType(NetWmWindowType::Dock); });
 
-    menu.exec(e->globalPos());
+  QObject::connect(normalAction, &QAction::triggered, this,
+      [&](void) { changeNetWmWindowType(NetWmWindowType::Normal); });
 
-    QObject::disconnect(connection);
-
-  } else {
-    QMenu * menu = this->page()->createStandardContextMenu();
-
-    QAction showUiAction(menu->addSeparator());;
-
-    if (menu->isEmpty()) {
-      menu->addAction(&showUiAction);
-    } else {
-      QAction * first = menu->actions().first();
-      menu->insertAction(menu->insertSeparator(first), &showUiAction);
-    }
-
-    showUiAction.setText("Show UI");
-    showUiAction.setIcon(QIcon("app_show.svg"));
-
-    QMetaObject::Connection connection =
-      QObject::connect(&showUiAction, &QAction::triggered, &m_Ui, &Ui::onShow);
-
-    menu->exec(e->globalPos());
-
-    QObject::disconnect(connection);
-  }
+  menu->exec(e->globalPos());
 }
 
 void
@@ -196,6 +164,16 @@ WebView::getScreen(void)
     }
   }
   return QGuiApplication::primaryScreen();
+}
+
+void
+WebView::changeNetWmWindowType(NetWmWindowType::Hint hint)
+{
+  this->hide();
+  Ewmh ewmh(QX11Info::connection());
+  NetWmWindowType windowType(ewmh, this->winId());
+  windowType.clear(NetWmWindowType::Same).add(hint);
+  this->show();
 }
 
 }; // namespace Quadro

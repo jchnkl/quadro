@@ -47,9 +47,6 @@ class WebView
     onResizeBy(const QMargins & offset);
 
     void
-    resizeEvent(QResizeEvent * e);
-
-    void
     contextMenuEvent(QContextMenuEvent * e);
 
     void
@@ -58,8 +55,10 @@ class WebView
     QScreen *
     getScreen(void);
 
+    void
+    changeNetWmWindowType(NetWmWindowType::Hint);
+
   private:
-    Ui m_Ui;
     Config m_Config;
     DBus m_DBus;
     File m_File;

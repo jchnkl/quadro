@@ -3,6 +3,9 @@
 
 #include <fstream>
 #include <sstream>
+#include <sys/vfs.h>
+#include <sys/stat.h>
+#include <errno.h>
 #include "FileBridge.hpp"
 
 std::string
@@ -39,6 +42,55 @@ File::read(const QString & filename)
 
   } catch (const std::exception & e) {
     return { { "content", QVariant() }, { "error",  e.what() } };
+  }
+}
+
+QVariantMap
+Stat::fs(const QString & path)
+{
+  struct statfs buf;
+  if (statfs(path.toStdString().c_str(), &buf) == 0) {
+    return { { "bsize",  QString::number(buf.f_bsize)  }
+           , { "blocks", QString::number(buf.f_blocks) }
+           , { "bfree",  QString::number(buf.f_bfree)  }
+           , { "bavail", QString::number(buf.f_bavail) }
+           , { "files",  QString::number(buf.f_files)  }
+           , { "ffree",  QString::number(buf.f_ffree)  }
+           };
+  } else {
+    return { { "error", strerror(errno) } };
+  }
+}
+
+QVariantMap
+Stat::file(const QString & file)
+{
+  struct stat buf;
+  if (stat(file.toStdString().c_str(), &buf) == 0) {
+    double atime = buf.st_atim.tv_sec
+                 + (double)buf.st_atim.tv_nsec / 1000 / 1000 / 1000;
+    double mtime = buf.st_mtim.tv_sec
+                 + (double)buf.st_mtim.tv_nsec / 1000 / 1000 / 1000;
+    double ctime = buf.st_ctim.tv_sec
+                 + (double)buf.st_ctim.tv_nsec / 1000 / 1000 / 1000;
+
+    return { { "dev",     QString::number(buf.st_dev)     }
+           , { "ino",     QString::number(buf.st_ino)     }
+           , { "mode",    QString::number(buf.st_mode)    }
+           , { "nlink",   QString::number(buf.st_nlink)   }
+           , { "uid",     QString::number(buf.st_uid)     }
+           , { "gid",     QString::number(buf.st_gid)     }
+           , { "dev",     QString::number(buf.st_rdev)    }
+           , { "off",     QString::number(buf.st_size)    }
+           , { "blksize", QString::number(buf.st_blksize) }
+           , { "blkcnt",  QString::number(buf.st_blocks)  }
+           , { "atime",   atime                           }
+           , { "mtime",   mtime                           }
+           , { "ctime",   ctime                           }
+           };
+
+  } else {
+    return { { "error", strerror(errno) } };
   }
 }
 

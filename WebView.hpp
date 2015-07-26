@@ -62,6 +62,7 @@ class WebView
     Config m_Config;
     DBus m_DBus;
     File m_File;
+    Stat m_Stat;
     WebPage m_WebPage;
 };
 

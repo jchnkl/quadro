@@ -154,6 +154,7 @@ WebView::onJsWindowObjectCleared(void)
   this->page()->mainFrame()->addToJavaScriptWindowObject("DBus", &m_DBus);
   this->page()->mainFrame()->addToJavaScriptWindowObject("File", &m_File);
   this->page()->mainFrame()->addToJavaScriptWindowObject("Stat", &m_Stat);
+  this->page()->mainFrame()->addToJavaScriptWindowObject("System", &m_System);
 }
 
 QScreen *

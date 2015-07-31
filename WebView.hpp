@@ -11,6 +11,7 @@
 #include "Config.hpp"
 #include "DBusBridge.hpp"
 #include "FileBridge.hpp"
+#include "SystemBridge.hpp"
 
 namespace Quadro {
 
@@ -63,6 +64,7 @@ class WebView
     DBus m_DBus;
     File m_File;
     Stat m_Stat;
+    System m_System;
     WebPage m_WebPage;
 };
 

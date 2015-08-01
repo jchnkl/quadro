@@ -11,7 +11,7 @@ class System
 
   public:
     Q_INVOKABLE
-    bool exec(const QString & prog, const QStringList & args);
+    QVariantMap exec(const QString & prog, const QStringList & args);
 
 }; // class System
 
